@@ -25,4 +25,6 @@ computation:
     notes: ["If the last day of the period is a holiday, or a day on which the Office is not open for filing, the period is extended to the first following working day."]
 
 checked: 2026-09-12
-verified: false
+verified: true
+notes:
+  - "Every provision in this pack was verified on 2026-09-12 against the Paris Convention text: Art 4C(1) (12 months for patents and utility models, 6 for designs and trade marks), Art 4C(2) (the day of filing is not included), Art 4C(3) (extension to the first following working day where the last day is an official holiday or the Office is not open for filing)."

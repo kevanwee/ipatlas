@@ -8,35 +8,58 @@ timezone: Europe/Madrid
 computation:
   exclude_first_day:
     value: true
-    cite: "EUTMDR Art 1; EUTMR Art 1 (periods computed from the day following the event)"
+    cite: "Commission Delegated Regulation (EU) 2018/625 (EUTMDR), Art 67 (Calculation and duration of time limits)"
+    value_unverified: true
+    notes:
+      - "The ARTICLE is confirmed: Title IX of Reg 2018/625 is 'Time limits', Art 67 is 'Calculation and duration of time limits', Art 68 'Extension of time limits', Art 69 'Expiry of time limits in special cases'."
+      - "The VALUE is NOT verified. EUR-Lex could not be read (bot challenges on every URL form tried), so the operative wording of Art 67 on excluding the first day was never quoted. Do not mark this verified until someone reads Art 67."
+      - "Previously cited 'EUTMDR Art 1', which is the subject-matter article. Corrected 2026-09-12."
   roll_non_working_forward:
     value: true
-    cite: "EUTMIR / EUTMDR provisions on time limits"
-    notes: ["A period expiring on a day on which the Office is not open for receipt of documents extends to the first day thereafter on which it is open."]
+    verified: true
+    cite: "EUTMDR (EU) 2018/625, Art 69(1); closure days designated under EUTMR (EU) 2017/1001, Arts 101(2) and 157(4)(a), (o)"
+    notes:
+      - "Art 69(1) extends a period expiring either on a day the Office is not open for receipt of documents or on a day ordinary post is not delivered in the Member State where the Office is located."
+      - "For registered Community designs the parallel provisions are EUDIR (EC) No 2245/2002 Art 58(1) and EUDR (EC) No 6/2002 (as amended by Reg (EU) 2024/2822) Art 100."
+      - "Previously cited 'EUTMIR / EUTMDR provisions on time limits'. EUTMIR (EU) 2018/626 is not the time-limit instrument. Corrected 2026-09-12 against the recitals of EUIPO Decision EX-25-16, which cite exactly these provisions."
   month_arithmetic:
     value: corresponding_date
-    cite: "EUTMDR time-limit provisions"
+    cite: "Commission Delegated Regulation (EU) 2018/625 (EUTMDR), Art 67"
+    value_unverified: true
+    notes:
+      - "Article confirmed, VALUE NOT verified: the operative wording of Art 67 could not be read (see exclude_first_day). Do not mark verified without reading it."
   weekend: [saturday, sunday]
 
 holidays:
   2026:
-    provenance: projected
-    source: "EUIPO published days on which the Office is not open"
+    provenance: official
+    source: "Decision No EX-25-16 of the Executive Director of the Office, 15 December 2025, on the days on which the Office is not open for the receipt of documents or on which ordinary post is not delivered in 2026"
     checked: 2026-09-12
-    verified: false
+    verified: true
     notes:
-      - "PROJECTED, NOT taken from EUIPO's published list. EUIPO closure days combine Spanish national, Valencian regional and Alicante local holidays plus an end-of-year closure. Replace with the published list before use."
+      - "Article 69(1) EUTMDR extends a period expiring EITHER on a day the Office is not open for receipt OR on a day ordinary post is not delivered, so the operative set is the union of Articles 1 and 2 of the decision. Days marked 'no ordinary post' come from Article 2."
+      - "The decision's end-of-year wording (24 December Thursday to 31 December Thursday, six days) resolves to the six working days 24, 25, 28, 29, 30 and 31 December, since 26-27 December are a weekend."
+      - "Assumption (15 August) is not in the decision; it falls on a Saturday in 2026."
+      - "Verified 2026-09-12. A previous version omitted nine days and wrongly included Assumption."
     days:
-      - { date: 2026-01-01, name: New Year's Day }
-      - { date: 2026-01-06, name: Epiphany }
-      - { date: 2026-04-03, name: Good Friday }
-      - { date: 2026-04-06, name: Easter Monday }
-      - { date: 2026-05-01, name: Labour Day }
-      - { date: 2026-06-24, name: Saint John (Alicante) }
-      - { date: 2026-08-15, name: Assumption }
-      - { date: 2026-10-09, name: Valencian Community Day }
-      - { date: 2026-10-12, name: National Day of Spain }
-      - { date: 2026-12-08, name: Immaculate Conception }
-      - { date: 2026-12-24, name: Christmas Eve }
-      - { date: 2026-12-25, name: Christmas Day }
-      - { date: 2026-12-31, name: New Year's Eve }
+      - { date: 2026-01-01, name: "New Year's Day" }
+      - { date: 2026-01-02, name: "Day after New Year's Day" }
+      - { date: 2026-01-06, name: "Epiphany" }
+      - { date: 2026-03-19, name: "San Jose (no ordinary post)" }
+      - { date: 2026-04-03, name: "Good Friday" }
+      - { date: 2026-04-06, name: "Easter Monday" }
+      - { date: 2026-04-16, name: "Santa Faz" }
+      - { date: 2026-05-01, name: "Labour Day" }
+      - { date: 2026-05-25, name: "Whit Monday" }
+      - { date: 2026-06-23, name: "Day before San Juan (no ordinary post)" }
+      - { date: 2026-06-24, name: "San Juan" }
+      - { date: 2026-10-09, name: "Day of the Valencian Community (no ordinary post)" }
+      - { date: 2026-10-12, name: "Spanish National Day" }
+      - { date: 2026-11-02, name: "All Souls' Day" }
+      - { date: 2026-12-08, name: "Immaculate Conception (no ordinary post)" }
+      - { date: 2026-12-24, name: "Christmas and end-of-year closure" }
+      - { date: 2026-12-25, name: "Christmas and end-of-year closure" }
+      - { date: 2026-12-28, name: "End-of-year closure" }
+      - { date: 2026-12-29, name: "End-of-year closure" }
+      - { date: 2026-12-30, name: "End-of-year closure" }
+      - { date: 2026-12-31, name: "End-of-year closure" }

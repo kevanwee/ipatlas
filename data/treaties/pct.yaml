@@ -10,44 +10,60 @@ administered_by: WIPO
 
 timeline:
   international_search_report:
-    months: 16
-    from: priority_date
+    # Deliberately NOT a single month figure: the rule is a max() of two periods, one of which
+    # runs from an event this pack does not hold (receipt of the search copy by the ISA).
+    rule: "later of (3 months from receipt of the search copy by the International Searching Authority) and (9 months from the priority date)"
+    months_from_priority_limb: 9
+    verified: true
     cite: "PCT Rule 42.1"
-    notes: ["Three months from receipt of the search copy, or 9 months from priority for a first filing, whichever expires later; 16 months is the practical outer marker."]
+    notes:
+      - "Rule 42.1: 'three months from the receipt of the search copy by the International Searching Authority, or nine months from the priority date, whichever time limit expires later.'"
+      - "A previous version recorded `months: 16` citing Rule 42.1. THE RULE CONTAINS NO 16-MONTH FIGURE; 16 months was a practical outer marker and is not derivable from the provision. Removed 2026-09-12 so no engine can compute a deadline from it."
   international_publication:
     months: 18
     from: priority_date
+    verified: true
     cite: "PCT Art 21(2)(a)"
   demand_for_international_preliminary_examination:
     months: 22
     from: priority_date
+    verified: true
     cite: "PCT Rule 54bis.1(a)"
     notes: ["22 months from priority, or 3 months from transmittal of the search report and written opinion, whichever expires later."]
   national_phase_chapter_i:
     months: 30
     from: priority_date
+    verified: true
     cite: "PCT Art 22(1)"
     notes: ["Amended with effect from 1 April 2002 to 30 months. Some Offices allow longer; the jurisdiction pack governs where it records a longer period."]
   national_phase_chapter_ii:
     months: 30
     from: priority_date
+    requires_election_before_months: 19
+    verified: true
     cite: "PCT Art 39(1)(a)"
+    notes:
+      - "The 30 months applies ONLY 'if the election of any Contracting State has been effected prior to the expiration of the 19th month from the priority date'. Where that condition is not met, Art 22 applies instead."
+      - "The precondition was missing from this entry; added 2026-09-12."
 
 computation:
-  exclude_first_day: { value: true, cite: "PCT Rule 80.1" }
-  month_arithmetic: { value: corresponding_date, cite: "PCT Rule 80.2" }
+  exclude_first_day: { value: true, verified: true, cite: "PCT Rule 80.3 (days); the same limb appears in Rules 80.1 and 80.2" }
+  month_arithmetic: { value: corresponding_date, verified: true, cite: "PCT Rule 80.2" }
   roll_non_working_forward:
     value: true
+    verified: true
     cite: "PCT Rule 80.5"
-    notes: ["Extension where the Office is not open for official business, it is an official holiday, or ordinary mail is not delivered at the locality."]
+    notes:
+      - "FOUR limbs; the period expires on the next day on which NONE exists: (i) the Office is not open to the public for official business; (ii) ordinary mail is not delivered in the locality; (iii) multi-locality offices where circumstances differ; (iv) a holiday in part only of the State. Limbs (iii) and (iv) are not modelled."
 
 restoration_of_priority:
   available: true
   window_months: 2
   from: expiry_of_priority_period
   standards: [due_care, unintentional]
-  cite: "PCT Rule 26bis.3"
+  verified: true
+  cite: "PCT Rule 26bis.3(a), (e)"
   notes: ["Designated Offices apply either the 'due care' or the 'unintentional' standard, and some have reserved out. Record the applicable standard per jurisdiction pack before relying on this."]
 
 checked: 2026-09-12
-verified: false
+verified: false   # per-fact flags above are authoritative

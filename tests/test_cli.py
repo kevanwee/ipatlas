@@ -61,8 +61,10 @@ def test_offices_listing(capsys):
     assert main(["offices"]) == 0
     out = capsys.readouterr().out
     # The listing must surface provenance: a projected year behaves differently.
-    assert "IPOS" in out and "2026:official, 2027:projected" in out
-    assert "USPTO" in out and "2026:derived" in out
+    # Every shipped closure year is transcribed from a published list or derived from statute.
+    assert "IPOS" in out and "2026:official, 2027:official" in out
+    assert "USPTO" in out and "2026:derived, 2027:derived" in out
+    assert "projected" not in out
 
 
 def test_deadline_priority(capsys):
@@ -77,18 +79,13 @@ def test_deadline_opposition_us_is_days(capsys):
     assert "DEADLINE: 2026-07-01" in capsys.readouterr().out
 
 
-def test_deadline_pct_refuses_on_a_projected_calendar(capsys):
-    """Exit 3: the deadline lands in IPOS 2027, which is a reconstruction."""
-    assert main(["deadline", "pct", "SG", "2024-09-01"]) == 3
-    assert "PROJECTED" in capsys.readouterr().err
-
-
-def test_deadline_pct_json_with_allow_projected(capsys):
-    assert main(["--json", "--allow-projected", "deadline", "pct", "SG", "2024-09-01"]) == 0
+def test_deadline_pct_json(capsys):
+    """IPOS 2027 is now gazetted, so this computes without opting in to anything."""
+    assert main(["--json", "deadline", "pct", "SG", "2024-09-01"]) == 0
     import json
     d = json.loads(capsys.readouterr().out)
     assert d["deadline"] == "2027-03-01" and d["office"] == "IPOS"
-    assert any("provenance=projected" in line for line in d["trace"])
+    assert any("provenance=official" in line for line in d["trace"])
 
 
 def test_deadline_missing_calendar_exits_3(capsys):

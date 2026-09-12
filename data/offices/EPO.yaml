@@ -8,37 +8,50 @@ timezone: Europe/Berlin
 computation:
   exclude_first_day:
     value: true
+    verified: true
     cite: "EPC Rule 131(2)"
     notes: ["Computation begins on the day following the day on which the relevant event occurred."]
   roll_non_working_forward:
     value: true
-    cite: "EPC Rule 134(1)"
-    notes: ["A period expiring on a day on which at least one of the EPO filing offices is not open for receipt of documents extends to the first day thereafter on which all the filing offices are open."]
+    verified: true
+    cite: "EPC Rule 134(1); see also Rule 134(2), (4), (5)"
+    notes:
+      - "Rule 134(1): where a period expires on a day on which ONE of the filing offices under Rule 35(1) is not open for receipt of documents, or on which mail is not delivered there, the period extends to the first day thereafter on which ALL the filing offices are open AND mail is delivered."
+      - "The mail-delivery limb and the second sentence (applying the rule where permitted electronic filing means a document cannot be received) are not modelled by this engine."
+      - "NOT MODELLED: Rule 134(2) extends periods for a general dislocation in mail delivery in a Contracting State (published under Rule 134(4)); Rule 134(5) lets a party show that mail was dislocated by an exceptional occurrence on any of the TEN days before expiry, in which case a document is timely if mailed within FIVE days after the dislocation ends. Both can make a real deadline later than this engine computes."
+      - "Verified 2026-09-12 against the EPC Rule 134 text (version in force 1 April 2025, CA/D 20/24)."
   month_arithmetic:
     value: corresponding_date
+    verified: true
     cite: "EPC Rule 131(4)"
     notes: ["A period expressed in months expires on the day of the relevant month having the same number as the day of the event; if there is no such day, on the last day of that month."]
   weekend: [saturday, sunday]
 
 holidays:
   2026:
-    provenance: projected
-    source: "EPO published days of closure (Munich, The Hague, Berlin filing offices)"
+    provenance: official
+    source: "OJ EPO 2025, A40 - Notice from the European Patent Office dated 10 June 2025 concerning the days on which EPO filing offices are closed in 2026 (published 30 June 2025)"
     checked: 2026-09-12
-    verified: false
+    verified: true
     notes:
-      - "PROJECTED, NOT taken from the EPO's published closure list. Rule 134(1) turns on ALL filing offices being open, so the effective closure set is the union of German and Dutch holidays plus EPO-specific days. Replace with the published list before relying on any date."
+      - "Rule 134(1) EPC turns on whether ALL filing offices are open, so the operative set is the union across Munich, The Hague and Berlin. That union is exactly the published table reproduced here."
+      - "The notice states expressly that for PCT proceedings this list applies mutatis mutandis for the purposes of PCT Rule 80.5."
+      - "German Unity Day (3 October 2026) is absent because it falls on a Saturday."
+      - "Verified 2026-09-12. A previous version omitted Epiphany, King's Day, Liberation Day and Corpus Christi, and wrongly included German Unity Day."
     days:
-      - { date: 2026-01-01, name: New Year's Day }
-      - { date: 2026-04-03, name: Good Friday }
-      - { date: 2026-04-06, name: Easter Monday }
-      - { date: 2026-05-01, name: Labour Day }
-      - { date: 2026-05-14, name: Ascension Day }
-      - { date: 2026-05-25, name: Whit Monday }
-      - { date: 2026-10-03, name: German Unity Day }
-      - { date: 2026-12-24, name: Christmas Eve }
-      - { date: 2026-12-25, name: Christmas Day }
-      - { date: 2026-12-28, name: End-of-year closure }
-      - { date: 2026-12-29, name: End-of-year closure }
-      - { date: 2026-12-30, name: End-of-year closure }
-      - { date: 2026-12-31, name: End-of-year closure }
+      - { date: 2026-01-01, name: "New Year's Day (all offices)" }
+      - { date: 2026-01-06, name: "Epiphany (Munich)" }
+      - { date: 2026-04-03, name: "Good Friday (all offices)" }
+      - { date: 2026-04-06, name: "Easter Monday (all offices)" }
+      - { date: 2026-04-27, name: "King's Day (The Hague)" }
+      - { date: 2026-05-01, name: "Labour Day" }
+      - { date: 2026-05-05, name: "Liberation Day (The Hague)" }
+      - { date: 2026-05-14, name: "Ascension Day (all offices)" }
+      - { date: 2026-05-25, name: "Whit Monday (all offices)" }
+      - { date: 2026-06-04, name: "Corpus Christi (Munich)" }
+      - { date: 2026-12-24, name: "Christmas Eve (all offices)" }
+      - { date: 2026-12-25, name: "Christmas Day (all offices)" }
+      - { date: 2026-12-28, name: "Bridging day (all offices)" }
+      - { date: 2026-12-29, name: "Bridging day (all offices)" }
+      - { date: 2026-12-30, name: "Bridging day (all offices)" }
+      - { date: 2026-12-31, name: "New Year's Eve (all offices)" }

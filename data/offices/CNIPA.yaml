@@ -13,47 +13,68 @@ timezone: Asia/Shanghai
 computation:
   exclude_first_day:
     value: true
-    cite: "专利法实施细则 (Patent Law Implementing Regulations), time limit provisions"
+    verified: true
+    cite: "专利法实施细则 第5条 (Patent Law Implementing Regulations 2023, Rule 5); 商标法实施条例 第12条 (Trademark Law Implementing Regulations, Art 12)"
+    notes:
+      - "Rule 5: 专利法和本细则规定的各种期限开始的当日不计算在期限内，自下一日开始计算 - the first day is excluded and counting starts the next day. All three computation rules sit in this single article."
+      - "Verified 2026-09-12 against the CNIPA official text. The trademark-side equivalent (Art 12) was corroborated from the national administrative-regulations database rather than read on a primary site, so it is one notch weaker."
   roll_non_working_forward:
     value: true
-    cite: "专利法实施细则 (Implementing Regulations); 商标法实施条例 (Trademark Law Implementing Regulations)"
-    notes: ["Where a time limit expires on an official holiday, it is extended to the first working day after the holiday."]
+    verified: true
+    cite: "专利法实施细则 第5条 (Rule 5); 商标法实施条例 第12条 (Art 12)"
+    notes:
+      - "Rule 5: 期限届满日是法定休假日的，以休假日后的第一个工作日为期限届满日 - where the expiry day is a statutory holiday it moves to the FIRST WORKING DAY after the holiday."
+      - "A State-Council-designated make-up weekend day IS a 工作日, which is why `working_weekends` must be populated."
+      - "NOT MODELLED: Rule 6 restoration. Force majeure allows a request within 2 months of the impediment ceasing and within 2 years of expiry; other justified reasons within 2 months of CNIPA's notice. Excluded for the periods in Patent Law Arts 24, 29, 42 and 74."
+      - "Trademark registration TERMS have their own rule in Art 12: the term expires on the day BEFORE the corresponding day of the final month. Not modelled."
   month_arithmetic:
     value: corresponding_date
-    cite: "专利法实施细则 (Implementing Regulations)"
+    verified: true
+    cite: "专利法实施细则 第5条 (Rule 5)"
+    notes:
+      - "Rule 5: 期限以年或者月计算的，以其最后一月的相应日为期限届满日；该月无相应日的，以该月最后一日为期限届满日."
   weekend: [saturday, sunday]
 
 holidays:
   2026:
     provenance: official
-    source: "State Council annual holiday notice (国务院办公厅关于2026年部分节假日安排的通知)"
+    source: "State Council notice 国务院办公厅关于2026年部分节假日安排的通知, 国办发明电〔2025〕7号, 4 November 2025"
     checked: 2026-09-12
-    verified: false
+    verified: true
     notes:
-      - "INCOMPLETE. Holiday blocks are approximate and the compensating working weekends are NOT recorded, so any computation crossing a block must be checked against the State Council notice."
-      - "Spring Festival and Mid-Autumn dates follow the lunar calendar and shift annually."
+      - "Read from the State Council's own published notice. Weekend-coincident days inside each block are omitted where the weekend rule already closes them; they change no outcome."
+      - "Qingming, Dragon Boat and Mid-Autumn have NO make-up working day in 2026."
+      - "Verified 2026-09-12. A previous version omitted 2 January, 23 February, and 4-5 May, and recorded the compensating working weekends as unknown."
     days:
-      - { date: 2026-01-01, name: New Year's Day (元旦) }
-      - { date: 2026-02-16, name: Spring Festival eve (春节) }
-      - { date: 2026-02-17, name: Spring Festival (春节) }
-      - { date: 2026-02-18, name: Spring Festival (春节) }
-      - { date: 2026-02-19, name: Spring Festival (春节) }
-      - { date: 2026-02-20, name: Spring Festival (春节) }
-      - { date: 2026-04-05, name: Qingming Festival (清明节) }
-      - { date: 2026-04-06, name: Qingming Festival (observed) }
-      - { date: 2026-05-01, name: Labour Day (劳动节) }
-      - { date: 2026-06-19, name: Dragon Boat Festival (端午节) }
-      - { date: 2026-09-25, name: Mid-Autumn Festival (中秋节) }
-      - { date: 2026-10-01, name: National Day (国庆节) }
-      - { date: 2026-10-02, name: National Day (国庆节) }
-      - { date: 2026-10-03, name: National Day (国庆节) }
-      - { date: 2026-10-04, name: National Day (国庆节) }
-      - { date: 2026-10-05, name: National Day (国庆节) }
-      - { date: 2026-10-06, name: National Day (国庆节) }
-      - { date: 2026-10-07, name: National Day (国庆节) }
+      - { date: 2026-01-01, name: "New Year's Day (元旦)" }
+      - { date: 2026-01-02, name: "New Year holiday (元旦)" }
+      - { date: 2026-02-16, name: "Spring Festival (春节)" }
+      - { date: 2026-02-17, name: "Spring Festival (春节)" }
+      - { date: 2026-02-18, name: "Spring Festival (春节)" }
+      - { date: 2026-02-19, name: "Spring Festival (春节)" }
+      - { date: 2026-02-20, name: "Spring Festival (春节)" }
+      - { date: 2026-02-23, name: "Spring Festival (春节)" }
+      - { date: 2026-04-06, name: "Qingming Festival (清明节)" }
+      - { date: 2026-05-01, name: "Labour Day (劳动节)" }
+      - { date: 2026-05-04, name: "Labour Day (劳动节)" }
+      - { date: 2026-05-05, name: "Labour Day (劳动节)" }
+      - { date: 2026-06-19, name: "Dragon Boat Festival (端午节)" }
+      - { date: 2026-09-25, name: "Mid-Autumn Festival (中秋节)" }
+      - { date: 2026-10-01, name: "National Day (国庆节)" }
+      - { date: 2026-10-02, name: "National Day (国庆节)" }
+      - { date: 2026-10-05, name: "National Day (国庆节)" }
+      - { date: 2026-10-06, name: "National Day (国庆节)" }
+      - { date: 2026-10-07, name: "National Day (国庆节)" }
 
-# Dates designated as working days to compensate for an adjacent holiday block. Not yet
-# recorded; the engine treats the list as authoritative once populated, so leaving it empty
-# is safer than guessing (a wrongly-designated working day shortens a deadline).
+# Weekend days DESIGNATED AS WORKING DAYS to compensate for an adjacent holiday block.
+# Load-bearing, not cosmetic: Implementing Regulations Rule 5 rolls an expiry to the first
+# 工作日, and a designated make-up Saturday IS a 工作日. Leaving this empty made the engine
+# treat such a day as a weekend and roll forward, returning a date LATER than the law allows.
 working_weekends:
-  2026: []
+  2026:
+    - 2026-01-04   # Sunday, 元旦 make-up
+    - 2026-02-14   # Saturday, 春节 make-up
+    - 2026-02-28   # Saturday, 春节 make-up
+    - 2026-05-09   # Saturday, 劳动节 make-up
+    - 2026-09-20   # Sunday, 国庆节 make-up
+    - 2026-10-10   # Saturday, 国庆节 make-up

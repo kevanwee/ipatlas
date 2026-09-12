@@ -12,27 +12,35 @@ timezone: Asia/Singapore
 computation:
   exclude_first_day:
     value: true
+    verified: true
     cite: "Interpretation Act 1965, s 50(a)"
-    notes: ["A period beginning on a day excludes that day."]
+    notes:
+      - "s 50(a): a period of days from the happening of an event is 'deemed to be exclusive of the day on which the event happens or the act or thing is done'."
+      - "Verified 2026-09-12 against sso.agc.gov.sg (version current as at that date)."
   roll_non_working_forward:
     value: true
-    cite: "Patents Rules; Trade Marks Rules (rule numbers unresolved, see notes)"
-    rule_numbers_disputed: true
+    verified: true
+    cite: "Patents Rules, r 98(2); Trade Marks Rules, r 79(2); Interpretation Act 1965, s 50(b)-(c)"
     notes:
-      - "Where a time limit expires on a day the Registry is not open, the act is in time if done on the next day the Registry is open. The RULE itself is standard practice and is not in doubt."
-      - "RULE NUMBERS UNRESOLVED. This entry cited Patents Rules r 100 and Trade Marks Rules r 78. A verification pass on 2026-09-12 flagged both as looking wrong before it was interrupted, without supplying replacements. Check against sso.agc.gov.sg before citing either number."
+      - "Patents Rules r 98(2): where the time for doing any business expires on an excluded day for that class of business, the time is extended to the next following day which is not an excluded day. r 98(12) defines an excluded day as any day the Registry is taken to be closed for that class of business. Trade Marks Rules r 79(2) and (7) are in identical terms."
+      - "CAUTION on s 50: s 50(b)-(c) name only SUNDAY or a public holiday. Saturday is not an excluded day under s 50; Saturday coverage comes only from r 98 / r 79. Do not rely on s 50 alone for a Saturday expiry."
+      - "NOT MODELLED: Patents Rules r 110(1) and Trade Marks Rules r 80A(1) let the Registrar declare a day an 'interruption' (postal service, Registry operation, or the electronic online system), extending a period expiring on it. TM r 80A(3) adds a discretionary extension for postal or system failure. Patents Rules r 110(3)-(5) specially alter the 12-month priority period where it ends on an excluded or interrupted day."
+      - "Verified 2026-09-12 against sso.agc.gov.sg. This entry previously cited Patents Rules r 100 (Correction of irregularities) and Trade Marks Rules r 78 (Change of commencement date for filing evidence) - both different subjects. The DISPUTED flag it carried is now cleared."
   month_arithmetic:
     value: corresponding_date
-    cite: "Interpretation Act 1965, s 50(b)"
-    notes: ["A period of months ends on the corresponding date; where that date does not exist, on the last day of the month."]
+    cite: "Common law; see also the Rules' own wording. NOT Interpretation Act s 50."
+    value_sourced_from_common_law: true
+    notes:
+      - "The corresponding-date convention is correct Singapore law but has NO statutory home in s 50. s 50 contains only: (a) exclude the first day; (b) last day a Sunday or public holiday; (c) an act directed on an excluded day; (d) periods of 6 days or less exclude excluded days. There is no month-arithmetic provision."
+      - "This entry previously cited s 50(b), which is in fact the roll-forward rule. Corrected 2026-09-12."
   weekend: [saturday, sunday]
 
 holidays:
   2026:
     provenance: official
-    source: "Ministry of Manpower gazetted public holidays 2026 (via data.gov.sg). IPOS observes Singapore public holidays."
+    source: "Ministry of Manpower press release, Public Holidays for 2026, 16 June 2025"
     checked: 2026-09-12
-    verified: false
+    verified: true
     notes: ["IPOS may also close on days not gazetted as public holidays; check the IPOS website for registry closure notices before relying on a computed date."]
     days:
       - { date: 2026-01-01, name: New Year's Day }
@@ -50,22 +58,24 @@ holidays:
       - { date: 2026-11-09, name: Deepavali (observed) }
       - { date: 2026-12-25, name: Christmas Day }
   2027:
-    provenance: projected
-    source: "Projected from the gazetted pattern; NOT yet published by MOM at the time of writing."
+    provenance: official
+    source: "Ministry of Manpower press release, Public Holidays for 2027, 18 June 2026"
     checked: 2026-09-12
-    verified: false
+    verified: true
     notes:
-      - "PROJECTED, NOT GAZETTED. Lunar and Islamic dates in particular are estimates. Replace with the gazette before relying on any 2027 date."
+      - "Gazetted. MOM grants an in-lieu Monday only where the holiday falls on a SUNDAY, so Labour Day (Sat 1 May) and Christmas (Sat 25 Dec) get no in-lieu day."
+      - "Verified 2026-09-12. A previous version of this block was projected and had Hari Raya Puasa on 11 March; the gazetted date is 10 March."
+      - "IPOS may also close on days not gazetted as public holidays (Patents Rules r 98(12) defines an excluded day as any day the Registry is taken to be closed for that class of business). No registry closure list was found, so that caveat stands."
     days:
-      - { date: 2027-01-01, name: New Year's Day }
-      - { date: 2027-02-06, name: Chinese New Year }
-      - { date: 2027-02-07, name: Chinese New Year }
-      - { date: 2027-02-08, name: Chinese New Year (observed) }
-      - { date: 2027-03-11, name: Hari Raya Puasa }
-      - { date: 2027-03-26, name: Good Friday }
-      - { date: 2027-05-01, name: Labour Day }
-      - { date: 2027-05-17, name: Hari Raya Haji }
-      - { date: 2027-05-20, name: Vesak Day }
-      - { date: 2027-08-09, name: National Day }
-      - { date: 2027-10-28, name: Deepavali }
-      - { date: 2027-12-25, name: Christmas Day }
+      - { date: 2027-01-01, name: "New Year's Day" }
+      - { date: 2027-02-06, name: "Chinese New Year" }
+      - { date: 2027-02-07, name: "Chinese New Year" }
+      - { date: 2027-02-08, name: "Chinese New Year (observed, Sunday holiday)" }
+      - { date: 2027-03-10, name: "Hari Raya Puasa" }
+      - { date: 2027-03-26, name: "Good Friday" }
+      - { date: 2027-05-01, name: "Labour Day" }
+      - { date: 2027-05-17, name: "Hari Raya Haji" }
+      - { date: 2027-05-20, name: "Vesak Day" }
+      - { date: 2027-08-09, name: "National Day" }
+      - { date: 2027-10-28, name: "Deepavali" }
+      - { date: 2027-12-25, name: "Christmas Day" }

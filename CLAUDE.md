@@ -84,6 +84,20 @@ These came from actual defects. Do not relitigate them.
   citations pointed at provisions about a different topic entirely (SG CA s 117 is published
   editions, not sound recordings; PA s 20(1) is entitlement disputes, not first-to-file). A
   reviewer spot-checking one of those concludes the whole pack is unreliable.
+- **Closure-date errors are NOT symmetric; this decides how to treat uncertainty.** A
+  MISSING closure day makes the engine return an EARLIER date than the law allows: the user
+  files early and is safe. A SPURIOUS closure day makes it return a LATER date: the user
+  files late and the right is lost. So when a closure list is incomplete, omitting a day is
+  conservative and inventing one is dangerous. The WIPO 2026 pack had seven invented days and
+  a misplaced Swiss National Day; the CNIPA pack had an empty `working_weekends` list, which
+  is the same failure in disguise, because a designated make-up Saturday IS a working day and
+  treating it as a weekend rolls the deadline later. Both are fixed. Never pad a closure list
+  to look complete.
+- **A closure year must be transcribed from the issuing authority's own publication, or
+  derived from a statutory rule.** Mark it `provenance: official` or `derived`. A list
+  reconstructed from a general pattern is `projected` and the engine REFUSES to compute over
+  it. No shipped pack is projected; a test enforces that. Flagging a guess is not good enough
+  when the guess still produces a date.
 - **Where a value is true only because of a deeming provision, cite both.** TMA s 18(1) says
   a term runs "from the date of registration"; it means filing only because s 15(2) deems
   them the same. Citing s 18 alone makes correct data look wrong.

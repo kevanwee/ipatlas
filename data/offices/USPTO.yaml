@@ -8,16 +8,27 @@ timezone: America/New_York
 computation:
   exclude_first_day:
     value: true
-    cite: "37 C.F.R. § 1.7"
+    cite: "No provision found. 37 C.F.R. § 1.7 does not contain an exclude-first-day rule."
+    value_unsourced: true
+    notes:
+      - "§ 1.7 contains only (a) 'whenever periods of time are specified in this part in days, calendar days are intended' plus the roll-forward rule, and (b) a provisional-pendency rule. Neither addresses day counting."
+      - "The value is believed correct as USPTO practice but NO PROVISION SUPPORTS IT in the sources checked. Corrected 2026-09-12 from a citation to § 1.7 that did not say this. Do not mark verified without a provision or an MPEP reference."
   roll_non_working_forward:
     value: true
-    cite: "37 C.F.R. § 1.7(a); 35 U.S.C. § 21(b)"
+    verified: true
+    cite: "37 C.F.R. § 1.7(a) (patents); 37 C.F.R. § 2.196 (trade marks); 35 U.S.C. § 21(b) (both)"
     notes:
-      - "When the day for taking an action falls on a Saturday, Sunday, or federal holiday within the District of Columbia, the action may be taken on the next succeeding business day."
-      - "The controlling calendar is federal holidays IN THE DISTRICT OF COLUMBIA, not state holidays."
+      - "§ 1.7(a): where the last day for taking any action 'falls on Saturday, Sunday, or on a Federal holiday within the District of Columbia, the action may be taken, or the fee paid, on the next succeeding business day'."
+      - "The controlling calendar is federal holidays IN THE DISTRICT OF COLUMBIA, not state holidays. Confirmed."
+      - "§ 1.7 sits in Part 1 and operates on 'this part', i.e. PATENTS ONLY. Trade marks have their own rule, 37 C.F.R. § 2.196, in materially identical terms. 35 U.S.C. § 21(b) is not patent-limited and covers both. The trade-mark provision was missing from this entry; added 2026-09-12."
+      - "NOT MODELLED: MPEP 510 provides that when the entire USPTO is officially closed for a whole day for adverse weather or other causes, that day is treated as a Federal holiday within DC under 35 U.S.C. § 21. Such closures are unscheduled, so the operative closure set is not fully knowable in advance. This does NOT help a deposit made by Priority Mail Express, which takes its actual deposit date."
   month_arithmetic:
     value: corresponding_date
-    cite: "37 C.F.R. § 1.7"
+    cite: "No regulation found; corresponding-date convention is MPEP/practice level."
+    value_unsourced: true
+    notes:
+      - "§ 1.7 contains no month arithmetic and no substitute was found in § 1.7 or 35 U.S.C. § 21. The convention is correct in practice but rests on the MPEP rather than a regulation."
+      - "Corrected 2026-09-12 from a citation to § 1.7 that did not say this."
   weekend: [saturday, sunday]
 
 holidays:

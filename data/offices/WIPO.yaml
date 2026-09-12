@@ -11,13 +11,18 @@ timezone: Europe/Zurich
 computation:
   exclude_first_day:
     value: true
-    cite: "PCT Rule 80.1 (periods expressed in days)"
+    verified: true
+    cite: "PCT Rule 80.3 (periods expressed in days); the same limb appears in Rules 80.1 and 80.2"
+    notes:
+      - "Rule 80.3: 'When a period is expressed as a certain number of days, computation shall start on the day following the day on which the relevant event occurred.'"
+      - "Previously cited Rule 80.1, which is 'Periods Expressed in Years'. Corrected 2026-09-12."
   roll_non_working_forward:
     value: true
     cite: "PCT Rule 80.5"
+    verified: true
     notes:
-      - "If a period expires on a day on which the office is not open for official business, or on an official holiday, the period extends to the first subsequent day on which the office is open."
-      - "PCT Rule 80.5 also covers days on which ordinary mail is not delivered at the locality of the office."
+      - "Rule 80.5 has FOUR limbs and the period expires on the next day on which NONE of them exists: (i) the Office is not open to the public for official business; (ii) ordinary mail is not delivered in the locality; (iii) multi-locality offices where the circumstances differ; (iv) a holiday in part only of the State."
+      - "Limbs (iii) and (iv) are not modelled by this engine. Verified 2026-09-12 against the WIPO PCT Regulations."
   month_arithmetic:
     value: corresponding_date
     cite: "PCT Rule 80.2"
@@ -26,24 +31,20 @@ computation:
 
 holidays:
   2026:
-    provenance: projected
-    source: "WIPO published closure days (Geneva). Pattern: New Year, Good Friday, Easter Monday, Ascension, Whit Monday, Swiss National Day, Jeune genevois, Christmas period."
+    provenance: official
+    source: "WIPO Information Notice No. 11/2025 (Hague), 19 November 2025, issued under Hague Common Regulations Rule 26(2); identical list in PCT Newsletter 12/2025"
     checked: 2026-09-12
-    verified: false
+    verified: true
     notes:
-      - "PROJECTED from the usual Geneva pattern, NOT taken from WIPO's published list. WIPO closes for an extended end-of-year period whose exact dates vary; replace this with the published list before relying on a December date."
+      - "EXHAUSTIVE: WIPO designated exactly EIGHT dates as official holidays at headquarters in Geneva for 2026, besides Saturdays and Sundays. There is NO extended end-of-year closure in 2026."
+      - "These are the International Bureau's closure days generally, so they apply across PCT, Madrid and Hague."
+      - "Verified 2026-09-12. A previous version of this block listed fourteen days, seven of them invented (2 January, 10 September, 24 and 28-30 December) plus Swiss National Day on the wrong date. Each spurious day would have pushed a deadline later under PCT Rule 80.5 and caused a filing to be late."
     days:
-      - { date: 2026-01-01, name: New Year's Day }
-      - { date: 2026-01-02, name: New Year holiday }
-      - { date: 2026-04-03, name: Good Friday }
-      - { date: 2026-04-06, name: Easter Monday }
-      - { date: 2026-05-14, name: Ascension Day }
-      - { date: 2026-05-25, name: Whit Monday }
-      - { date: 2026-08-01, name: Swiss National Day }
-      - { date: 2026-09-10, name: Jeune genevois }
-      - { date: 2026-12-24, name: Christmas Eve }
-      - { date: 2026-12-25, name: Christmas Day }
-      - { date: 2026-12-28, name: End-of-year closure }
-      - { date: 2026-12-29, name: End-of-year closure }
-      - { date: 2026-12-30, name: End-of-year closure }
-      - { date: 2026-12-31, name: End-of-year closure }
+      - { date: 2026-01-01, name: "New Year" }
+      - { date: 2026-04-03, name: "Good Friday" }
+      - { date: 2026-04-06, name: "Easter Monday" }
+      - { date: 2026-05-14, name: "Ascension" }
+      - { date: 2026-05-25, name: "Whitsun (Whit Monday)" }
+      - { date: 2026-07-31, name: "Swiss National Day (observed Friday; 1 August falls on a Saturday)" }
+      - { date: 2026-12-25, name: "Christmas" }
+      - { date: 2026-12-31, name: "New Year's Eve" }

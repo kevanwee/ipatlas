@@ -8,48 +8,64 @@ refusal_windows:
   default:
     months: 12
     from: notification_of_designation
+    verified: true
     cite: "Madrid Protocol, Art 5(2)(a)"
-    notes: ["A designated Contracting Party must notify a refusal within 12 months."]
+    notes: ["Art 5(2)(a) expresses this as 'one year', equivalent to the 12 months recorded."]
   declared_extension:
     months: 18
     from: notification_of_designation
     cite: "Madrid Protocol, Art 5(2)(b)"
     notes: ["A Contracting Party may declare an 18-month period. The jurisdiction pack's `trade_mark.madrid.refusal_window_months` records which applies."]
   opposition_based_later_refusal:
-    cite: "Madrid Protocol, Art 5(2)(c)"
-    notes: ["Where a Contracting Party has so declared, a refusal resulting from an opposition may be notified after the 18-month period, subject to the conditions in Art 5(2)(c). This engine does not compute that outer date; it is opposition-dependent."]
+    months_from_expiry_of_opposition_period: 1
+    max_months_from_start_of_opposition_period: 7
+    verified: true
+    cite: "Madrid Protocol, Art 5(2)(c)(i)-(ii)"
+    notes:
+      - "Art 5(2)(c)(ii) DOES give a computable outer bound, contrary to what this entry previously said: notification must be made 'within a time limit of one month from the expiry of the opposition period and, in any case, not later than seven months from the date on which the opposition period begins', conditional on the Art 5(2)(c)(i) pre-notification."
+      - "Corrected 2026-09-12. The engine still does not compute it, because the opposition period's start date is not held in these packs - but the bound exists and is recorded."
 
 term:
   years: 10
   from: international_registration_date
   renewable: true
   renewal_years: 10
+  verified: true
   cite: "Madrid Protocol, Art 6(1), Art 7(1)"
 
 renewal_grace:
   months: 6
   surcharge: true
-  cite: "Madrid Protocol, Art 7(4); Common Regulations Rule 30(1)"
+  verified: true
+  cite: "Madrid Protocol, Art 7(4); Regulations Under the Protocol, Rule 30(1)(a)"
+  notes:
+    - "Art 7(4): 'Subject to the payment of a surcharge fixed by the Regulations, a period of grace of six months shall be allowed for renewal.' Rule 30(1)(a) allows payment within six months of the due date provided the surcharge is paid at the same time."
+    - "The instrument is NO LONGER CALLED the 'Common Regulations'. Its current title is the 'Regulations Under the Protocol Relating to the Madrid Agreement Concerning the International Registration of Marks'. Corrected 2026-09-12."
 
 dependency:
   years: 5
   from: international_registration_date
-  cite: "Madrid Protocol, Art 6(3)"
+  verified: true
+  cite: "Madrid Protocol, Art 6(2)-(4)"
   notes:
-    - "For five years the international registration depends on the basic mark: if the basic application or registration ceases in that period, the international registration is cancelled to the same extent (central attack)."
+    - "Art 6(2) sets the period: 'Upon expiry of a period of five years from the date of the international registration, such registration shall become independent of the basic application or the registration resulting therefrom, or of the basic registration.'"
+    - "Art 6(3) is the CONSEQUENCE limb: protection may no longer be invoked if, before expiry of the five years, the basic application has been withdrawn, lapsed, been renounced or finally rejected, revoked, cancelled or invalidated - including where an action begun before expiry concludes after it. Art 6(4) is the Office-of-origin notification and cancellation request."
+    - "This entry previously cited Art 6(3) alone for the five-year period. Corrected 2026-09-12: the period is in Art 6(2)."
     - "This is the principal strategic risk of the Madrid route and has no analogue in national filing."
 
 transformation:
   available: true
   window_months: 3
   from: cancellation_of_international_registration
-  cite: "Madrid Protocol, Art 9quinquies"
+  verified: true
+  cite: "Madrid Protocol, Art 9quinquies(i)"
   notes: ["Where an international registration is cancelled following central attack, it may be transformed into national applications in each designated Contracting Party within 3 months, keeping the original date."]
 
 replacement:
   available: true
-  cite: "Madrid Protocol, Art 4bis"
+  verified: true
+  cite: "Madrid Protocol, Art 4bis(1)-(2)"
   notes: ["An international registration may replace an earlier national registration for the same mark and goods, keeping the earlier rights. Practice on recording replacement varies by Office."]
 
 checked: 2026-09-12
-verified: false
+verified: false   # per-fact flags above are authoritative

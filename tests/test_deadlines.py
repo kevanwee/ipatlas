@@ -13,6 +13,7 @@ from ipatlas import (
     NotRecordedError,
     ProjectedCalendarError,
     load_atlas,
+    load_office,
     load_offices,
     load_treaty_pack,
 )
@@ -130,8 +131,8 @@ def test_patent_priority_is_twelve_months(atlas, offices, paris):
     assert d.date == dt.date(2026, 6, 10)  # Wednesday, USPTO open
 
 
-def test_priority_falls_back_to_the_treaty_when_no_target(atlas, offices_projected, paris):
-    d = priority_deadline(atlas, offices_projected, "trade_mark", dt.date(2026, 3, 13),
+def test_priority_falls_back_to_the_treaty_when_no_target(atlas, offices, paris):
+    d = priority_deadline(atlas, offices, "trade_mark", dt.date(2026, 3, 13),
                           treaty=paris)
     assert d.source.origin == "treaty paris"
     assert d.office == "WIPO"
@@ -144,9 +145,9 @@ def test_priority_without_a_period_refuses(atlas, offices):
 
 # -- PCT -------------------------------------------------------------------------------
 
-def test_pct_national_phase_thirty_months(atlas, offices_projected, pct):
+def test_pct_national_phase_thirty_months(atlas, offices, pct):
     # Priority 1 Sep 2024 + 30 months = 1 Mar 2027 (Monday, IPOS open)
-    d = pct_national_phase(atlas, offices_projected, "SG", dt.date(2024, 9, 1), treaty=pct)
+    d = pct_national_phase(atlas, offices, "SG", dt.date(2024, 9, 1), treaty=pct)
     assert d.date == dt.date(2027, 3, 1)
     assert d.source.months == 30
     assert d.source.origin == "pack SG:patent.pct"
@@ -245,25 +246,69 @@ def test_madrid_refusal_for_cn_refuses_for_want_of_2027_closure_data(atlas, offi
 
 # -- projected calendars ---------------------------------------------------------------
 
-def test_a_projected_calendar_refuses_by_default(atlas, offices, pct):
+@pytest.fixture
+def projected_office(tmp_path):
+    """An office whose closure list is a reconstruction.
+
+    No SHIPPED pack is projected any longer - every closure year is now transcribed from the
+    issuing authority's own publication, or derived from statute. The gate still has to work,
+    so it is tested here on a fixture. If a future pack is added from a pattern rather than a
+    published list, this is the behaviour it gets.
+    """
+    p = tmp_path / "ZZO.yaml"
+    p.write_text(
+        "office: ZZO\nname: Testland IP Office\njurisdiction: ZZ\n"
+        "computation:\n"
+        "  exclude_first_day: { value: true, cite: c }\n"
+        "  roll_non_working_forward: { value: true, cite: c }\n"
+        "  month_arithmetic: { value: corresponding_date, cite: c }\n"
+        "holidays:\n  2026:\n"
+        "    provenance: projected\n"
+        "    source: \"reconstructed from the usual regional pattern\"\n"
+        "    checked: 2026-09-01\n    verified: false\n"
+        "    days:\n      - { date: 2026-04-03, name: \"Good Friday\" }\n",
+        encoding="utf-8")
+    return load_office(p)
+
+
+def test_a_projected_calendar_refuses_by_default(projected_office):
     """A reconstructed closure list must not produce a legal deadline.
 
-    IPOS 2027 was projected from the gazetted pattern because MOM had not published it. A
-    computed date over invented closure days looks authoritative and may be wrong, which is
-    more dangerous than no answer.
+    A computed date over invented closure days looks authoritative and may be wrong, which is
+    more dangerous than no answer at all.
     """
     with pytest.raises(ProjectedCalendarError, match="PROJECTED"):
-        pct_national_phase(atlas, offices, "SG", dt.date(2024, 9, 1), treaty=pct)
+        projected_office.is_open(dt.date(2026, 4, 3))
 
 
-def test_the_refusal_names_the_remedy(atlas, offices, pct):
+def test_the_refusal_names_the_remedy(projected_office):
     try:
-        pct_national_phase(atlas, offices, "SG", dt.date(2024, 9, 1), treaty=pct)
+        projected_office.is_open(dt.date(2026, 4, 3))
     except ProjectedCalendarError as e:
         assert "Replace it with the published list" in str(e)
         assert "allow_projected=True" in str(e)
     else:
         pytest.fail("expected a refusal")
+
+
+def test_opting_in_lets_a_projected_calendar_compute(projected_office):
+    projected_office.allow_projected = True
+    assert projected_office.is_open(dt.date(2026, 4, 3)) is False
+    assert projected_office.is_open(dt.date(2026, 4, 2)) is True
+
+
+def test_no_shipped_calendar_is_projected(offices):
+    """Every shipped closure year must be transcribed or derived, never reconstructed.
+
+    This is the invariant the verification pass of 2026-09-12 established: the WIPO list had
+    seven invented closure days, and each one would have pushed a deadline LATER, causing a
+    filing to be late. Anything projected must be replaced, not merely flagged.
+    """
+    from ipatlas import Provenance
+    for code in offices.codes:
+        for year, cy in offices[code].years.items():
+            assert cy.provenance in (Provenance.OFFICIAL, Provenance.DERIVED), \
+                f"{code} {year} is {cy.provenance.value}"
 
 
 def test_official_and_derived_calendars_compute_without_opting_in(atlas, offices):
