@@ -26,10 +26,13 @@ $ ipatlas compare trade_mark SG US CN -a filing_system -a term -a use_requiremen
 ...
 ```
 
-**Status: Phase 0.** The data model, loader, linter and comparator are built and tested.
-Packs exist for **SG, US, CN**. The deadline, route, exhaustion, takedown, portfolio and
-transfer engines are designed but not written — see [PLAN.md](PLAN.md) for the full design
-and phasing, and [CLAUDE.md](CLAUDE.md) for the engineering contract.
+**Status: Phase 1 complete.** Data model, loader, linter, comparator, office calendars,
+deadline engine, lifecycle (terms/renewals/copyright) and filing-route matrices are built
+and tested (131 tests). Packs for **SG, US, CN**; office packs for **IPOS, USPTO, CNIPA,
+WIPO, EPO, EUIPO**; treaty packs for **Paris, PCT, Madrid, Hague**. The exhaustion,
+takedown, portfolio and transfer engines are designed but not written — see
+[PLAN.md](PLAN.md) for the design and phasing, [CLAUDE.md](CLAUDE.md) for the engineering
+contract.
 
 **Nothing in the data is verified.** Every fact carries `verified: false` and every output
 surface says so. Do not rely on a cell without checking its citation.
@@ -54,8 +57,72 @@ differ. That is exactly the shape a comparator wants.
 | `ipatlas compare <right> <JUR...>` | Cited comparison table (markdown / CSV / JSON) with a "where they differ" section and gaps listed as gaps |
 | `ipatlas brief <JUR> <right>` | One-page country note assembled from the pack, with unrecorded attributes shown as unrecorded |
 | `ipatlas fact <JUR> <path>` | One fact with its citation, check date and notes |
+| `ipatlas offices` | Office packs and their closure-data coverage |
+| `ipatlas deadline <kind> <JUR> <date>` | Paris priority, PCT national phase, opposition, Madrid refusal — with a full derivation |
+| `ipatlas term <JUR> <right> --date base=YYYY-MM-DD` | Expiry and renewal schedule with grace and restoration |
+| `ipatlas copyright-term <JUR> <category>` | Copyright term expressions, including "whichever is earlier" limbs |
+| `ipatlas routes <right> <JUR...>` | Filing-route matrix with the traps the packs record |
 | `ipatlas lint` | The data quality gate; exit 1 on errors |
 | `--as-of YYYY-MM-DD` | Answer under the law in force on that date |
+
+### Deadlines
+
+```
+$ ipatlas deadline priority CN 2026-03-13 --right trade_mark
+
+Paris priority deadline for trade mark filing in CN
+the day of first filing is excluded from the priority period (Paris Convention, Art 4C(2))
+period: 6 months (pack CN:trade_mark.priority: 商标法 第25条 (Art 25)) [unverified]
+trigger: 2026-03-13 (Fri)
+office: CNIPA (China National Intellectual Property Administration)
+month arithmetic (corresponding_date, 专利法实施细则): 2026-03-13 (Fri) + 6 months = 2026-09-13 (Sun)
+2026-09-13 (Sun): Sunday. Rolled forward to the next day the office is open, 2026-09-14 (Mon)
+DEADLINE: 2026-09-14 (Mon)
+CNIPA closure data 2026: UNVERIFIED, source=State Council annual holiday notice
+  caution: INCOMPLETE. Holiday blocks are approximate and the compensating working weekends
+  are NOT recorded, so any computation crossing a block must be checked.
+WARNING: the period was read from pack CN:trade_mark.priority, which is marked unverified
+```
+
+Deadlines compute against the **office that receives the act**, not the jurisdiction. Periods
+come from the packs, so the citation travels with the answer. Three properties worth noting:
+
+- **The office calendar refuses rather than assumes.** `ipatlas deadline madrid-refusal CN
+  2026-04-01` exits 3: an 18-month window lands in 2027 and the CNIPA pack has no 2027
+  closure data. Chinese holidays are set annually by State Council notice and include
+  compensating working weekends, so padding the pack with guessed dates would be worse than
+  the refusal.
+- **Days and months are different.** US trade mark opposition is 30 *days* from publication;
+  Singapore's is 2 *months*; China's is 3 months and not extendable. The engine reads whichever
+  the pack records and says which.
+- **Unverified periods produce a warning on every result**, not just in the data file.
+
+### Terms and renewals
+
+```
+$ ipatlas term US trade_mark --date filing_date=2020-03-01
+missing date: US trade_mark term runs from registration_date, which you did not supply.
+Supplied: filing_date. This matters: a term running from registration expires later than
+one running from filing.
+```
+
+That refusal is the feature. Singapore trade mark terms run from filing and US and Chinese
+terms run from registration, so the same mark expires on different dates — and an engine
+that quietly accepted the wrong date would hide exactly the divergence the dataset exists to
+record. Renewal schedules carry the grace and restoration windows; `registered_design` stops
+at the recorded maximum duration.
+
+Copyright terms apply the recorded expression, including two-limb rules:
+
+```
+$ ipatlas copyright-term US works_made_for_hire --date publication=2000-01-01 --date creation=1990-01-01
+  primary: publication 2000-01-01 + 95 years = 2095-01-01
+  alternative: creation 1990-01-01 + 120 years = 2110-01-01
+  rule: whichever is earlier -> 2095-01-01
+```
+
+Same author's death, three jurisdictions: SG and US give 2070-06-15; China gives
+2050-12-31, because the term is 50 years and runs to the end of the calendar year.
 
 Rights covered by the three packs: trade marks, patents, utility models, registered
 designs, copyright, trade secrets, geographical indications, plant varieties (SG), plus
@@ -65,7 +132,7 @@ transfer formalities and statutory takedown regimes.
 
 ```bash
 pip install -e ".[dev]"
-python -m pytest          # 73 tests
+python -m pytest          # 131 tests
 ipatlas lint              # 0 errors, 2 known research gaps
 ```
 
@@ -144,9 +211,19 @@ The three packs are chosen to make the divergences that matter visible:
 
 ## Not built yet
 
-Deadlines (priority, PCT, Madrid, Hague, opposition, per-office calendars), filing-route
-matrices, the exhaustion decision table, takedown notice validation, portfolio dockets with
-ICS export, and transfer checklists. All designed in [PLAN.md](PLAN.md) §8; phased in §9.
+The exhaustion decision table, takedown notice validation, portfolio dockets with ICS
+export, and transfer-formality checklists. All designed in [PLAN.md](PLAN.md) §8; phased
+in §9.
+
+Known coverage gaps in what *is* built:
+
+- **Closure data is thin.** IPOS and USPTO have 2026–2027; the rest have 2026 only. Every
+  year is `verified: false`, and the 2027 IPOS set is projected rather than gazetted.
+- **CNIPA compensating working weekends are not modelled.** The field exists and is
+  deliberately empty: a wrongly-designated working day *shortens* a deadline, so guessing is
+  the dangerous direction.
+- **EPO, EUIPO and WIPO closure lists are projected**, not taken from the published lists.
+  EPO Rule 134(1) turns on *all* filing offices being open, which widens the effective set.
 
 ## Deliberately out of scope
 
