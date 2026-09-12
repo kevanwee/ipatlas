@@ -2,7 +2,12 @@
 #
 # This file is the REFERENCE SHAPE for every pack. Read CLAUDE.md "Data conventions"
 # before editing. Every fact needs a cite; `defaults` supplies checked/verified for the
-# file; per-fact keys override. Nothing here is verified yet.
+# file; per-fact keys override.
+#
+# VERIFICATION STATE: facts marked `verified: true` were checked against the consolidated
+# text on sso.agc.gov.sg on 2026-09-12, and their notes quote the operative words. Facts
+# without the flag are still unchecked. Where a correction was made, the note records what
+# the previous entry said so the error is auditable.
 
 jurisdiction: SG
 name: Singapore
@@ -25,66 +30,165 @@ memberships:
 # ---------------------------------------------------------------------------------------
 trade_mark:
   statute: { name: "Trade Marks Act 1998", url: https://sso.agc.gov.sg/Act/TMA1998 }
-  filing_system: { value: first_to_file, cite: "TMA 1998, s 5 and Part III generally" }
+  filing_system:
+    value: first_to_file
+    verified: true
+    cite: "TMA 1998, s 5; Part 2 (ss 4-25, Registration of Trade Marks)"
+    notes:
+      - "Previously cited 'Part III'. SSO numbers the Parts in arabic, and Part 3 is 'Rights and remedies of proprietor'; registration is Part 2. Corrected 2026-09-12."
   examination: { value: substantive, scope: [absolute, relative], cite: "TMA 1998, ss 7-8, 12" }
   multi_class: { value: true, cite: "TMA 1998, s 5(3)" }
   classification: { value: nice, edition_followed: current,
                     practice: "Class headings are not accepted as covering the whole class; specify goods/services. Madrid Goods & Services Manager terms accepted.",
                     cite: "Trade Marks Rules, r 19; IPOS Trade Marks Work Manual (Classification)" }
   priority: { months: 6, treaty: paris, cite: "TMA 1998, s 10" }
-  term: { years: 10, from: filing_date, renewable: true, renewal_years: 10, cite: "TMA 1998, ss 18-19" }
-  renewal_grace: { months: 6, surcharge: true, restoration_after_grace_months: 6,
-                   cite: "TMA 1998, s 19; Trade Marks Rules, rr 50-52" }
+  term:
+    years: 10
+    from: filing_date
+    renewable: true
+    renewal_years: 10
+    verified: true
+    cite: "TMA 1998, ss 15(2), 18(1)-(2)"
+    notes:
+      - "s 18(1) says '10 years from the date of registration' ON ITS FACE. It means from the filing date only because s 15(2) deems the date of registration to be the date of the application. Both provisions are needed; citing s 18 alone makes the pack look wrong to anyone spot-checking."
+      - "Verified 2026-09-12 against sso.agc.gov.sg/Act/TMA1998."
+  renewal_grace:
+    months: 6
+    surcharge: true
+    restoration_months_from_removal: 6
+    verified: true
+    cite: "TMA 1998, s 19; Trade Marks Rules, rr 49, 51, 53"
+    notes:
+      - "r 49(1): renewal may be filed from 6 months before to 6 months after expiry; r 49(3)(b) imposes the late payment fee. r 53(1): restoration within 6 months after THE DATE OF REMOVAL from the register - not from the end of the grace period."
+      - "Previously cited rr 50-52. r 52 is DELETED and r 50 is only the Registrar's reminder notice. Corrected 2026-09-12, including the restoration trigger."
   maintenance:
     separate_obligation: false
     cite: "Trade Marks Act 1998 (no declaration of use requirement)"
     notes:
       - "Renewal is the only periodic obligation. Unlike the US, there is no affidavit or declaration of use to file between renewals, so non-use is tested only on a third-party revocation application."
-  opposition: { window_months: 2, from: publication, extendable: true, max_extension_months: 4,
-                cite: "TMA 1998, s 13; Trade Marks Rules, r 29" }
+  opposition:
+    window_months: 2
+    from: publication
+    extendable: true
+    max_total_months_from_publication: 4
+    max_extension_months: 2
+    verified: true
+    cite: "TMA 1998, s 13; Trade Marks Rules, r 29(1), (4)"
+    notes:
+      - "r 29(1): 'within 2 months after the date of publication'. r 29(4): 'The total extension of time ... shall not exceed 4 months after the date of the publication'."
+      - "The absolute deadline is therefore 4 MONTHS FROM PUBLICATION, i.e. at most 2 further months. This entry previously recorded max_extension_months: 4, which read as a 6-month outer limit; anyone relying on it would have filed two months late and out of time with no remedy. Corrected 2026-09-12."
   use_requirement:
     non_use_years: 5
     from: completion_of_registration
     consequence: revocation_on_application
     cite: "TMA 1998, s 22(1)(a)-(b)"
-  well_known_marks: { protected: true, registration_required: false, dilution_protection: true,
-                      cite: "TMA 1998, ss 2 (definition), 55" }
+  well_known_marks:
+    protected: true
+    registration_required: false
+    goodwill_required: false
+    dilution_protection: two_tier
+    acquiescence_bar_years: 5
+    verified: true
+    cite: "TMA 1998, ss 2 (definition), 55(1), 55(3)(b), 55(7)"
+    notes:
+      - "s 55(1): protected 'whether or not the trade mark has been registered in Singapore' and whether or not the proprietor has goodwill here."
+      - "TWO TIERS: the basic protection needs the mark to be well known in Singapore, but dilution and unfair-advantage protection under s 55(3)(b) requires the mark to be 'well known to the public at large in Singapore' - a materially higher threshold."
+      - "s 55(7) bars relief after 5 years of acquiescence."
+      - "Verified 2026-09-12."
   exhaustion:
     value: international
-    exceptions: ["goods changed or impaired after being put on the market", "contrary to proprietor's consent in the circumstances of s 29(2)"]
-    cite: "TMA 1998, s 29"
-  border_measures: { available: true, mechanism: "notice to Director-General of Customs to seize goods",
-                     cite: "TMA 1998, Part X (ss 81-100)" }
+    exceptions_are_cumulative: true
+    exceptions:
+      - "the condition of the goods has been changed or impaired after they were put on the market, AND"
+      - "use of the registered trade mark on those goods has caused dilution in an unfair manner of the mark's distinctive character"
+    verified: true
+    cite: "TMA 1998, s 29(1)-(2)"
+    notes:
+      - "s 29(1) covers goods 'put on the market, whether in Singapore or outside Singapore' - international exhaustion."
+      - "s 29(2) is a SINGLE CUMULATIVE TEST requiring BOTH limbs (a) and (b). This entry previously listed two independent exceptions joined disjunctively, one of which ('contrary to proprietor's consent') is not in s 29(2) at all."
+      - "The cumulative requirement makes Singapore's parallel-import defence much harder for a brand owner to defeat than the former entry implied: repackaging alone is not enough without unfair dilution. Corrected 2026-09-12."
+  border_measures:
+    available: true
+    mechanism: "seizure on request by notice to the Director-General of Customs (Part 10 Div 2), and ex officio seizure without request (Part 10 Div 3, ss 93-96)"
+    verified: true
+    cite: "TMA 1998, Part 10 (ss 81-100); Trade Marks (Border Enforcement Measures) Rules"
+    notes:
+      - "Ex officio seizure without a prior request is materially stronger than an application-only regime and was missing from this entry. Part numbering corrected from roman 'Part X' to arabic 'Part 10' to match SSO. Corrected 2026-09-12."
   criminal_sanctions: { available: true, cite: "TMA 1998, ss 46-49" }
   madrid:
     designation_accepted: true
     refusal_window_months: 18
     individual_fee: true
-    cite: "Trade Marks (International Registration) Rules; Madrid Protocol Art 5(2)(b)-(c) declaration"
+    opposition_based_refusal_after_window: true
+    verified: true
+    cite: "Trade Marks (International Registration) Rules; Madrid Protocol Arts 5(2)(b), 5(2)(c), 8(7)(a) declarations (WIPO Information Notice 17/2000)"
+    notes:
+      - "Singapore declared under Art 5(2)(b) that the one-year refusal limit is replaced by 18 months, and under Art 5(2)(c) that a refusal resulting from an opposition may be notified AFTER that 18 months expires. The Art 5(2)(c) element was missing; it means the 18-month date is not an outer limit where an opposition is filed."
+      - "Individual fee declared under Art 8(7)(a). In force for Singapore from 31 October 2000. Verified 2026-09-12."
 
 # ---------------------------------------------------------------------------------------
 patent:
   statute: { name: "Patents Act 1994", url: https://sso.agc.gov.sg/Act/PA1994 }
-  filing_system: { value: first_to_file, cite: "PA 1994, s 20(1)" }
+  filing_system:
+    value: first_to_file
+    verified: true
+    cite: "PA 1994, ss 14 (novelty), 17 (priority date), 26 (date of filing)"
+    notes:
+      - "Previously cited s 20(1), which is 'Determination before grant of questions about entitlement to patents' - an entitlement-dispute mechanism, not a first-to-file rule. First-to-file follows from the priority-date and novelty scheme. Corrected 2026-09-12."
   examination: { value: substantive, routes: [local_search_and_examination, supplementary_examination_on_foreign_result],
                  cite: "PA 1994, s 29" }
   priority: { months: 12, treaty: paris, cite: "PA 1994, s 17" }
   term: { years: 20, from: filing_date, cite: "PA 1994, s 36(1)" }
-  term_extension: { available: true, grounds: [unreasonable_office_delay, marketing_approval_delay_pharma],
-                    max_years: 5, cite: "PA 1994, s 36A" }
+  term_extension:
+    available: true
+    grounds: [unreasonable_office_delay_singapore, unreasonable_delay_in_corresponding_foreign_patent, marketing_approval_delay_pharma]
+    max_years_ground_b: 5
+    max_years_pharma: 5
+    office_delay_uncapped: true
+    verified: true
+    cite: "PA 1994, s 36A(1)(a)-(c), (3)-(4), (9); Patents Rules, r 51A"
+    notes:
+      - "THREE grounds, not two: s 36A(1)(a) unreasonable delay by the Registrar; s 36A(1)(b) unreasonable delay in a corresponding foreign patent which that foreign office extended - a practically important route for applicants holding a US PTA; s 36A(1)(c) pharmaceutical marketing approval delay."
+      - "There is NO general 5-year cap. The 5-year ceiling sits in s 36A(4) (ground (b)) and Patents Rules r 51A(8)(c) (pharma). The Singapore office-delay extension under s 36A(3) with r 51A(6) is UNCAPPED, measured as the excess over the 4-year/2-year thresholds in r 51A(5). A client told 'five years maximum' could under-claim. Corrected 2026-09-12."
+      - "s 36A(9): during a pharmaceutical extension the protection applies ONLY TO THE SUBSTANCE, not the full claim scope."
+      - "Application deadlines: within 6 months of grant (r 51A(1)); for pharma, 6 months from grant or approval whichever is later and not later than 6 months before the 20-year expiry (r 51A(2))."
   maintenance:
     from_year: 5
     frequency: annual
-    due: before_anniversary_of_filing
+    due: in_the_3_months_ending_with_the_filing_anniversary
     grace_months: 6
-    cite: "PA 1994, s 36(2)-(3); Patents Rules, r 51"
+    verified: true
+    cite: "PA 1994, s 36(2)-(3); Patents Rules, r 51(1), (3A)"
+    notes:
+      - "r 51(1): the fee to keep the patent in force for a further year after the expiry of the fourth or any succeeding year must be filed IN THE 3 MONTHS ENDING WITH that anniversary of the filing date. So the first renewal fee falls in the 3 months ending with the 4th anniversary and buys the 5th year."
+      - "r 51(3A): the prescribed period for s 36(3) is 6 months. s 36(3) restores the patent 'as if it had never expired'."
+      - "Verified 2026-09-12. Restoration of a lapsed patent under s 53 / r 53 is not modelled."
   grace_period:
     months: 12
-    scope: disclosure_by_or_derived_from_applicant
-    cite: "PA 1994, s 14(4)-(6)"
-    notes: ["Confirm current scope: the 2017 amendments broadened the grace period. Record the exact subsection."]
-  pct: { national_phase_months: 30, from: priority_date, extension_available: true, cite: "Patents Rules, r 86" }
-  exhaustion: { value: international, cite: "PA 1994, s 66(2)(g)" }
+    from: filing_date
+    scope: disclosure_by_or_derived_from_inventor
+    verified: true
+    cite: "PA 1994, s 14(4)-(8)"
+    notes:
+      - "s 14(4): a disclosure is disregarded if not earlier than 12 months immediately preceding THE DATE OF FILING - not the priority date."
+      - "The 2017 amendments (Act 18 of 2017) DID broaden this: s 14(4)(e) is a general catch-all for disclosure 'made to the public by the inventor, or by a person who obtained the matter directly or indirectly from the inventor, in any circumstances not described in paragraphs (a) to (d)', with conditions in s 14(6)-(7)."
+      - "Scope is framed around the INVENTOR, not the applicant. s 14(8) requires the applicant to file written evidence."
+      - "Verified 2026-09-12; this resolves the uncertainty previously flagged in this entry."
+  pct:
+    national_phase_months: 30
+    from: priority_date
+    verified: true
+    cite: "Patents Rules, r 86(1)(a)"
+    notes:
+      - "r 86(1)(a): '30 months from the relevant date'. r 86(1)(b) provides 20 months in any other case."
+      - "An `extension_available: true` flag was recorded here and REMOVED on 2026-09-12: r 86 contains no extension of the 30-month period, and no other basis was found. Do not reinstate it without a provision."
+  exhaustion:
+    value: international
+    verified: true
+    cite: "PA 1994, s 66(2)(g), (3)-(6)"
+    notes:
+      - "s 66(2)(g) covers import, use or disposal of a product produced by or with the proprietor's consent, and expressly provides that 'patent' includes a patent granted outside Singapore - hence international exhaustion."
+      - "It is expressly 'subject to subsections (3) and (6)', which disapply it for certain patented pharmaceutical product imports. Those carve-outs were missing from this entry. Corrected 2026-09-12."
   border_measures: { available: false, cite: "Patents Act 1994 (no border enforcement provision)",
                      notes: ["No customs recordal for patents; enforcement is by civil action."] }
   criminal_sanctions: { available: false, cite: "Patents Act 1994 (no criminal offence for infringement)" }
@@ -97,10 +201,36 @@ utility_model:
 # ---------------------------------------------------------------------------------------
 registered_design:
   statute: { name: "Registered Designs Act 2000", url: https://sso.agc.gov.sg/Act/RDA2000 }
-  examination: { value: formal, cite: "RDA 2000, s 17" }
+  examination:
+    value: formal
+    verified: true
+    cite: "RDA 2000, s 19 (Only formality examination required); s 16"
+    notes:
+      - "s 19: the Registrar is not required to consider registrability, entitlement to claimed priority, or whether the design is properly represented."
+      - "Previously cited s 17, which is 'Refusal of application'. Corrected 2026-09-12."
   priority: { months: 6, treaty: paris, cite: "RDA 2000, s 12" }
-  term: { years: 5, from: filing_date, renewable: true, renewal_years: 5, max_years: 15, cite: "RDA 2000, s 21" }
-  grace_period: { months: 12, scope: disclosure_by_or_derived_from_applicant, cite: "RDA 2000, s 8" }
+  term:
+    years: 5
+    from: filing_date
+    renewable: true
+    renewal_years: 5
+    max_years: 15
+    verified: true
+    cite: "RDA 2000, ss 20, 21(1)-(2)"
+    notes:
+      - "s 21(1) says '5 years from the date of registration' ON ITS FACE; it means from filing only because s 20 deems the date of registration to be the filing date. Both provisions are needed."
+      - "s 21(2): extendable for a second and third period of 5 years, hence the 15-year maximum."
+      - "Verified 2026-09-12. s 18A deferment of publication and s 22 (exceptions relating to artistic works) are not modelled."
+  grace_period:
+    months: 12
+    from: filing_date
+    scope: disclosure_by_or_derived_from_designer
+    verified: true
+    cite: "RDA 2000, s 8A; s 8B (non-physical products)"
+    notes:
+      - "s 8A(1)(b): a disclosure by the designer or a successor in title 'during the period of 12 months immediately before the date of filing'. s 8A(2) applies it to disclosures made on or after 30 October 2017."
+      - "Previously cited s 8, which s 8(3) expressly confines to events BEFORE 30 October 2017 and which never gave a general 12-month grace. The citation was to a spent provision and the live rule was absent from the pack entirely. Corrected 2026-09-12."
+      - "s 8B is a distinct grace provision for a design to be registered for a non-physical product."
   hague: { designation_accepted: true, refusal_window_months: 6, cite: "Registered Designs (International Registration) Rules" }
   unregistered_design_right: { available: false, cite: "Registered Designs Act 2000 (registration required)",
                                notes: ["No UK-style unregistered design right; artistic-work copyright may apply within RDA/Copyright Act limits."] }
@@ -111,20 +241,84 @@ copyright:
     value: { name: "Copyright Act 2021" }
     url: https://sso.agc.gov.sg/Act/CA2021
     in_force_from: 2021-11-21
-    cite: "Copyright Act 2021, s 1(2) (commencement)"
+    verified: true
+    cite: "Copyright Act 2021 (Act 22 of 2021); commenced 21 November 2021 by Gazette notification (see SSO legislative history)"
+    notes:
+      - "Previously cited to s 1(2). That subsection does the opposite of what it was cited for: it DEFERS Division 2 of Part 9 and ss 501(2)-(3), 507(4)(c) and (10) to a later appointed date. Corrected 2026-09-12."
   registration: { value: none, cite: "Copyright Act 2021 (no registration system)" }
   term:
-    literary_dramatic_musical_artistic: { base: author_death, plus_years: 70, cite: "Copyright Act 2021, s 114" }
-    anonymous_or_pseudonymous: { base: publication, plus_years: 70, cite: "Copyright Act 2021, s 115" }
-    sound_recording: { base: publication, plus_years: 70, cite: "Copyright Act 2021, s 117" }
-    film: { base: publication, plus_years: 70, cite: "Copyright Act 2021, s 118" }
-    notes: ["Singapore moved from life+50 to life+70 in 2004 under the US-Singapore FTA. Section numbers under the 2021 Act must be confirmed."]
+    literary_dramatic_musical_artistic:
+      base: author_death
+      plus_years: 70
+      verified: true
+      cite: "Copyright Act 2021, s 114(1)(a)"
+      notes:
+        - "s 114(1)(a): '70 years after the end of the year in which the author dies' - but ONLY 'if the author is identified within 70 years after the end of the year in which the work is first published'."
+        - "Where the author is NOT identified, see author_not_identified below. The 2021 Act's operative trigger is identification, not anonymity."
+    author_not_identified:
+      base: publication
+      plus_years: 70
+      verified: true
+      cite: "Copyright Act 2021, s 114(1)(b), (2)(b), (3)(b)"
+      notes:
+        - "Three limbs with DIFFERENT start events: s 114(1)(b) runs from first publication; s 114(2)(b) from first making available; s 114(3)(b) from the year the work was made. This entry models the publication limb only."
+        - "Replaces an `anonymous_or_pseudonymous` entry cited to s 115. s 115 is a TRANSITIONAL provision for certain works published before 31 December 2022 - citing it for the general rule invited a spent carve-out to be applied to a current work. Corrected 2026-09-12."
+        - "s 110(1)(b) can cause copyright in an unpublished authorial work to expire on publication, qualifying this and s 114. Not modelled."
+    sound_recording:
+      base: publication
+      plus_years: 70
+      verified: true
+      cite: "Copyright Act 2021, s 122(1)"
+      notes:
+        - "s 122(1)(a): 70 years from the end of the year of first publication, if first published within 50 years after the end of the year the recording was made; (b) otherwise 70 years from the end of the year it was made."
+        - "Previously cited to s 117, which is 'Conditions for copyright to subsist in published editions'. Corrected 2026-09-12."
+    film:
+      base: publication
+      plus_years: 70
+      verified: true
+      cite: "Copyright Act 2021, s 125(1)"
+      notes:
+        - "s 125(1)(a): 70 years from the end of the year of first publication if first published within 50 years of the year of making; s 125(1)(c): otherwise 70 years from the end of the year of making."
+        - "Previously cited to s 118, which is 'Nature of copyright in published editions'. Corrected 2026-09-12."
+    published_edition:
+      base: publication
+      plus_years: 25
+      verified: true
+      cite: "Copyright Act 2021, s 119"
+      notes: ["Verified 2026-09-12 against sso.agc.gov.sg/Act/CA2021: 25 years from the end of the year of first publication."]
+    broadcast:
+      base: publication
+      plus_years: 50
+      verified: true
+      cite: "Copyright Act 2021, s 128; s 129 (repeats)"
+      notes: ["Verified 2026-09-12: 50 years from the end of the year of first broadcast. s 129 governs repeat broadcasts."]
+    cable_programme:
+      base: publication
+      plus_years: 50
+      verified: true
+      cite: "Copyright Act 2021, s 132"
+      notes: ["Verified 2026-09-12: 50 years from the end of the year the programme was included in a cable programme service."]
+    notes:
+      - "EVERY Singapore copyright term runs from THE END OF THE YEAR of the triggering event, not from its anniversary. A term therefore expires on 31 December of the final year."
+      - "Singapore moved from life+50 to life+70 in 2004 under the US-Singapore FTA."
+      - "Performers' protection is 70 years from the end of the year the performance is given (s 174); not modelled here as it is a neighbouring right rather than copyright in a work."
   # Not researched: expressed as a value-less note so `lint` flags it as an open gap
   # rather than as a fact. Never write `applies: null` -- a null is not an answer.
   shorter_term_rule:
     notes: ["Not yet researched. Record whether SG applies Berne Art 7(8) comparison of terms to foreign works."]
-  moral_rights: { available: true, rights: [attribution, against_false_attribution, integrity],
-                  cite: "Copyright Act 2021, Part 7", notes: ["Introduced by the 2021 Act; not waivable in advance? Confirm."] }
+  moral_rights:
+    available: true
+    rights: [be_identified, against_false_identification, against_false_identification_on_copy_of_artistic_work, against_altered_copy_represented_as_unaltered]
+    integrity_right: false
+    waivable_in_advance: true
+    assignable: false
+    verified: true
+    cite: "Copyright Act 2021, Part 7 Div 1 (ss 369-388); ss 371, 378, 379, 380, 382, 386"
+    notes:
+      - "SINGAPORE HAS NO INTEGRITY RIGHT. There is no right to object to derogatory treatment of a work. s 380 is only the moral right 'not to have an altered copy of the work represented as being unaltered' - a misrepresentation right, not a Berne Art 6bis integrity right."
+      - "The four author's moral rights are: to be identified (s 371); against false identification as author (s 378); not to be falsely identified as author of a copy of an artistic work (s 379); and s 380 above. Part 7 Div 2 (ss 389-407) covers performers."
+      - "MORAL RIGHTS ARE WAIVABLE IN ADVANCE. s 382(2)-(3): a waiver is valid only if made in writing and signed by the author; s 382(4)(b): a waiver may relate to existing OR FUTURE authorial works. They are not assignable (s 386)."
+      - "Corrected 2026-09-12. This entry previously asserted an integrity right that does not exist, and speculated that moral rights might not be waivable in advance - the opposite of the law. Advice given on the former entry would have been wrong in both directions."
   fair_dealing: { value: open_fair_use_style, cite: "Copyright Act 2021, ss 190-194 (fair use)",
                   notes: ["2021 Act renamed the general exception 'fair use' with a non-exhaustive factor test."] }
   safe_harbour:
@@ -132,8 +326,16 @@ copyright:
     regime: network_service_provider
     notice_and_takedown: true
     counter_notice: true
-    cite: "Copyright Act 2021, Part 6 (network service providers); Copyright (Network Service Provider) Regulations"
-    notes: ["Record the prescribed notice contents and the counter-notice/restoration timeline once checked."]
+    categories: [transmission_routing_connections, system_caching, storage, locating_information]
+    designated_representative_required: true
+    site_blocking_available: true
+    verified: true
+    cite: "Copyright Act 2021, Part 6 Div 2 (ss 313-328); Copyright Regulations 2021, Part 5 Div 1 (rr 73-80)"
+    notes:
+      - "There is NO 'Copyright (Network Service Provider) Regulations' under the 2021 Act - that instrument sat under the repealed 1987 Act. The current rules are in the Copyright Regulations 2021, Part 5 Div 1. Corrected 2026-09-12; the pack's only pointer to the takedown formalities was a dead end."
+      - "Four separate safe-harbour regimes with separate conditions: s 316 transmission/routing/connections, s 317 system caching, s 318 storage, s 319 locating information. s 320 confirms none requires monitoring."
+      - "Storage and locating-information providers must designate a representative and publish its details both publicly and to IPOS (reg 76; ss 318(2)(c), 319(2)(c)). This is the operative compliance step, not merely a formality."
+      - "ss 325-328 provide a 'flagrantly infringing online location' site-blocking order - a Singapore-specific enforcement tool with no analogue in most comparison jurisdictions."
 
 # History lives at the top level, keyed by the full dotted path of the fact it supersedes.
 # A query with `as_of` before the current fact's in_force_from resolves to the entry here
@@ -153,52 +355,144 @@ trade_secret:
     cite: "No trade secrets statute in Singapore"
     notes: ["Protection is by the equitable action for breach of confidence."]
   basis: { value: breach_of_confidence, cite: "I-Admin (Singapore) Pte Ltd v Hong Ying Ting [2020] SGCA 32" }
-  elements: { value: ["information has the necessary quality of confidence", "imparted in circumstances importing an obligation of confidence", "burden shifts to defendant to show conscience unaffected (I-Admin modification)"],
-              cite: "I-Admin (Singapore) Pte Ltd v Hong Ying Ting [2020] SGCA 32 at [61]" }
+  elements:
+    value:
+      - "information has the necessary quality of confidence"
+      - "imparted in circumstances importing an obligation of confidence, OR accessed or acquired without the plaintiff's knowledge or consent"
+      - "on satisfaction of those prerequisites breach is presumed, and the burden shifts to the defendant to prove its conscience was unaffected (the I-Admin modification)"
+    verified: true
+    cite: "I-Admin (Singapore) Pte Ltd v Hong Ying Ting [2020] SGCA 32 at [61]"
+    notes:
+      - "At [61] the Court of Appeal extended the second Coco limb: an obligation of confidence also arises where confidential information has been 'accessed or acquired without a plaintiff's knowledge or consent'. That limb did the work on the facts and was missing from this entry. Corrected 2026-09-12."
   criminal_sanctions: { available: false, cite: "No trade-secret offence; cf Computer Misuse Act 1993",
                         notes: ["The Computer Misuse Act may apply to the means of taking, not to the misuse of the secret."] }
 
 # ---------------------------------------------------------------------------------------
 geographical_indication:
   statute: { name: "Geographical Indications Act 2014", url: https://sso.agc.gov.sg/Act/GIA2014 }
-  registration: { value: available, registry_operational_from: 2019-04-01, cite: "GIA 2014, Part 4" }
-  protection_without_registration: { value: true, scope: limited, cite: "GIA 2014, s 4" }
+  registration:
+    value: available
+    registry_operational_from: 2019-04-01
+    verified: true
+    cite: "GIA 2014, Part 5 (ss 26-51, Registration); Part 4 (Registry and administration)"
+    notes:
+      - "Part 4 establishes the Registry and administration; the REGISTRATION regime is Part 5. Previously cited Part 4 alone. Corrected 2026-09-12."
+      - "SSO legislative history records partial commencement on 1 April 2019 for the registration provisions."
+  protection_without_registration:
+    value: true
+    scope: limited
+    verified: true
+    cite: "GIA 2014, s 4(1)-(2)"
+    notes:
+      - "s 4(1): 'an interested party of goods identified by a geographical indication may bring an action' - no registration precondition. s 4(2)(a)-(d) covers misleading use, Paris Art 10bis unfair competition, and wines and spirits."
 
 plant_variety:
   statute: { name: "Plant Varieties Protection Act 2004", url: https://sso.agc.gov.sg/Act/PVPA2004 }
-  term: { years: 25, from: grant_date, cite: "PVPA 2004, s 33", notes: ["Confirm whether trees/vines have a different term."] }
+  term:
+    years: 25
+    from: grant_date
+    verified: true
+    cite: "PVPA 2004, s 24(2)"
+    notes:
+      - "s 24(2): 'the term of a grant of protection is a period of 25 calendar years from the date of the grant of protection', subject to ss 25 and 26."
+      - "There is NO trees/vines differential in Singapore - 25 years flat. The uncertainty previously flagged here is resolved."
+      - "Previously cited s 33, which is a licensee's right to sue for infringement. Corrected 2026-09-12."
+      - "s 24(3) imposes an ANNUAL FEE during the term, with a late fee under s 24(4). Not yet modelled as a maintenance obligation."
 
 # ---------------------------------------------------------------------------------------
 transfer_formalities:
   trade_mark_assignment:
-    writing_required: { value: true, signed_by: assignor, cite: "TMA 1998, s 38(3)" }
+    writing_required:
+      value: true
+      signed_by: assignor_or_on_behalf
+      verified: true
+      cite: "TMA 1998, s 38(3)"
+      notes:
+        - "s 38(3): 'not effective unless it is in writing signed BY OR ON BEHALF OF the assignor'. The pack previously recorded signed_by: assignor, which is narrower than the statute."
     recordal: { value: optional, effect: "ineffective against a person acquiring a conflicting interest in ignorance of it until recorded; no costs/damages for pre-recordal infringement in some circumstances",
                 cite: "TMA 1998, s 39" }
     goodwill: { value: assignable_without_goodwill, cite: "TMA 1998, s 38(1)" }
     government_approval: { value: false, cite: "No approval requirement under Singapore law" }
   trade_mark_licence:
-    writing_required: { value: true, cite: "TMA 1998, s 42(2)" }
-    recordal: { value: optional, effect: "as for assignment", cite: "TMA 1998, s 39" }
+    writing_required:
+      value: true
+      signed_by: grantor_or_on_behalf
+      verified: true
+      cite: "TMA 1998, s 42(3)"
+      notes:
+        - "s 42(3): 'A licence is not effective unless it is in writing signed by or on behalf of the grantor.' Previously cited s 42(2), which concerns LIMITED licences. Corrected 2026-09-12."
+    recordal:
+      value: optional
+      effect: "no statutory penalty for non-recordal: s 39(5) expressly excludes licences from the s 39(3)-(4) consequences"
+      verified: true
+      cite: "TMA 1998, s 39(5)"
+      notes:
+        - "This entry previously read 'as for assignment', which is flatly contradicted by s 39(5): 'subsections (3) and (4) do not apply to any registrable transaction relating to - (a) a licence under a registered trade mark'. The pack told a licensee it faced a recordal penalty the statute disapplies. Corrected 2026-09-12."
   patent_assignment:
-    writing_required: { value: true, signed_by: assignor, cite: "PA 1994, s 41(6)" }
+    writing_required:
+      value: true
+      signed_by: assignor_or_on_behalf
+      verified: true
+      cite: "PA 1994, s 41(6)"
+      notes:
+        - "s 41(6): 'void unless it is in writing and is signed BY OR ON BEHALF OF the assignor or mortgagor', or for a body corporate so signed or under its seal."
     recordal: { value: optional, effect: "unregistered transaction ineffective against later inconsistent registered transaction", cite: "PA 1994, s 43" }
     government_approval: { value: false, cite: "No approval requirement under Singapore law" }
   copyright_assignment:
-    writing_required: { value: true, signed_by: assignor, cite: "Copyright Act 2021, s 132" }
+    writing_required:
+      value: true
+      signed_by: assignor_or_on_behalf
+      verified: true
+      cite: "Copyright Act 2021, s 138"
+      notes:
+        - "s 138: 'An assignment of copyright is valid only if it is - (a) made in writing; and (b) signed by or on behalf of the assignor.' Note 'or on behalf of'."
+        - "Previously cited to s 132, which is 'Duration of copyright in cable programmes'. Corrected 2026-09-12."
     recordal: { value: not_available, cite: "Copyright Act 2021 (no register of assignments)" }
 
 # ---------------------------------------------------------------------------------------
 takedown:
   copyright:
-    regime: { value: sg_copyright_act_nsp, cite: "Copyright Act 2021, Part 6" }
-    statutory_notice: { value: true, prescribed_form: true, cite: "Copyright (Network Service Provider) Regulations" }
+    regime:
+      value: sg_copyright_act_nsp
+      verified: true
+      cite: "Copyright Act 2021, Part 6 Div 2 (ss 313-328)"
+      notes: ["Verified 2026-09-12 against sso.agc.gov.sg/Act/CA2021. Part 6 Div 2 is the network service provider regime; Part 6 overall is headed Remedies and border enforcement measures."]
+    statutory_notice:
+      value: true
+      prescribed_form: true
+      verified: true
+      cite: "Copyright Regulations 2021, reg 78(3)-(4)"
+      notes: ["Verified 2026-09-12: reg 78(3) requires the notice to be in or substantially in the prescribed form and signed by the complainant; reg 78(4) prescribes the contents."]
     required_elements:
-      value: []
-      cite: "Copyright (Network Service Provider) Regulations"
-      notes: ["Populate from the Regulations: identification of material, statement of ownership, contact particulars, declaration, signature. Not yet checked."]
-    counter_notice: { available: true, restoration_window: null,
-                      cite: "Copyright Act 2021, Part 6 Div 3",
-                      notes: ["Record the restoration timeline once checked."] }
+      value:
+        - "name and address of the complainant, and of the rights owner if different"
+        - "the complainant's Singapore address for service if not resident in Singapore"
+        - "telephone, fax and email"
+        - "sufficient particulars to identify the work or performance, and to identify and locate the alleged infringing copy including its online location"
+        - "a statement requiring removal (own network) or disabling of access (other network)"
+        - "a statement of good-faith belief that the copy is in fact infringing"
+        - "for system-caching notices, a statement that the copy is cached and that the source copy has been removed or disabled or a court has so ordered"
+        - "a statement that the information is accurate"
+        - "a statement that the complainant is the rights owner or authorised to act for them"
+        - "a statement submitting to the jurisdiction of the Singapore courts for the purposes of s 324(2)(b)"
+      verified: true
+      cite: "Copyright Regulations 2021, reg 78(4); Copyright Act 2021, s 324(2)(b)"
+      notes:
+        - "Must be in or substantially in the prescribed form and signed by the complainant (reg 78(3))."
+        - "This list was an empty placeholder citing a non-existent instrument. Filled and corrected 2026-09-12."
+    counter_notice:
+      available: true
+      service_window_weeks_from_nsp_notification: 6
+      restoration_working_days_min: 10
+      restoration_working_days_max: 14
+      proceedings_window_working_days: 10
+      verified: true
+      cite: "Copyright Act 2021, s 322(3)(c)-(e), (4)(c)-(d); Copyright Regulations 2021, regs 79(2), 80(4)"
+      notes:
+        - "A restoration notice must be served within 6 WEEKS after the NSP notifies the uploader (reg 79(2)). Its contents mirror the takedown notice, signed by the respondent, with a good-faith belief that the material was removed by mistake or misidentification or is not infringing, plus TWO separate submissions to Singapore jurisdiction (reg 80(4)(g), (i))."
+        - "s 322(3)(e): the NSP restores not less than 10 and not more than 14 WORKING days after notifying the complainant, if no proceedings are brought within 10 working days."
+        - "s 324 makes a knowingly false statement in either notice a CRIMINAL OFFENCE (fine up to $10,000 and/or 2 years) as well as civil liability for foreseeable loss, with extraterritorial reach under s 324(3)."
+        - "Previously cited 'Part 6 Div 3', which is border enforcement measures. Corrected 2026-09-12."
   trade_mark:
     regime:
       value: none_statutory

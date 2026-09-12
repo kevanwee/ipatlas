@@ -69,7 +69,11 @@ def test_sg_tm_renewal_schedule_with_grace_and_restoration(atlas):
     assert [w.due for w in r.renewals] == [dt.date(2030, 3, 1), dt.date(2040, 3, 1)]
     first = r.renewals[0]
     assert first.grace_until == dt.date(2030, 9, 1)          # 6 months
-    assert first.restoration_until == dt.date(2031, 3, 1)    # + a further 6 months
+    # Restoration runs 6 months from the date the registry REMOVES the mark (Trade Marks
+    # Rules r 53(1)), not from the grace expiry. Grace expiry is the engine proxy, and the
+    # trace must say the actual removal date governs.
+    assert first.restoration_until == dt.date(2031, 3, 1)
+    assert any("actual removal date governs" in line for line in r.trace)
 
 
 def test_cn_tm_renewal_window_opens_twelve_months_before_expiry(atlas):
@@ -96,10 +100,20 @@ def test_term_not_recorded_refuses(atlas):
 
 # -- copyright -------------------------------------------------------------------------
 
-def test_sg_copyright_life_plus_seventy(atlas):
+def test_sg_copyright_runs_to_the_end_of_the_seventieth_year(atlas):
+    """s 114(1)(a) is '70 years after the END OF THE YEAR in which the author dies', so the
+    term expires on 31 December, not on the anniversary."""
     c = copyright_term(atlas, "SG", "literary_dramatic_musical_artistic",
                        {"author_death": dt.date(2000, 6, 15)})
-    assert c.expiry == dt.date(2070, 6, 15)
+    assert c.expiry == dt.date(2070, 12, 31)
+    assert any("calendar year" in line for line in c.trace)
+
+
+def test_sg_copyright_where_the_author_is_not_identified(atlas):
+    """The 2021 Act's operative trigger is whether the author is IDENTIFIED, not anonymity."""
+    c = copyright_term(atlas, "SG", "author_not_identified",
+                       {"publication": dt.date(2000, 6, 15)})
+    assert c.expiry == dt.date(2070, 12, 31)
 
 
 def test_cn_copyright_is_fifty_years_to_the_year_end(atlas):
@@ -141,6 +155,9 @@ def test_jurisdictions_diverge_on_copyright_term(atlas):
     sg = copyright_term(atlas, "SG", "literary_dramatic_musical_artistic", death).expiry
     us = copyright_term(atlas, "US", "literary_dramatic_musical_artistic", death).expiry
     cn = copyright_term(atlas, "CN", "literary_dramatic_musical_artistic", death).expiry
-    assert sg == us == dt.date(2070, 6, 15)
+    # All three are a flat "+70" or "+50" on paper, yet all three give a different date:
+    # SG and CN run to the end of the calendar year, the US runs to the anniversary.
+    assert sg == dt.date(2070, 12, 31)
+    assert us == dt.date(2070, 6, 15)
     assert cn == dt.date(2050, 12, 31)
-    assert cn < sg
+    assert cn < us < sg

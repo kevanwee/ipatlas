@@ -265,12 +265,34 @@ def opposition_deadline(atlas: Atlas, offices: Offices, right: str, jurisdiction
                  publication, source, o)
     fact = atlas[jurisdiction].try_get(path, as_of=as_of)
     if fact and isinstance(fact.value, dict):
-        if fact.value.get("extendable") is True:
-            ext = fact.value.get("max_extension_months")
+        v = fact.value
+        if v.get("extendable") is True:
+            # Periods are recorded in whichever unit the rule uses, so read both.
+            ext = (f"{v['max_extension_months']} months" if "max_extension_months" in v
+                   else f"{v['max_extension_days']} days" if "max_extension_days" in v
+                   else None)
             d.trace.append("this window is extendable"
-                           + (f" by up to {ext} months" if ext else "")
-                           + "; the date above is the unextended deadline")
-        elif fact.value.get("extendable") is False:
+                           + (f" by up to {ext}" if ext else "")
+                           + "; the date above is the UNEXTENDED deadline")
+            # The total cap is the absolute deadline and is what a diary needs, so compute it.
+            total = next(((k, v[k]) for k in ("max_total_months_from_publication",
+                                             "max_total_days_from_publication") if k in v), None)
+            if total is not None:
+                key, amount = total
+                # The unit is in the MIDDLE of the key name (max_total_months_from_...),
+                # so test for containment; `endswith` silently read months as days.
+                months = amount if "months" in key else None
+                cap = PeriodSource(months=months, days=None if months else amount,
+                                   cite=fact.cite, origin=f"pack {jurisdiction}:{path}",
+                                   verified=fact.verified)
+                outer = _compute(f"{jurisdiction} opposition ABSOLUTE deadline with every "
+                                 "extension granted", publication, cap, o)
+                d.trace.append(f"ABSOLUTE deadline if every extension is granted: "
+                               f"{_fmt(outer.date)} ({amount} "
+                               f"{'months' if months else 'days'} from publication)")
+                d.trace.append("  the total cap runs from PUBLICATION, not from the end of "
+                               "the first window; do not add the extension to the date above")
+        elif v.get("extendable") is False:
             d.trace.append("this window is NOT extendable")
     return d
 

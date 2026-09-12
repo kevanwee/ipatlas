@@ -1,6 +1,10 @@
 # ipatlas jurisdiction pack: United States
 #
-# Nothing here is verified. See CLAUDE.md "Data conventions" before editing.
+# VERIFICATION STATE: facts marked `verified: true` were checked on 2026-09-12 against
+# Cornell LII (uscode/CFR), supremecourt.gov and WIPO's declaration tables, and their notes
+# quote the operative words. Facts without the flag are still unchecked. Where a correction
+# was made the note records what the previous entry said.
+# See CLAUDE.md "Data conventions" before editing.
 # Note the two `history` entries at the foot of the file: the AIA shift to first-to-file
 # and Lexmark's move to international patent exhaustion are both dated changes of law, so a
 # query with an earlier `as_of` must get the earlier rule.
@@ -61,16 +65,25 @@ trade_mark:
     window_days: 30
     from: publication
     extendable: true
-    max_extension_months: 3
+    max_extension_days: 150
+    max_total_days_from_publication: 180
     forum: TTAB
-    cite: "15 U.S.C. § 1063; 37 C.F.R. § 2.102"
-    notes: ["30 days, not months. Extensions to 90 days on request, and to 180 days with consent or for cause."]
+    verified: true
+    cite: "15 U.S.C. § 1063(a); 37 C.F.R. § 2.102(c)"
+    notes:
+      - "30 DAYS, not months. s 1063(a): 'within thirty days after the publication under subsection (a) of section 1062'."
+      - "The ceiling is 180 days from publication, i.e. 150 days of extension. Only the FIRST 30-day extension is granted on request; a 90-day first request needs good cause shown; a further 60 days needs good cause; and the final 60 days (to 180) needs the applicant's written consent or extraordinary circumstances."
+      - "Verified 2026-09-12 against law.cornell.edu/cfr/text/37/2.102 and /uscode/text/15/1063. A previous entry recorded max_extension_months: 3 with a note that 90 days was available on request; both were wrong."
   use_requirement:
     non_use_years: 3
     effect: prima_facie_abandonment
     consequence: cancellation_on_petition
-    cite: "15 U.S.C. §§ 1064(3), 1127 (definition of abandonment)"
-    notes: ["Three years of non-use raises a presumption of abandonment, rebuttable by proof of intent to resume use."]
+    verified: true
+    cite: "15 U.S.C. §§ 1064(3), 1064(6), 1127 (definition of abandonment)"
+    notes:
+      - "s 1127: 'Nonuse for 3 consecutive years shall be prima facie evidence of abandonment.' Rebuttable by proof of intent to resume use. s 1064(3) is the cancellation ground."
+      - "s 1064(6) is a SEPARATE ground: cancellation at any time after the 3-year period following registration where the mark has never been used in commerce. It does not require proof of abandonment."
+      - "Verified 2026-09-12 against law.cornell.edu/uscode/text/15/1064 and /1127."
   well_known_marks:
     protected: true
     registration_required: false
@@ -78,10 +91,15 @@ trade_mark:
     cite: "15 U.S.C. § 1125(c) (famous marks); § 1125(a) (unregistered marks)"
     notes: ["The federal 'famous mark' dilution standard is demanding and niche fame does not qualify. Whether the Paris Art 6bis well-known marks doctrine protects a mark with no US use is unsettled between the circuits; see Grupo Gigante (9th Cir) against ITC Ltd v Punchgini (2d Cir)."]
   exhaustion:
-    value: national
-    exceptions: ["genuine goods with no material difference may be resold", "material differences defeat the defence (the Lever rule)"]
-    cite: "19 U.S.C. § 1526; Lever Bros Co v United States, 981 F.2d 1330 (DC Cir 1993)"
-    notes: ["Gray-market analysis turns on material difference and common control, not on a clean statutory exhaustion rule. Treat the value as shorthand for a fact-specific enquiry."]
+    value: mixed
+    exceptions:
+      - "genuine goods from a commonly-controlled source with no material difference may be resold"
+      - "materially different goods are reachable even under common control (the Lever rule)"
+    cite: "15 U.S.C. §§ 1114, 1124; K Mart Corp v Cartier, 486 U.S. 281 (1988); Lever Bros Co v United States, 981 F.2d 1330 (DC Cir 1993)"
+    notes:
+      - "US trade mark law has NO statutory exhaustion rule in either direction. Recorded as `mixed`, not `national`: for genuine, non-materially-different goods from a commonly-controlled source the default is that they come in, which is the opposite of what `national` signals to a reader or a query engine."
+      - "NEC Electronics v CAL Circuit Abco, 810 F.2d 1506 (9th Cir 1987): no infringement in genuine commonly-controlled goods. K Mart v Cartier upheld Customs' common-control exception (19 C.F.R. s 133.23). Lever II then held Lanham Act s 42 reaches materially different goods even under common control."
+      - "19 U.S.C. s 1526 was previously the headline cite. It is a border prohibition on importing foreign-made goods bearing a US-owned mark, not an exhaustion provision; corrected 2026-09-12."
   border_measures:
     available: true
     mechanism: "recordation with CBP after federal registration; CBP may seize counterfeit and gray-market goods"
@@ -118,8 +136,13 @@ patent:
     available: true
     grounds: [patent_term_adjustment_office_delay, hatch_waxman_regulatory_review]
     max_years: 5
-    cite: "35 U.S.C. § 154(b) (PTA); 35 U.S.C. § 156 (PTE)"
-    notes: ["PTA and PTE are different mechanisms and can both apply. The 5-year cap is the § 156 cap."]
+    max_total_years_after_approval: 14
+    verified: true
+    cite: "35 U.S.C. § 154(b) (PTA); 35 U.S.C. §§ 156(c)(3), 156(g)(6)(A) (PTE)"
+    notes:
+      - "PTA and PTE are different mechanisms and can both apply. s 154(b) PTA carries no year cap."
+      - "s 156(g)(6)(A): 'the period of extension ... may not exceed five years'. s 156(c)(3) separately caps the total: where the term remaining after approval plus the regulatory review period exceeds FOURTEEN years, the extension is reduced. The equivalent 14-year cap is recorded for China; it was missing here."
+      - "Verified 2026-09-12 against law.cornell.edu/uscode/text/35/156."
   maintenance:
     due_at_years: [3.5, 7.5, 11.5]
     from: grant_date
@@ -161,10 +184,22 @@ registered_design:
     years: 15
     from: grant_date
     renewable: false
+    in_force_from: 2015-05-13
+    verified: true
     cite: "35 U.S.C. § 173"
-    notes: ["15 years from grant with no renewals or maintenance fees; contrast renewable registration systems measured from filing."]
+    notes:
+      - "s 173: 'Patents for designs shall be granted for the term of 15 years from the date of grant.' No renewals and no maintenance fees; contrast renewable registration systems measured from filing."
+      - "15 years applies to applications FILED on or after 13 May 2015 (Patent Law Treaties Implementation Act of 2012, Pub. L. 112-211). Earlier applications run 14 years; see history."
+      - "Verified 2026-09-12 against law.cornell.edu/uscode/text/35/173 and its amendment notes."
   grace_period: { months: 12, scope: inventor_own_disclosure_or_derived, cite: "35 U.S.C. § 102(b)(1)" }
-  hague: { designation_accepted: true, refusal_window_months: 12, cite: "35 U.S.C. § 385; Hague Geneva Act Art 18(1)(b) declaration" }
+  hague:
+    designation_accepted: true
+    refusal_window_months: 12
+    verified: true
+    cite: "Hague Geneva Act, Art 18(1)(b); Hague Common Regulations, Rule 18(1)(b) (US declaration)"
+    notes:
+      - "35 U.S.C. s 385 was previously cited. It concerns only the effect and filing date of an international design application and says nothing about refusal windows; corrected 2026-09-12."
+      - "The US appears on WIPO's list of Contracting Parties declaring the extended 12-month refusal period."
   unregistered_design_right: { available: false, cite: "No unregistered design right under US law",
                                notes: ["Trade dress under 15 U.S.C. § 1125(a) may overlap in substance."] }
 
@@ -184,12 +219,25 @@ copyright:
     joint_works: { base: author_death, plus_years: 70, rule: last_surviving_author, cite: "17 U.S.C. § 302(b)" }
     works_made_for_hire: { base: publication, plus_years: 95, alt: { base: creation, plus_years: 120 }, rule: earlier, cite: "17 U.S.C. § 302(c)" }
     anonymous_or_pseudonymous: { base: publication, plus_years: 95, alt: { base: creation, plus_years: 120 }, rule: earlier, cite: "17 U.S.C. § 302(c)" }
-    sound_recording: { base: publication, plus_years: 95, cite: "17 U.S.C. §§ 302(c), 1401 (pre-1972 recordings)" }
-    notes: ["Pre-1978 works follow the 1909 Act's published/renewal scheme and are not modelled here. Any term question about a work first published before 1978 must be researched, not computed."]
+    pre_1972_sound_recording:
+      base: publication
+      plus_years: 95
+      verified: true
+      cite: "17 U.S.C. § 1401(a)(2) (Music Modernization Act)"
+      notes:
+        - "Runs to 31 December of the 95th year after first publication, PLUS a transition period: +5 years for recordings first published 1923-1946, +15 years for 1947-1956. Nothing in this class runs past 15 February 2067."
+        - "Verified 2026-09-12 against 17 U.S.C. s 1401. The transition periods and the 2067 outer limit are NOT modelled by the term engine; do not compute from this entry without applying them."
+    notes:
+      - "There is NO sound-recording-specific term rule for recordings fixed on or after 15 February 1972. Such a recording takes the term for its authorship: life+70 under s 302(a) where the authors are individuals, or publication+95 / creation+120 under s 302(c) only where it is a work made for hire or anonymous/pseudonymous. Use the applicable category above."
+      - "A flat `sound_recording: publication + 95` entry was recorded here and removed on 2026-09-12: it was wrong in both directions, and s 1401 is a separate pre-1972 regime rather than authority for a post-1978 term."
+      - "Pre-1978 works follow the 1909 Act's published/renewal scheme and are not modelled here. Any term question about a work first published before 1978 must be researched, not computed."
   shorter_term_rule:
     applies: false
-    cite: "17 U.S.C. § 104; Berne Convention Art 7(8)"
-    notes: ["The US does not apply the rule of the shorter term; a foreign work gets the full US term even if it has expired at home."]
+    verified: true
+    cite: "17 U.S.C. §§ 302-304 (origin-neutral terms); 17 U.S.C. § 104A (restoration); Berne Convention Art 7(8) (permissive)"
+    notes:
+      - "The US does not apply the rule of the shorter term: a foreign work gets the full US term even if it has expired at home."
+      - "s 104 was previously cited. It governs national-origin ELIGIBILITY, not duration, and s 104(c) provides only that rights are neither expanded nor reduced by virtue of Berne. The basis is that ss 302-304 set terms without regard to country of origin. Berne Art 7(8) permits comparison of terms; it does not require it. Corrected 2026-09-12."
   moral_rights:
     available: true
     scope: visual_art_only
@@ -208,7 +256,8 @@ copyright:
     counter_notice_wait_business_days: { min: 10, max: 14 }
     repeat_infringer_policy_required: true
     designated_agent_registration_required: true
-    cite: "17 U.S.C. § 512"
+    verified: true
+    cite: "17 U.S.C. §§ 512(c)(3)(A) (notice), 512(g)(2)(C) (restoration), 512(c)(2) (designated agent), 512(i)(1)(A) (repeat infringer policy)"
     notes: ["Restoration is required 10 to 14 business days after a compliant counter-notice unless the claimant files suit. Safe harbour also requires a registered designated agent and a repeat-infringer policy."]
 
 # ---------------------------------------------------------------------------------------
@@ -240,8 +289,13 @@ transfer_formalities:
       notes: ["The 3-month window is a hard diary date after any US trade mark assignment."]
     goodwill:
       value: must_include_goodwill
+      verified: true
       cite: "15 U.S.C. § 1060(a)(1)"
-      notes: ["An assignment in gross is invalid. Contrast jurisdictions that permit assignment without goodwill; the same global assignment deed can be valid in one and void in the other."]
+      notes:
+        - "s 1060(a)(1): a mark 'shall be assignable with the good will of the business in which the mark is used'."
+        - "That an assignment in gross is INVALID is the settled case-law gloss, not the statute's words. Do not quote it as statutory text."
+        - "Contrast Singapore, TMA 1998 s 38(1), which permits assignment with the goodwill OR independently: the same global assignment deed can be valid there and void here."
+        - "Verified 2026-09-12 against law.cornell.edu/uscode/text/15/1060."
     government_approval: { value: false, cite: "No approval requirement under US law" }
   patent_assignment:
     writing_required: { value: true, cite: "35 U.S.C. § 261" }
@@ -252,8 +306,13 @@ transfer_formalities:
     recordal: { value: optional, effect: "priority between conflicting transfers; constructive notice", cite: "17 U.S.C. §§ 205(a), (d)" }
     termination_right:
       value: true
-      cite: "17 U.S.C. §§ 203, 304(c)"
-      notes: ["An author may terminate a grant 35 years on (or 56 years for pre-1978 grants) notwithstanding any contrary agreement. There is no equivalent in most other jurisdictions and it cannot be contracted away."]
+      verified: true
+      cite: "17 U.S.C. §§ 203(a)(3), 304(c)(3), 304(d)"
+      notes:
+        - "The two regimes measure from DIFFERENT events. s 203(a)(3): a five-year window opening 35 years from EXECUTION OF THE GRANT (or, where the grant covers publication, 35 from publication / 40 from execution, whichever is earlier). s 304(c)(3): a five-year window opening 56 years from THE DATE COPYRIGHT WAS ORIGINALLY SECURED, not from the grant."
+        - "s 304(d) adds a further five-year window at 75 years where s 304(c) rights lapsed unexercised."
+        - "s 203 does not apply to works made for hire. Termination operates notwithstanding any agreement to the contrary and cannot be contracted away."
+        - "Verified 2026-09-12. An earlier note read '35 years on, or 56 years for pre-1978 grants', which wrongly implied both run from the grant."
 
 # ---------------------------------------------------------------------------------------
 takedown:
@@ -281,6 +340,14 @@ takedown:
 # Dated changes of law. A query with `as_of` before the current fact's in_force_from
 # resolves here instead.
 history:
+  registered_design.term:
+    - value: { years: 14, from: grant_date, renewable: false }
+      in_force_from: 1982-01-01
+      in_force_until: 2015-05-12
+      cite: "35 U.S.C. § 173 (before the Patent Law Treaties Implementation Act of 2012)"
+      notes:
+        - "14 years from grant. The transition operates by FILING date: a design patent granted on an application filed before 13 May 2015 runs 14 years, not 15."
+        - "in_force_from is nominal; the 14-year term long predates 1982. Recorded so a dated query resolves, not as the start of the rule."
   patent.filing_system:
     - value: first_to_invent
       in_force_from: 1790-04-10
@@ -289,7 +356,9 @@ history:
       notes: ["Priority went to the first to invent, provable by interference proceedings. Applications filed before 16 March 2013 are still examined under pre-AIA law."]
   patent.exhaustion:
     - value: national
-      in_force_from: 2001-01-01
+      in_force_from: 2001-08-21
       in_force_until: 2017-05-29
       cite: "Jazz Photo Corp v ITC, 264 F.3d 1094 (Fed Cir 2001)"
-      notes: ["Foreign first sale did not exhaust US patent rights; overruled by Impression Products v Lexmark. The in_force_from date is the Jazz Photo decision, not the start of the doctrine."]
+      notes:
+        - "Foreign first sale did not exhaust US patent rights; overruled by Impression Products v Lexmark."
+        - "in_force_from is the date of the Jazz Photo decision, 21 August 2001. Corrected from 2001-01-01 on 2026-09-12: the note claimed the field held the decision date while the field did not."

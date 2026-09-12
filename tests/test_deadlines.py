@@ -162,7 +162,20 @@ def test_us_opposition_is_thirty_days_not_months(atlas, offices):
     d = opposition_deadline(atlas, offices, "trade_mark", "US", dt.date(2026, 6, 1))
     assert d.date == dt.date(2026, 7, 1)
     assert d.source.days == 30 and d.source.months is None
-    assert any("extendable by up to 3 months" in line for line in d.trace)
+    assert any("extendable by up to 150 days" in line for line in d.trace)
+
+
+def test_opposition_reports_the_absolute_deadline_not_just_the_first_window(atlas, offices):
+    """The total cap runs from publication, so it cannot be derived by adding the extension
+    to the first deadline. Verification showed both packs had recorded the cap in a way that
+    invited exactly that error."""
+    # US: 180 days from 1 Jun 2026 = 28 Nov 2026 (Saturday) -> Mon 30 Nov
+    us = opposition_deadline(atlas, offices, "trade_mark", "US", dt.date(2026, 6, 1))
+    assert any("ABSOLUTE deadline" in x and "2026-11-30" in x for x in us.trace)
+    assert any("do not add the extension to the date above" in x for x in us.trace)
+    # SG: 4 months from 1 Jun 2026 = 1 Oct 2026, far earlier than 2 + 4 months would give
+    sg = opposition_deadline(atlas, offices, "trade_mark", "SG", dt.date(2026, 6, 1))
+    assert any("ABSOLUTE deadline" in x and "2026-10-01" in x for x in sg.trace)
 
 
 def test_sg_opposition_is_two_months(atlas, offices):
@@ -199,7 +212,7 @@ def test_madrid_refusal_uses_the_designated_office_calendar(atlas, offices, madr
     d = madrid_refusal_deadline(atlas, offices, "SG", dt.date(2026, 3, 1), treaty=madrid)
     assert d.office == "IPOS"
     assert any("IPOS closure data" in line for line in d.trace)
-    assert not any("WIPO" in line for line in d.trace)
+    assert not any("office: WIPO" in line for line in d.trace)
 
 
 def test_madrid_refusal_for_cn_refuses_for_want_of_2027_closure_data(atlas, offices, madrid):

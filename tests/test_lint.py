@@ -30,6 +30,19 @@ def test_bundled_packs_have_no_errors(atlas):
     assert errors(findings) == [], _msgs(errors(findings))
 
 
+def test_verified_facts_carry_their_evidence(atlas):
+    """A `verified: true` fact must have a citation and a note saying what was checked.
+
+    This rule is why the 2026-09-12 verification pass did not leave five facts flipped to
+    verified without evidence: the linter caught them before they were committed.
+    """
+    for code in atlas.codes:
+        for path, f in atlas[code].facts.items():
+            if f.verified:
+                assert f.cite is not None, f"{code}:{path} verified with no citation"
+                assert f.notes, f"{code}:{path} verified with no evidence note"
+
+
 def test_only_the_known_research_gaps_remain_as_warnings(atlas):
     warns = [f for f in lint_atlas(atlas, as_of=TODAY) if f.severity == "warn"]
     assert {(f.jurisdiction, f.path) for f in warns} == {

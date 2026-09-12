@@ -15,7 +15,9 @@ def test_compare_surfaces_the_real_divergences(atlas):
     t = compare(atlas, "trade_mark", ["SG", "US", "CN"],
                 ["filing_system", "term", "use_requirement", "opposition", "exhaustion"])
     assert t.coverage == (15, 15)
-    assert t.unverified == 15  # nothing is verified yet, and the table must say so
+    # Some cells are now verified against the statute and some are not; the table must
+    # distinguish them rather than flattening everything to one state.
+    assert 0 < t.unverified < 15
     assert set(t.divergences()) == {"filing_system", "term", "use_requirement",
                                     "opposition", "exhaustion"}
     assert t.cell("filing_system", "US").fact.value == "first_to_use"
@@ -96,24 +98,27 @@ def test_csv_round_trip_has_provenance_columns(atlas):
     assert header.split(",") == ["attribute", "jurisdiction", "value", "verified", "cite",
                                  "url", "checked", "notes"]
     assert row.startswith("term,SG,")
-    assert ",no," in row  # verified = no
+    assert ",yes," in row  # SG trade mark term verified against TMA ss 15(2), 18
 
 
 def test_json_shape(atlas):
     d = compare(atlas, "trade_mark", ["SG", "US"], ["term"]).to_dict()
-    assert d["coverage"] == {"recorded": 2, "total": 2, "unverified": 2}
+    assert d["coverage"]["recorded"] == 2 and d["coverage"]["total"] == 2
     assert d["divergences"] == ["term"]
     assert len(d["cells"]) == 2
-    assert d["cells"][0]["fact"]["cite"] == "TMA 1998, ss 18-19"
+    # The cite must name s 15(2) as well as s 18: s 18 alone says "from the date of
+    # registration", and only s 15(2) makes that the filing date.
+    assert d["cells"][0]["fact"]["cite"] == "TMA 1998, ss 15(2), 18(1)-(2)"
+    assert d["cells"][0]["fact"]["verified"] is True
 
 
 # -- briefs ----------------------------------------------------------------------------
 
 def test_brief_warns_about_unverified_content(atlas):
     out = brief(atlas["SG"], "trade_mark")
-    assert "**unverified**" in out
+    assert "**unverified**" in out  # some facts remain unchecked
     assert "Intellectual Property Office of Singapore (IPOS)" in out
-    assert "TMA 1998, ss 18-19" in out
+    assert "TMA 1998, ss 15(2), 18(1)-(2)" in out
 
 
 def test_brief_shows_an_unresearched_attribute_as_not_recorded(atlas):

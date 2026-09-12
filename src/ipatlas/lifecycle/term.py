@@ -150,7 +150,14 @@ def term_expiry(atlas: Atlas, right: str, jurisdiction: str, dates: dict[str, dt
         g = grace.value if grace and isinstance(grace.value, dict) else {}
         grace_months = g.get("months")
         window_before = g.get("window_before_expiry_months")
+        # Two spellings with different legal meanings. `restoration_after_grace_months` runs
+        # from the end of the grace period. `restoration_months_from_removal` runs from the
+        # date the registry actually removes the mark, which is an administrative act whose
+        # date is not derivable from the pack: we use the grace expiry as a proxy and say so.
         restore_after = g.get("restoration_after_grace_months")
+        restore_from_removal = g.get("restoration_months_from_removal")
+        if restore_from_removal is not None:
+            restore_after = restore_from_removal
         if grace:
             trace.append(f"renewal grace: {grace.render_value()} ({grace.cite or 'no cite'})")
         cur = expiry
@@ -177,6 +184,12 @@ def term_expiry(atlas: Atlas, right: str, jurisdiction: str, dates: dict[str, dt
             if w.restoration_until:
                 bits.append(f"restoration to {w.restoration_until.isoformat()}")
             trace.append("  " + "; ".join(bits))
+        if restore_from_removal is not None and schedule:
+            trace.append(f"  restoration runs {restore_from_removal} months from the date the "
+                         "registry REMOVES the mark, not from the grace expiry. The grace "
+                         "expiry is used above as a proxy; the actual removal date governs "
+                         "and is usually later, so treat the restoration date as the "
+                         "earliest possible.")
 
     trace.append("note: renewal and grace dates are computed from the recorded periods and "
                  "are not adjusted for office closures; run them through the deadline engine "
