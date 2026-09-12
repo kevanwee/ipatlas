@@ -1,0 +1,55 @@
+# Office pack: USPTO.
+
+office: USPTO
+name: United States Patent and Trademark Office
+jurisdiction: US
+timezone: America/New_York
+
+computation:
+  exclude_first_day:
+    value: true
+    cite: "37 C.F.R. § 1.7"
+  roll_non_working_forward:
+    value: true
+    cite: "37 C.F.R. § 1.7(a); 35 U.S.C. § 21(b)"
+    notes:
+      - "When the day for taking an action falls on a Saturday, Sunday, or federal holiday within the District of Columbia, the action may be taken on the next succeeding business day."
+      - "The controlling calendar is federal holidays IN THE DISTRICT OF COLUMBIA, not state holidays."
+  month_arithmetic:
+    value: corresponding_date
+    cite: "37 C.F.R. § 1.7"
+  weekend: [saturday, sunday]
+
+holidays:
+  2026:
+    source: "5 U.S.C. § 6103 federal holidays, with in-lieu observance under Executive Order 11582"
+    checked: 2026-09-12
+    verified: false
+    days:
+      - { date: 2026-01-01, name: New Year's Day }
+      - { date: 2026-01-19, name: Birthday of Martin Luther King, Jr. }
+      - { date: 2026-02-16, name: Washington's Birthday }
+      - { date: 2026-05-25, name: Memorial Day }
+      - { date: 2026-06-19, name: Juneteenth National Independence Day }
+      - { date: 2026-07-03, name: Independence Day (observed, 4 July falls on a Saturday) }
+      - { date: 2026-09-07, name: Labor Day }
+      - { date: 2026-10-12, name: Columbus Day }
+      - { date: 2026-11-11, name: Veterans Day }
+      - { date: 2026-11-26, name: Thanksgiving Day }
+      - { date: 2026-12-25, name: Christmas Day }
+  2027:
+    source: "5 U.S.C. § 6103 federal holidays, with in-lieu observance under Executive Order 11582"
+    checked: 2026-09-12
+    verified: false
+    days:
+      - { date: 2027-01-01, name: New Year's Day }
+      - { date: 2027-01-18, name: Birthday of Martin Luther King, Jr. }
+      - { date: 2027-02-15, name: Washington's Birthday }
+      - { date: 2027-05-31, name: Memorial Day }
+      - { date: 2027-06-18, name: Juneteenth (observed, 19 June falls on a Saturday) }
+      - { date: 2027-07-05, name: Independence Day (observed, 4 July falls on a Sunday) }
+      - { date: 2027-09-06, name: Labor Day }
+      - { date: 2027-10-11, name: Columbus Day }
+      - { date: 2027-11-11, name: Veterans Day }
+      - { date: 2027-11-25, name: Thanksgiving Day }
+      - { date: 2027-12-24, name: Christmas Day (observed, 25 December falls on a Saturday) }

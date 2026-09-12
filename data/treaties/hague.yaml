@@ -1,0 +1,27 @@
+# Treaty pack: Hague Agreement (1999 Geneva Act).
+
+treaty: hague
+name: Hague Agreement Concerning the International Registration of Industrial Designs (Geneva Act 1999)
+administered_by: WIPO
+
+refusal_windows:
+  default:
+    months: 6
+    from: publication_of_international_registration
+    cite: "Geneva Act, Art 12(2); Common Regulations Rule 18(1)(a)"
+  declared_extension:
+    months: 12
+    from: publication_of_international_registration
+    cite: "Common Regulations Rule 18(1)(b)"
+    notes: ["A Contracting Party whose law provides for substantive examination or opposition may declare a 12-month period. The jurisdiction pack's `registered_design.hague.refusal_window_months` records which applies."]
+
+term:
+  years: 5
+  from: international_registration_date
+  renewable: true
+  renewal_years: 5
+  cite: "Geneva Act, Art 17(1)-(2)"
+  notes: ["Renewable in 5-year terms; the maximum duration is that allowed by each designated Contracting Party's own law, which the jurisdiction pack records."]
+
+checked: 2026-09-12
+verified: false

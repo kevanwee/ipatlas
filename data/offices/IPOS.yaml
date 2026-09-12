@@ -1,0 +1,66 @@
+# Office pack: IPOS. Computation-of-time rules and closure calendar.
+#
+# Deadlines are computed against the OFFICE that receives the act, not the jurisdiction.
+# Holiday data is vendored per year; the engine refuses to compute over a year it does not
+# have rather than assuming the office was open.
+
+office: IPOS
+name: Intellectual Property Office of Singapore
+jurisdiction: SG
+timezone: Asia/Singapore
+
+computation:
+  exclude_first_day:
+    value: true
+    cite: "Interpretation Act 1965, s 50(a)"
+    notes: ["A period beginning on a day excludes that day."]
+  roll_non_working_forward:
+    value: true
+    cite: "Patents Rules, r 100; Trade Marks Rules, r 78"
+    notes: ["Where a time limit expires on a day the Registry is not open, the act is in time if done on the next day the Registry is open."]
+  month_arithmetic:
+    value: corresponding_date
+    cite: "Interpretation Act 1965, s 50(b)"
+    notes: ["A period of months ends on the corresponding date; where that date does not exist, on the last day of the month."]
+  weekend: [saturday, sunday]
+
+holidays:
+  2026:
+    source: "Ministry of Manpower gazetted public holidays 2026 (via data.gov.sg). IPOS observes Singapore public holidays."
+    checked: 2026-09-12
+    verified: false
+    notes: ["IPOS may also close on days not gazetted as public holidays; check the IPOS website for registry closure notices before relying on a computed date."]
+    days:
+      - { date: 2026-01-01, name: New Year's Day }
+      - { date: 2026-02-17, name: Chinese New Year }
+      - { date: 2026-02-18, name: Chinese New Year }
+      - { date: 2026-03-21, name: Hari Raya Puasa }
+      - { date: 2026-04-03, name: Good Friday }
+      - { date: 2026-05-01, name: Labour Day }
+      - { date: 2026-05-27, name: Hari Raya Haji }
+      - { date: 2026-05-31, name: Vesak Day }
+      - { date: 2026-06-01, name: Vesak Day (observed) }
+      - { date: 2026-08-09, name: National Day }
+      - { date: 2026-08-10, name: National Day (observed) }
+      - { date: 2026-11-08, name: Deepavali }
+      - { date: 2026-11-09, name: Deepavali (observed) }
+      - { date: 2026-12-25, name: Christmas Day }
+  2027:
+    source: "Projected from the gazetted pattern; NOT yet published by MOM at the time of writing."
+    checked: 2026-09-12
+    verified: false
+    notes:
+      - "PROJECTED, NOT GAZETTED. Lunar and Islamic dates in particular are estimates. Replace with the gazette before relying on any 2027 date."
+    days:
+      - { date: 2027-01-01, name: New Year's Day }
+      - { date: 2027-02-06, name: Chinese New Year }
+      - { date: 2027-02-07, name: Chinese New Year }
+      - { date: 2027-02-08, name: Chinese New Year (observed) }
+      - { date: 2027-03-11, name: Hari Raya Puasa }
+      - { date: 2027-03-26, name: Good Friday }
+      - { date: 2027-05-01, name: Labour Day }
+      - { date: 2027-05-17, name: Hari Raya Haji }
+      - { date: 2027-05-20, name: Vesak Day }
+      - { date: 2027-08-09, name: National Day }
+      - { date: 2027-10-28, name: Deepavali }
+      - { date: 2027-12-25, name: Christmas Day }

@@ -1,0 +1,43 @@
+# Office pack: European Patent Office.
+
+office: EPO
+name: European Patent Office
+jurisdiction: null
+timezone: Europe/Berlin
+
+computation:
+  exclude_first_day:
+    value: true
+    cite: "EPC Rule 131(2)"
+    notes: ["Computation begins on the day following the day on which the relevant event occurred."]
+  roll_non_working_forward:
+    value: true
+    cite: "EPC Rule 134(1)"
+    notes: ["A period expiring on a day on which at least one of the EPO filing offices is not open for receipt of documents extends to the first day thereafter on which all the filing offices are open."]
+  month_arithmetic:
+    value: corresponding_date
+    cite: "EPC Rule 131(4)"
+    notes: ["A period expressed in months expires on the day of the relevant month having the same number as the day of the event; if there is no such day, on the last day of that month."]
+  weekend: [saturday, sunday]
+
+holidays:
+  2026:
+    source: "EPO published days of closure (Munich, The Hague, Berlin filing offices)"
+    checked: 2026-09-12
+    verified: false
+    notes:
+      - "PROJECTED, NOT taken from the EPO's published closure list. Rule 134(1) turns on ALL filing offices being open, so the effective closure set is the union of German and Dutch holidays plus EPO-specific days. Replace with the published list before relying on any date."
+    days:
+      - { date: 2026-01-01, name: New Year's Day }
+      - { date: 2026-04-03, name: Good Friday }
+      - { date: 2026-04-06, name: Easter Monday }
+      - { date: 2026-05-01, name: Labour Day }
+      - { date: 2026-05-14, name: Ascension Day }
+      - { date: 2026-05-25, name: Whit Monday }
+      - { date: 2026-10-03, name: German Unity Day }
+      - { date: 2026-12-24, name: Christmas Eve }
+      - { date: 2026-12-25, name: Christmas Day }
+      - { date: 2026-12-28, name: End-of-year closure }
+      - { date: 2026-12-29, name: End-of-year closure }
+      - { date: 2026-12-30, name: End-of-year closure }
+      - { date: 2026-12-31, name: End-of-year closure }

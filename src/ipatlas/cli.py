@@ -12,6 +12,16 @@ from pathlib import Path
 from .compare import DEFAULT_ATTRIBUTES, brief, compare
 from .core import NotRecordedError, PackError, lint_atlas, load_atlas, summarise
 from .core.lint import errors
+from .deadlines import (
+    madrid_refusal_deadline,
+    opposition_deadline,
+    pct_national_phase,
+    priority_deadline,
+)
+from .lifecycle import copyright_term, renewal_schedule
+from .lifecycle.term import MissingDateError
+from .offices import CalendarDataMissingError, load_offices, load_treaty_pack
+from .routes import routes as route_matrix
 
 
 def _atlas(a):
@@ -89,6 +99,102 @@ def cmd_fact(a) -> int:
     return 0
 
 
+def _offices(a):
+    return load_offices(a.offices)
+
+
+def _emit(result, as_json: bool) -> int:
+    if as_json:
+        print(json.dumps(result.to_dict(), indent=2, default=str))
+    else:
+        print(result.render())
+    return 0
+
+
+def cmd_deadline(a) -> int:
+    atlas, offices = _atlas(a), _offices(a)
+    trigger = a.date
+    try:
+        if a.kind == "priority":
+            r = priority_deadline(atlas, offices, a.right, trigger, target=a.jurisdiction,
+                                  treaty=load_treaty_pack("paris"), as_of=a.as_of)
+        elif a.kind == "pct":
+            r = pct_national_phase(atlas, offices, a.jurisdiction, trigger,
+                                   treaty=load_treaty_pack("pct"), as_of=a.as_of)
+        elif a.kind == "opposition":
+            r = opposition_deadline(atlas, offices, a.right, a.jurisdiction, trigger,
+                                    as_of=a.as_of)
+        else:  # madrid-refusal
+            r = madrid_refusal_deadline(atlas, offices, a.jurisdiction, trigger,
+                                        treaty=load_treaty_pack("madrid"), as_of=a.as_of)
+    except NotRecordedError as e:
+        print(f"not recorded: {e}", file=sys.stderr)
+        return 2
+    except CalendarDataMissingError as e:
+        print(f"cannot compute: {e}", file=sys.stderr)
+        return 3
+    return _emit(r, a.json)
+
+
+def cmd_term(a) -> int:
+    atlas = _atlas(a)
+    dates = {}
+    for pair in a.date or []:
+        if "=" not in pair:
+            print(f"--date expects base=YYYY-MM-DD, got {pair!r}", file=sys.stderr)
+            return 2
+        k, v = pair.split("=", 1)
+        dates[k] = dt.date.fromisoformat(v)
+    try:
+        r = renewal_schedule(atlas, a.right, a.jurisdiction, dates, count=a.renewals,
+                             as_of=a.as_of)
+    except MissingDateError as e:
+        print(f"missing date: {e}", file=sys.stderr)
+        return 2
+    except NotRecordedError as e:
+        print(f"not recorded: {e}", file=sys.stderr)
+        return 2
+    return _emit(r, a.json)
+
+
+def cmd_copyright(a) -> int:
+    atlas = _atlas(a)
+    dates = {}
+    for pair in a.date or []:
+        k, v = pair.split("=", 1)
+        dates[k] = dt.date.fromisoformat(v)
+    try:
+        r = copyright_term(atlas, a.jurisdiction, a.category, dates, as_of=a.as_of)
+    except (MissingDateError, NotRecordedError) as e:
+        print(f"cannot compute: {e}", file=sys.stderr)
+        return 2
+    print(r.render())
+    return 0
+
+
+def cmd_routes(a) -> int:
+    atlas = _atlas(a)
+    try:
+        m = route_matrix(atlas, a.right, a.jurisdictions, as_of=a.as_of)
+    except NotRecordedError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    print(json.dumps(m.to_dict(), indent=2) if a.json else m.to_markdown())
+    return 0
+
+
+def cmd_offices(a) -> int:
+    offices = _offices(a)
+    for code in offices.codes:
+        o = offices[code]
+        years = ", ".join(str(y) for y in sorted(o.years))
+        unverified = sum(1 for y in o.years.values() if not y.verified)
+        print(f"{code:7} {o.name[:48]:50} jur={o.jurisdiction or '-':4} "
+              f"closure years: {years or 'NONE'}"
+              + (f" ({unverified} unverified)" if unverified else ""))
+    return 0
+
+
 def cmd_lint(a) -> int:
     atlas = _atlas(a)
     findings = lint_atlas(atlas, as_of=a.as_of)
@@ -117,6 +223,10 @@ def main(argv=None) -> int:
     p = argparse.ArgumentParser(
         prog="ipatlas", description="Cross-border intellectual property as structured data.")
     p.add_argument("--data", type=Path, help="jurisdictions directory (default: bundled data/)")
+    p.add_argument("--offices", type=Path, help="offices directory (default: bundled data/)")
+    # Global, for the commands that emit a single structured result. `compare` and `fact`
+    # predate it and take --format, which also accepts json.
+    p.add_argument("--json", action="store_true", help="emit JSON instead of a trace")
     p.add_argument("--as-of", type=dt.date.fromisoformat, default=None,
                    help="resolve facts as in force on this date (default: today)")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -147,6 +257,35 @@ def main(argv=None) -> int:
     f.add_argument("path", help="dotted path, e.g. trade_mark.term")
     f.add_argument("--format", choices=["text", "json"], default="text")
     f.set_defaults(fn=cmd_fact)
+
+    dl = sub.add_parser("deadline", help="compute a deadline with a full derivation")
+    dl.add_argument("kind", choices=["priority", "pct", "opposition", "madrid-refusal"])
+    dl.add_argument("jurisdiction")
+    dl.add_argument("date", type=dt.date.fromisoformat, help="trigger date, ISO")
+    dl.add_argument("--right", default="trade_mark")
+    dl.set_defaults(fn=cmd_deadline)
+
+    tm = sub.add_parser("term", help="registered-right expiry and renewal schedule")
+    tm.add_argument("jurisdiction")
+    tm.add_argument("right")
+    tm.add_argument("--date", action="append", metavar="BASE=YYYY-MM-DD",
+                    help="e.g. --date filing_date=2020-03-01 (repeatable)")
+    tm.add_argument("--renewals", type=int, default=2)
+    tm.set_defaults(fn=cmd_term)
+
+    cp = sub.add_parser("copyright-term", help="apply a copyright term expression")
+    cp.add_argument("jurisdiction")
+    cp.add_argument("category")
+    cp.add_argument("--date", action="append", metavar="BASE=YYYY-MM-DD")
+    cp.set_defaults(fn=cmd_copyright)
+
+    rt = sub.add_parser("routes", help="filing-route matrix from treaty membership")
+    rt.add_argument("right")
+    rt.add_argument("jurisdictions", nargs="+")
+    rt.set_defaults(fn=cmd_routes)
+
+    of = sub.add_parser("offices", help="list office packs and their closure-data coverage")
+    of.set_defaults(fn=cmd_offices)
 
     li = sub.add_parser("lint", help="data quality gate; exit 1 on errors")
     li.add_argument("--errors-only", action="store_true")

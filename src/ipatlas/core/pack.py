@@ -75,6 +75,31 @@ class Pack:
         except NotRecordedError:
             return None
 
+    def subvalue(self, attr: str, key: str, *,
+                 as_of: dt.date | None = None) -> tuple[object | None, Fact | None]:
+        """Read one key of a fact, whichever shape the pack used.
+
+        A flat leaf mapping such as
+
+            madrid: { designation_accepted: true, refusal_window_months: 18, cite: ... }
+
+        loads as ONE fact whose value is a dict, so `madrid.designation_accepted` is not a
+        path. A pack that instead nests each key as its own cited fact produces real
+        sub-paths. Both spellings are legitimate, so callers must not assume either:
+        `subvalue("trade_mark.madrid", "designation_accepted")` works for both.
+
+        Returns (value, owning fact), or (None, None) when not recorded.
+        """
+        nested = self.try_get(f"{attr}.{key}", as_of=as_of)
+        if nested is not None:
+            return nested.value, nested
+        parent = self.try_get(attr, as_of=as_of)
+        if parent is not None and isinstance(parent.value, dict) and key in parent.value:
+            return parent.value[key], parent
+        if parent is not None and key in parent.extra:
+            return parent.extra[key], parent
+        return None, None
+
     def has_right(self, right: str) -> bool:
         """False when the pack records the right as unavailable (e.g. utility models in SG)."""
         f = self.try_get(f"{right}.available")

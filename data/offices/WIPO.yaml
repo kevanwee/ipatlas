@@ -1,0 +1,48 @@
+# Office pack: WIPO International Bureau (Geneva).
+#
+# Governs acts done at the IB: PCT international phase, Madrid international applications
+# and responses, Hague international applications.
+
+office: WIPO
+name: World Intellectual Property Organization International Bureau
+jurisdiction: null
+timezone: Europe/Zurich
+
+computation:
+  exclude_first_day:
+    value: true
+    cite: "PCT Rule 80.1 (periods expressed in days)"
+  roll_non_working_forward:
+    value: true
+    cite: "PCT Rule 80.5"
+    notes:
+      - "If a period expires on a day on which the office is not open for official business, or on an official holiday, the period extends to the first subsequent day on which the office is open."
+      - "PCT Rule 80.5 also covers days on which ordinary mail is not delivered at the locality of the office."
+  month_arithmetic:
+    value: corresponding_date
+    cite: "PCT Rule 80.2"
+    notes: ["A period expressed in months expires on the corresponding date; if there is no corresponding date, on the last day of that month."]
+  weekend: [saturday, sunday]
+
+holidays:
+  2026:
+    source: "WIPO published closure days (Geneva). Pattern: New Year, Good Friday, Easter Monday, Ascension, Whit Monday, Swiss National Day, Jeune genevois, Christmas period."
+    checked: 2026-09-12
+    verified: false
+    notes:
+      - "PROJECTED from the usual Geneva pattern, NOT taken from WIPO's published list. WIPO closes for an extended end-of-year period whose exact dates vary; replace this with the published list before relying on a December date."
+    days:
+      - { date: 2026-01-01, name: New Year's Day }
+      - { date: 2026-01-02, name: New Year holiday }
+      - { date: 2026-04-03, name: Good Friday }
+      - { date: 2026-04-06, name: Easter Monday }
+      - { date: 2026-05-14, name: Ascension Day }
+      - { date: 2026-05-25, name: Whit Monday }
+      - { date: 2026-08-01, name: Swiss National Day }
+      - { date: 2026-09-10, name: Jeune genevois }
+      - { date: 2026-12-24, name: Christmas Eve }
+      - { date: 2026-12-25, name: Christmas Day }
+      - { date: 2026-12-28, name: End-of-year closure }
+      - { date: 2026-12-29, name: End-of-year closure }
+      - { date: 2026-12-30, name: End-of-year closure }
+      - { date: 2026-12-31, name: End-of-year closure }

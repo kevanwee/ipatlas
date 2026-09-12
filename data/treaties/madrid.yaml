@@ -1,0 +1,55 @@
+# Treaty pack: Madrid Protocol.
+
+treaty: madrid
+name: Protocol Relating to the Madrid Agreement Concerning the International Registration of Marks
+administered_by: WIPO
+
+refusal_windows:
+  default:
+    months: 12
+    from: notification_of_designation
+    cite: "Madrid Protocol, Art 5(2)(a)"
+    notes: ["A designated Contracting Party must notify a refusal within 12 months."]
+  declared_extension:
+    months: 18
+    from: notification_of_designation
+    cite: "Madrid Protocol, Art 5(2)(b)"
+    notes: ["A Contracting Party may declare an 18-month period. The jurisdiction pack's `trade_mark.madrid.refusal_window_months` records which applies."]
+  opposition_based_later_refusal:
+    cite: "Madrid Protocol, Art 5(2)(c)"
+    notes: ["Where a Contracting Party has so declared, a refusal resulting from an opposition may be notified after the 18-month period, subject to the conditions in Art 5(2)(c). This engine does not compute that outer date; it is opposition-dependent."]
+
+term:
+  years: 10
+  from: international_registration_date
+  renewable: true
+  renewal_years: 10
+  cite: "Madrid Protocol, Art 6(1), Art 7(1)"
+
+renewal_grace:
+  months: 6
+  surcharge: true
+  cite: "Madrid Protocol, Art 7(4); Common Regulations Rule 30(1)"
+
+dependency:
+  years: 5
+  from: international_registration_date
+  cite: "Madrid Protocol, Art 6(3)"
+  notes:
+    - "For five years the international registration depends on the basic mark: if the basic application or registration ceases in that period, the international registration is cancelled to the same extent (central attack)."
+    - "This is the principal strategic risk of the Madrid route and has no analogue in national filing."
+
+transformation:
+  available: true
+  window_months: 3
+  from: cancellation_of_international_registration
+  cite: "Madrid Protocol, Art 9quinquies"
+  notes: ["Where an international registration is cancelled following central attack, it may be transformed into national applications in each designated Contracting Party within 3 months, keeping the original date."]
+
+replacement:
+  available: true
+  cite: "Madrid Protocol, Art 4bis"
+  notes: ["An international registration may replace an earlier national registration for the same mark and goods, keeping the earlier rights. Practice on recording replacement varies by Office."]
+
+checked: 2026-09-12
+verified: false

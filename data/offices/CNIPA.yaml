@@ -1,0 +1,58 @@
+# Office pack: CNIPA.
+#
+# CAUTION. Chinese public holidays are set annually by State Council notice and include
+# SHIFTED WORKING WEEKENDS: a Saturday or Sunday adjacent to a holiday block is designated a
+# working day to compensate. This pack does not yet model shifted working days, so a date
+# computed across a holiday block may be wrong by a day or two. See `working_weekends` below.
+
+office: CNIPA
+name: China National Intellectual Property Administration
+jurisdiction: CN
+timezone: Asia/Shanghai
+
+computation:
+  exclude_first_day:
+    value: true
+    cite: "专利法实施细则 (Patent Law Implementing Regulations), time limit provisions"
+  roll_non_working_forward:
+    value: true
+    cite: "专利法实施细则 (Implementing Regulations); 商标法实施条例 (Trademark Law Implementing Regulations)"
+    notes: ["Where a time limit expires on an official holiday, it is extended to the first working day after the holiday."]
+  month_arithmetic:
+    value: corresponding_date
+    cite: "专利法实施细则 (Implementing Regulations)"
+  weekend: [saturday, sunday]
+
+holidays:
+  2026:
+    source: "State Council annual holiday notice (国务院办公厅关于2026年部分节假日安排的通知)"
+    checked: 2026-09-12
+    verified: false
+    notes:
+      - "INCOMPLETE. Holiday blocks are approximate and the compensating working weekends are NOT recorded, so any computation crossing a block must be checked against the State Council notice."
+      - "Spring Festival and Mid-Autumn dates follow the lunar calendar and shift annually."
+    days:
+      - { date: 2026-01-01, name: New Year's Day (元旦) }
+      - { date: 2026-02-16, name: Spring Festival eve (春节) }
+      - { date: 2026-02-17, name: Spring Festival (春节) }
+      - { date: 2026-02-18, name: Spring Festival (春节) }
+      - { date: 2026-02-19, name: Spring Festival (春节) }
+      - { date: 2026-02-20, name: Spring Festival (春节) }
+      - { date: 2026-04-05, name: Qingming Festival (清明节) }
+      - { date: 2026-04-06, name: Qingming Festival (observed) }
+      - { date: 2026-05-01, name: Labour Day (劳动节) }
+      - { date: 2026-06-19, name: Dragon Boat Festival (端午节) }
+      - { date: 2026-09-25, name: Mid-Autumn Festival (中秋节) }
+      - { date: 2026-10-01, name: National Day (国庆节) }
+      - { date: 2026-10-02, name: National Day (国庆节) }
+      - { date: 2026-10-03, name: National Day (国庆节) }
+      - { date: 2026-10-04, name: National Day (国庆节) }
+      - { date: 2026-10-05, name: National Day (国庆节) }
+      - { date: 2026-10-06, name: National Day (国庆节) }
+      - { date: 2026-10-07, name: National Day (国庆节) }
+
+# Dates designated as working days to compensate for an adjacent holiday block. Not yet
+# recorded; the engine treats the list as authoritative once populated, so leaving it empty
+# is safer than guessing (a wrongly-designated working day shortens a deadline).
+working_weekends:
+  2026: []

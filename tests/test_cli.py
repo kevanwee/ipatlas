@@ -53,3 +53,60 @@ def test_attributes_listing(capsys):
     assert main(["attributes", "trade_mark"]) == 0
     out = capsys.readouterr().out
     assert "default comparison set for trade_mark" in out
+
+
+# -- Phase 1 commands ------------------------------------------------------------------
+
+def test_offices_listing(capsys):
+    assert main(["offices"]) == 0
+    out = capsys.readouterr().out
+    assert "IPOS" in out and "closure years: 2026, 2027" in out
+
+
+def test_deadline_priority(capsys):
+    assert main(["deadline", "priority", "CN", "2026-03-13", "--right", "trade_mark"]) == 0
+    out = capsys.readouterr().out
+    assert "DEADLINE: 2026-09-14" in out
+    assert "Art 4C(2)" in out
+
+
+def test_deadline_opposition_us_is_days(capsys):
+    assert main(["deadline", "opposition", "US", "2026-06-01"]) == 0
+    assert "DEADLINE: 2026-07-01" in capsys.readouterr().out
+
+
+def test_deadline_pct_json(capsys):
+    assert main(["--json", "deadline", "pct", "SG", "2024-09-01"]) == 0
+    import json
+    d = json.loads(capsys.readouterr().out)
+    assert d["deadline"] == "2027-03-01" and d["office"] == "IPOS"
+
+
+def test_deadline_missing_calendar_exits_3(capsys):
+    assert main(["deadline", "madrid-refusal", "CN", "2026-04-01"]) == 3
+    assert "CNIPA has no closure data for 2027" in capsys.readouterr().err
+
+
+def test_term_command(capsys):
+    assert main(["term", "SG", "trade_mark", "--date", "filing_date=2020-03-01"]) == 0
+    out = capsys.readouterr().out
+    assert "+ 10 years = 2030-03-01" in out
+    assert "renewal 1 due 2030-03-01" in out
+
+
+def test_term_wrong_base_date_exits_2(capsys):
+    assert main(["term", "US", "trade_mark", "--date", "filing_date=2020-03-01"]) == 2
+    assert "runs from registration_date" in capsys.readouterr().err
+
+
+def test_copyright_term_command(capsys):
+    assert main(["copyright-term", "CN", "literary_dramatic_musical_artistic",
+                 "--date", "author_death=2000-06-15"]) == 0
+    assert "COPYRIGHT EXPIRES: 2050-12-31" in capsys.readouterr().out
+
+
+def test_routes_command(capsys):
+    assert main(["routes", "trade_mark", "SG", "US", "CN"]) == 0
+    out = capsys.readouterr().out
+    assert "Madrid international registration" in out
+    assert "does not recommend a route" in out

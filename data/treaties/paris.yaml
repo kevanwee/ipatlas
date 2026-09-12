@@ -1,0 +1,28 @@
+# Treaty pack: Paris Convention.
+#
+# Priority windows are treaty-level facts and live here, not in the jurisdiction packs, so
+# that a correction lands once. Jurisdiction packs still record their own implementing
+# provision (e.g. "TMA 1998, s 10") because that is what a local practitioner cites.
+
+treaty: paris
+name: Paris Convention for the Protection of Industrial Property
+administered_by: WIPO
+
+priority_windows:
+  patent: { months: 12, cite: "Paris Convention, Art 4C(1)" }
+  utility_model: { months: 12, cite: "Paris Convention, Art 4C(1)" }
+  trade_mark: { months: 6, cite: "Paris Convention, Art 4C(1)" }
+  registered_design: { months: 6, cite: "Paris Convention, Art 4C(1)" }
+
+computation:
+  exclude_first_day:
+    value: true
+    cite: "Paris Convention, Art 4C(2)"
+    notes: ["The day of first filing is not included in the priority period."]
+  roll_non_working_forward:
+    value: true
+    cite: "Paris Convention, Art 4C(3)"
+    notes: ["If the last day of the period is a holiday, or a day on which the Office is not open for filing, the period is extended to the first following working day."]
+
+checked: 2026-09-12
+verified: false
