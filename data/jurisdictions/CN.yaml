@@ -35,6 +35,7 @@ trade_mark:
   statute: { name: "商标法 (Trademark Law of the PRC, as amended 2019)", url: https://www.cnipa.gov.cn }
   filing_system:
     value: first_to_file
+    in_force_until: 2026-12-31   # superseded by the fifth amendment; see `pending`
     cite: "商标法 第31条 (Trademark Law, Art 31)"
     notes:
       - "Strict first-to-file with very limited unregistered protection. Defensive filing before market entry is essential; squatting remains the single largest practical risk for foreign brands."
@@ -42,6 +43,7 @@ trade_mark:
   examination: { value: substantive, scope: [absolute, relative], cite: "商标法 第28-35条 (Arts 28-35)" }
   multi_class:
     value: true
+    in_force_until: 2026-12-31   # superseded by the fifth amendment; see `pending`
     cite: "商标法 第22条 (Art 22)"
     notes: ["Multi-class applications are permitted but are administered as separable registrations; a single application does not create a single indivisible right."]
   classification:
@@ -49,10 +51,12 @@ trade_mark:
     practice: "CNIPA requires terms from its own subclass system. Goods in different subclasses are generally treated as dissimilar, so a specification drafted for another jurisdiction will leave gaps."
     cite: "商标法 第22条; 类似商品和服务区分表 (CNIPA Classification of Similar Goods and Services)"
     notes: ["The subclass practice has no analogue in SG/US/EU and is the most common cause of an apparently broad Chinese registration being unenforceable against a competitor."]
-  priority: { months: 6, treaty: paris, cite: "商标法 第25条 (Art 25)" }
+  priority: { months: 6, treaty: paris, in_force_until: 2026-12-31,
+              cite: "商标法 第25条 (Art 25)" }
   term:
     years: 10
     from: registration_date
+    in_force_until: 2026-12-31   # superseded by the fifth amendment; see `pending`
     renewable: true
     renewal_years: 10
     cite: "商标法 第39-40条 (Arts 39-40)"
@@ -67,6 +71,7 @@ trade_mark:
     notes: ["No periodic proof of use. Non-use is tested only on a third-party cancellation application under Art 49."]
   opposition:
     window_months: 3
+    in_force_until: 2026-12-31   # superseded by the fifth amendment; see `pending`
     from: publication
     extendable: false
     cite: "商标法 第33条 (Art 33)"
@@ -74,16 +79,19 @@ trade_mark:
   use_requirement:
     non_use_years: 3
     consequence: cancellation_on_application
+    in_force_until: 2026-12-31   # superseded by the fifth amendment; see `pending`
     cite: "商标法 第49条 (Art 49)"
     notes: ["Three years, against five in Singapore and a three-year abandonment presumption in the US. Evidence of use must be of use in mainland China."]
   well_known_marks:
     protected: true
+    in_force_until: 2026-12-31   # superseded by the fifth amendment; see `pending`
     registration_required: false
     recognition: case_by_case
     cite: "商标法 第13-14条 (Arts 13-14)"
     notes: ["Well-known status is determined case by case in the proceeding where it is raised; there is no standing register of well-known marks that confers protection prospectively."]
   exhaustion:
     value: unsettled
+    in_force_until: 2026-12-31   # superseded by the fifth amendment; see `pending`
     cite: "商标法 (no express exhaustion provision)"
     notes:
       - "The Trademark Law contains no exhaustion article and outcomes in parallel-import cases have diverged between courts, often turning on quality differences, repackaging and consumer confusion rather than on a clean exhaustion rule."
@@ -93,7 +101,12 @@ trade_mark:
     mechanism: "recordal with the General Administration of Customs; customs may detain ex officio once recorded"
     cite: "知识产权海关保护条例 (Regulations on Customs Protection of IP Rights)"
     notes: ["Ex officio detention on a recorded right is a materially stronger tool than the application-based seizure regimes in several common-law jurisdictions."]
-  criminal_sanctions: { available: true, cite: "刑法 第213-215条 (Criminal Law, Arts 213-215)" }
+  criminal_sanctions:
+    available: true
+    cite: "刑法 第213-215条 (Criminal Law, Arts 213-215), as amended by Criminal Law Amendment (XI)"
+    notes:
+      - "Criminal Law Amendment (XI), in force 1 March 2021, raised the maximum term for the counterfeiting offences from 7 to 10 years and removed the fixed fine bands. The bare article citation hides that change."
+      - "This statement rests on a single comparison table rather than a direct read of Arts 213-215; it is weaker than the corresponding statement for Art 219. Verify before advising on sentencing exposure."
   madrid:
     designation_accepted: true
     refusal_window_months: 18
@@ -125,10 +138,12 @@ patent:
     due: anniversary_of_filing
     grace_months: 6
     surcharge: true
-    cite: "专利法 第43条; 专利法实施细则 (Implementing Regulations)"
+    verified: true
+    cite: "专利法 第43条; 专利法实施细则 第115条 (Implementing Regulations 2023, Rule 115)"
     notes:
       - "专利法 第43条: the patentee pays an annual fee BEGINNING WITH THE YEAR IN WHICH THE PATENT RIGHT IS GRANTED. Corrected 2026-09-12: the pack previously said 'the first year after grant', which is off by one."
-      - "Art 43 carries only the duty to pay. The due date by filing anniversary and the 6-month late-payment window with surcharge are in the Implementing Regulations (2023 revision, in force 20 January 2024)."
+      - "Art 43 carries only the duty to pay. Rule 115 carries the timing: 授予专利权当年以后的年费应当在上一年度期满前缴纳 - annuities after the year of grant are due before the end of the preceding year; a 6-month late window applies with a surcharge accruing at 5% of the full annual fee per month overdue, failing which the patent terminates."
+      - "Verified 2026-09-12 against the CNIPA official text of the 2023 revision (149 rules, in force 20 January 2024)."
       - "Contrast the US three-fee schedule at 3.5 / 7.5 / 11.5 years from grant."
   grace_period:
     months: 6
@@ -148,11 +163,11 @@ patent:
     extension_available: true
     extended_months: 32
     surcharge_for_extension: true
-    cite: "专利法实施细则 (Patent Law Implementing Regulations, 2023 revision, PCT chapter); PCT Art 48"
-    rule_number_disputed: true
+    verified: true
+    cite: "专利法实施细则 第120条 (Patent Law Implementing Regulations 2023, Rule 120); PCT Art 48"
     notes:
-      - "Entry within 30 months of the earliest priority date; the procedures may still be completed within 32 months on payment of a surcharge. The PERIODS are not in doubt."
-      - "RULE NUMBER UNRESOLVED. A verification pass on 2026-09-12 proposed Rule 103, then flagged Rule 120 as the likely correct number before it was interrupted; neither was confirmed. The 2023 revision renumbered the Regulations, so a pre-2024 rule number may be stale. Do not cite a specific rule number from this entry until it is checked against the current text on cnipa.gov.cn."
+      - "Rule 120: 申请人应当在…优先权日起30个月内，向国务院专利行政部门办理进入中国国家阶段的手续；申请人未在该期限内办理该手续的，在缴纳宽限费后，可以在自优先权日起32个月内办理 - 30 months, extendable to 32 on payment of a grace fee."
+      - "Verified 2026-09-12 against the CNIPA official text and the MOJ administrative-regulations database. An earlier entry cited Rule 103, which was wrong; the DISPUTED flag it carried is now cleared."
   exhaustion: { value: international, cite: "专利法 第75条第1项 (Art 75(1))" }
   border_measures: { available: true, mechanism: "customs recordal as for trade marks", cite: "知识产权海关保护条例" }
   criminal_sanctions: { available: true, scope: counterfeit_patent_marking_only, cite: "刑法 第216条 (Criminal Law, Art 216)" }
@@ -170,7 +185,12 @@ utility_model:
   double_filing:
     value: permitted_same_day
     cite: "专利法 第9条 (Art 9)"
-    notes: ["An invention patent and a utility model may be filed on the same day for the same invention, with the utility model surrendered on grant of the invention patent. A fast enforceable right plus a long one."]
+    verified: true
+    cite: "专利法 第9条; 专利审查指南 (Patent Examination Guidelines, as amended by CNIPA Order No. 84, in force 1 January 2026)"
+    notes:
+      - "An invention patent and a utility model may be filed on the same day for the same invention. A fast enforceable right plus a long one."
+      - "The Guidelines revision in force 1 January 2026 NARROWS the mechanism: the invention patent may now be obtained only by WAIVING the utility model right (仅允许通过放弃实用新型专利权的方式获得发明专利授权). Earlier practice allowed other routes."
+      - "Verified 2026-09-12 against CNIPA Order No. 84 and CNIPA's published policy explanation."
   maintenance: { from_year: 1, frequency: annual, cite: "专利法 第43条 (Art 43)" }
 
 # ---------------------------------------------------------------------------------------
@@ -255,7 +275,9 @@ trade_secret:
     value: { name: "反不正当竞争法 (Anti-Unfair Competition Law, as amended 2025)" }
     url: https://www.gov.cn
     in_force_from: 2025-10-15
-    cite: "反不正当竞争法 (AUCL), amended by the NPCSC on 27 June 2025, in force 15 October 2025"
+    adopted: 2025-06-27
+    verified: true
+    cite: "反不正当竞争法, 第二次修订 (second full revision) adopted by the 16th session of the 14th NPCSC on 27 June 2025, in force 15 October 2025 per Art 41"
     notes:
       - "The 2025 amendment took the AUCL from 33 to 41 articles and RENUMBERED the trade-secret provisions. A pleading citing the 2019 numbering today cites a repealed numbering."
       - "Corrected 2026-09-12: the pack previously described the 2019 version as current."
@@ -268,29 +290,66 @@ trade_secret:
   elements:
     value: ["not known to the public", "commercial value", "subject to confidentiality measures taken by the right holder"]
     in_force_from: 2025-10-15
+    verified: true
     cite: "反不正当竞争法 第10条末款 (AUCL 2025, Art 10, final paragraph)"
     notes:
-      - "Art 10 final paragraph defines a trade secret as technical, operational or other commercial information that is not known to the public and has commercial value, and for which the holder has taken corresponding confidentiality measures."
-      - "The three elements are unchanged from the 2019 text; only the article number moved (Art 9 -> Art 10)."
+      - "本法所称的商业秘密，是指不为公众所知悉、具有商业价值并经权利人采取相应保密措施的技术信息、经营信息等商业信息 - information not known to the public, having commercial value, for which the holder has taken CORRESPONDING confidentiality measures."
+      - "相应 means corresponding or commensurate, not merely reasonable: Chinese courts read it as measures proportionate to the value and nature of the information. Do not translate it as a bare reasonableness standard."
+      - "The three elements are unchanged from the 2019 text; only the article number moved (Art 9 -> Art 10). Verified 2026-09-12."
   burden_shifting:
     value: true
     in_force_from: 2025-10-15
     cite: "反不正当竞争法 第39条 (AUCL 2025, Art 39)"
+    verified: true
     notes:
-      - "Two-stage framework retained: the holder provides preliminary evidence of reasonable confidentiality measures and of infringement, whereupon the alleged infringer bears the burden of proving non-infringement."
-      - "Art 39 in the 2025 text; it was Art 32 in the 2019 text. Corrected 2026-09-12."
+      - "TWO DISTINCT STAGES, which an earlier note in this entry collapsed into one."
+      - "Stage 1 (subsistence), Art 39 para 1: on preliminary evidence that the holder took confidentiality measures AND a reasonable indication of infringement, the alleged infringer must prove the information is NOT a trade secret under the Law."
+      - "Stage 2 (infringement), Art 39 para 2: on a reasonable indication of infringement AND any one of three listed evidential routes, the alleged infringer must prove it did not infringe. The routes are (1) access or opportunity to obtain the secret plus information substantially identical to it; (2) the secret has been, or is at risk of being, disclosed or used by the alleged infringer; (3) other evidence of infringement. Limb (2) is materially broader than an access theory."
+      - "Art 39 in the 2025 text, carried over verbatim from the 2019 Art 32. Verified 2026-09-12 against the CNIPA official text."
+  misappropriation_acts:
+    value:
+      - "acquisition by theft, bribery, fraud, coercion, ELECTRONIC INTRUSION (电子侵入) or other improper means"
+      - "disclosure, use, or permitting use of a secret so acquired"
+      - "disclosure or use in breach of a confidentiality obligation or the holder's requirements"
+      - "ABETTING, INDUCING or ASSISTING another to breach such an obligation (教唆、引诱、帮助)"
+    verified: true
+    cite: "反不正当竞争法 第10条第1款(一)-(四) (AUCL 2025, Art 10, paras (1)-(4))"
+    notes:
+      - "Electronic intrusion and the abetting limb both arrived in the 2019 amendment and are carried forward unchanged into the 2025 text."
+      - "Verified 2026-09-12 against the CNIPA official text."
+  extraterritorial_application:
+    value: true
+    in_force_from: 2025-10-15
+    verified: true
+    cite: "反不正当竞争法 第40条 (AUCL 2025, Art 40)"
+    notes:
+      - "在中华人民共和国境外实施本法规定的不正当竞争行为，扰乱境内市场竞争秩序的，依照本法以及有关法律的规定处理 - conduct outside China that disrupts domestic market competition order is dealt with under this Law."
+      - "New in the 2025 amendment and directly relevant to offshore trade-secret misappropriation affecting the Chinese market."
+  statutory_damages:
+    value: { max_cny: 5000000, punitive_multiplier_min: 1, punitive_multiplier_max: 5 }
+    cite: "反不正当竞争法 (AUCL 2025) - article number unverified"
+    article_number_disputed: true
+    notes:
+      - "Statutory damages up to CNY 5 million where neither actual loss nor infringer profit can be determined, and a 1x to 5x punitive multiplier for wilful infringement in serious circumstances."
+      - "ARTICLE NUMBER UNVERIFIED. One source attributed the multiplier to Art 22; it could not be independently corroborated. The SUBSTANCE is well sourced; the article number is not. Do not cite a number from this entry."
   criminal_sanctions:
     available: true
-    cite: "刑法 第219条 (Criminal Law, Art 219)"
+    verified: true
+    cite: "刑法 第219条 (Criminal Law, Art 219), as amended by Criminal Law Amendment (XI)"
     notes:
-      - "Criminal Law Amendment (XI), in force 1 March 2021, revised the Art 219 offence; confirm the current thresholds before advising on criminal exposure."
+      - "Criminal Law Amendment (XI), in force 1 March 2021, rewrote Art 219: it DELETED the 造成重大损失 (substantial loss) quantum gateway and substituted 情节严重 (serious circumstances, up to 3 years) and 情节特别严重 (3 to 10 years), and added 电子侵入 as a means. A pre-2021 analysis of criminal exposure turns on a threshold that no longer exists."
+      - "Consider also Art 219a (第二百一十九条之一), the separate offence of stealing, spying out, buying or unlawfully supplying trade secrets FOR A FOREIGN ENTITY, introduced by Amendment XI. It is the provision most likely to arise in a cross-border matter. Its text has not been checked here."
+      - "Verified 2026-09-12 against the Supreme People's Procuratorate text of Amendment XI."
 
 geographical_indication:
   registration:
     value: available
     mechanism: "sui generis GI products scheme plus collective/certification marks"
-    cite: "商标法 第16条; 地理标志产品保护规定 (Provisions on Protection of GI Products)"
-    notes: ["Two parallel routes (CNIPA GI scheme and collective/certification marks). The EU-China GI Agreement (2021) protects listed EU GIs directly."]
+    cite: "商标法 第16条; CNIPA 地理标志产品保护办法 (Measures for the Protection of GI Products) - instrument unconfirmed"
+    instrument_disputed: true
+    notes:
+      - "Two parallel routes (the CNIPA GI scheme and collective/certification marks). The EU-China GI Agreement (2021) protects listed EU GIs directly."
+      - "INSTRUMENT UNCONFIRMED. This entry cited 地理标志产品保护规定 (AQSIQ Order No. 78 of 2005), which is very likely superseded by CNIPA's 地理标志产品保护办法. A verification pass on 2026-09-12 could not reach a primary source. Check cnipa.gov.cn before citing either instrument."
 
 # ---------------------------------------------------------------------------------------
 transfer_formalities:
@@ -298,6 +357,7 @@ transfer_formalities:
     writing_required: { value: true, cite: "商标法 第42条 (Art 42)" }
     recordal:
       value: mandatory
+      in_force_until: 2026-12-31   # superseded by the fifth amendment; see `pending`
       effect: "the assignment takes effect on publication by CNIPA; until then the assignee has no registered right"
       cite: "商标法 第42条 (Art 42)"
       notes: ["Constitutive, not merely protective. Contrast SG and US where recordal affects priority against third parties but the assignment is effective between the parties on execution."]
@@ -355,13 +415,109 @@ takedown:
     notes: ["The E-Commerce Law notice regime is right-agnostic and covers trade marks, unlike the US where § 512 is copyright-only."]
 
 # ---------------------------------------------------------------------------------------
+# ADOPTED BUT NOT YET IN FORCE. The fifth Trademark Law amendment was adopted on
+# 26 June 2026 and commences 1 January 2027, taking the Law from 8 chapters / 73 articles to
+# 9 chapters / 87 articles. Entries here win for any query dated on or after commencement;
+# the live facts above continue to answer for earlier dates. Nothing needs migrating on the
+# commencement date.
+#
+# THE OPERATIONALLY SIGNIFICANT CHANGE is the opposition window: three months becomes TWO.
+# Watching services and internal escalation paths need changing BEFORE 1 January 2027.
+pending:
+  trade_mark.opposition:
+    - value:
+        window_months: 2
+        from: publication
+        extendable: false
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 第36条 (Trademark Law as amended 2026, Art 36)"
+      notes:
+        - "对初步审定公告的商标，自公告之日起二个月内…可以向国务院商标管理部门提出异议 - TWO months from publication, down from three. Still not extendable."
+        - "Art 33 in the current text becomes Art 36. Verified 2026-09-12 against the CNIPA official text and corroborated against Lee & Li and Chang Tsi commentary because the change is consequential."
+        - "Whether the two-month period applies to marks published BEFORE 1 January 2027 whose three-month window is still running is a transitional question not addressed in the statute text. Do not guess at it."
+  trade_mark.filing_system:
+    - value: first_to_file
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 第35条 (Trademark Law as amended 2026, Art 35)"
+      notes:
+        - "First-to-file unchanged in substance; Art 31 renumbers to Art 35."
+        - "Bad-faith refusal moves from Art 4 to Art 19 and is strengthened by a 明显超出正常生产经营需要 limb (manifestly exceeding normal business needs). New Art 54 makes bad-faith filing administratively punishable: a warning plus a fine of up to RMB 100,000."
+  trade_mark.use_requirement:
+    - value:
+        non_use_years: 3
+        consequence: cancellation_on_application_or_cnipa_own_motion
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 第57条 (Trademark Law as amended 2026, Art 57)"
+      notes:
+        - "Three years unchanged. Art 49 renumbers to Art 57."
+        - "NEW: CNIPA gains an OWN-MOTION revocation power for generic-name and three-year-non-use grounds (国务院商标管理部门可以撤销该注册商标), and must decide a cancellation application within 9 months, extendable by 3."
+  trade_mark.term:
+    - value: { years: 10, from: registration_date, renewable: true, renewal_years: 10 }
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 第43-44条 (Trademark Law as amended 2026, Arts 43-44)"
+      notes: ["Substance unchanged: 10 years from registration, renewable for 10. Arts 39-40 renumber to Arts 43-44."]
+  trade_mark.priority:
+    - value: { months: 6, treaty: paris }
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 第29条 (Trademark Law as amended 2026, Art 29); 第30条 (exhibition priority)"
+      notes: ["Six months unchanged. Art 25 splits into Art 29 (Paris/foreign priority) and Art 30 (exhibition priority)."]
+  trade_mark.multi_class:
+    - value: true
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 第26条 (Trademark Law as amended 2026, Art 26)"
+      notes: ["Unchanged. Art 22 renumbers to Art 26."]
+  trade_mark.well_known_marks:
+    - value:
+        protected: true
+        registration_required: false
+        recognition: case_by_case
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 第21条 (substantive protection); 第63条 (factors); 第69条 (outbound confirmation)"
+      notes:
+        - "Arts 13-14 renumber to Art 21 plus Art 63. Art 21 now bars bad-faith filing against a well-known mark whether or not it is registered in China. Terminology changes from 认定 to 确认."
+        - "NEW Art 69: CNIPA may confirm that a mark is well known among the relevant public in China in order to support protection ABROAD. A new evidentiary artefact foreign practitioners will encounter."
+  trade_mark.exhaustion:
+    - value: unsettled
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 (as amended 2026) - no exhaustion provision; cf 第72条 (infringing acts)"
+      notes:
+        - "The fifth amendment does NOT introduce an exhaustion provision. The 2026 text was searched for 权利用尽 and for any exhaustion limb in the infringement article (Art 72, successor to Art 57): none exists."
+        - "So `unsettled` survives the amendment, and the instruction in the live entry not to convert it to `international` without an SPC decision or a statutory amendment still stands."
+  transfer_formalities.trade_mark_assignment.recordal:
+    - value: mandatory
+      adopted: 2026-06-26
+      in_force_from: 2027-01-01
+      verified: true
+      cite: "商标法 第46条 (Trademark Law as amended 2026, Art 46)"
+      notes:
+        - "Constitutive effect unchanged: 转让注册商标经核准后，予以公告。受让人自公告之日起享有注册商标专用权 - the assignee holds the exclusive right from the date of publication."
+        - "The assign-similar-marks-together rule also survives verbatim. Art 42 renumbers to Art 46."
+
+# ---------------------------------------------------------------------------------------
 history:
   trade_secret.statute:
     - value: { name: "反不正当竞争法 (Anti-Unfair Competition Law, as amended 2019)" }
       in_force_from: 2019-04-23
       in_force_until: 2025-10-14
-      cite: "反不正当竞争法 (AUCL), amended 23 April 2019"
-      notes: ["33 articles. Superseded by the 2025 amendment in force 15 October 2025."]
+      cite: "反不正当竞争法 (AUCL), amended 23 April 2019 by 《关于修改〈中华人民共和国建筑法〉等八部法律的决定》"
+      notes:
+        - "33 articles. The 2019 change was a targeted 修正 effected by an OMNIBUS decision amending eight laws, with same-day effect, not a dedicated amending act. Superseded by the second full revision (第二次修订) in force 15 October 2025."
   trade_secret.basis:
     - value: statutory
       in_force_from: 2019-04-23

@@ -49,6 +49,8 @@ from .offices import (
     CalendarDataMissingError,
     Office,
     Offices,
+    ProjectedCalendarError,
+    Provenance,
     load_office,
     load_offices,
     load_treaty_pack,
@@ -60,7 +62,7 @@ __all__ = [
     "load_atlas", "load_pack", "load_treaty", "Atlas", "Pack", "Fact", "Cite",
     "NotRecordedError", "PackError",
     "load_offices", "load_office", "load_treaty_pack", "Office", "Offices",
-    "CalendarDataMissingError",
+    "CalendarDataMissingError", "ProjectedCalendarError", "Provenance",
     # engines
     "compare", "brief", "Table", "DEFAULT_ATTRIBUTES",
     "Deadline", "priority_deadline", "pct_national_phase", "opposition_deadline",

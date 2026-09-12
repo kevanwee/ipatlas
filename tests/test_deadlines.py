@@ -11,6 +11,7 @@ import pytest
 from ipatlas import (
     CalendarDataMissingError,
     NotRecordedError,
+    ProjectedCalendarError,
     load_atlas,
     load_offices,
     load_treaty_pack,
@@ -31,7 +32,19 @@ def atlas():
 
 @pytest.fixture(scope="module")
 def offices():
+    """Default loading: a reconstructed ("projected") closure list refuses to compute."""
     return load_offices()
+
+
+@pytest.fixture(scope="module")
+def offices_projected():
+    """Opts in to reconstructed closure lists.
+
+    Used only where the test is about ARITHMETIC rather than about whether the closure list
+    is sourced. IPOS 2027 and the WIPO, EPO and EUIPO 2026 lists are reconstructions, so
+    without this the engine rightly refuses and the arithmetic goes untested.
+    """
+    return load_offices(allow_projected=True)
 
 
 @pytest.fixture(scope="module")
@@ -117,8 +130,9 @@ def test_patent_priority_is_twelve_months(atlas, offices, paris):
     assert d.date == dt.date(2026, 6, 10)  # Wednesday, USPTO open
 
 
-def test_priority_falls_back_to_the_treaty_when_no_target(atlas, offices, paris):
-    d = priority_deadline(atlas, offices, "trade_mark", dt.date(2026, 3, 13), treaty=paris)
+def test_priority_falls_back_to_the_treaty_when_no_target(atlas, offices_projected, paris):
+    d = priority_deadline(atlas, offices_projected, "trade_mark", dt.date(2026, 3, 13),
+                          treaty=paris)
     assert d.source.origin == "treaty paris"
     assert d.office == "WIPO"
 
@@ -130,15 +144,15 @@ def test_priority_without_a_period_refuses(atlas, offices):
 
 # -- PCT -------------------------------------------------------------------------------
 
-def test_pct_national_phase_thirty_months(atlas, offices, pct):
+def test_pct_national_phase_thirty_months(atlas, offices_projected, pct):
     # Priority 1 Sep 2024 + 30 months = 1 Mar 2027 (Monday, IPOS open)
-    d = pct_national_phase(atlas, offices, "SG", dt.date(2024, 9, 1), treaty=pct)
+    d = pct_national_phase(atlas, offices_projected, "SG", dt.date(2024, 9, 1), treaty=pct)
     assert d.date == dt.date(2027, 3, 1)
     assert d.source.months == 30
     assert d.source.origin == "pack SG:patent.pct"
 
 
-def test_pct_uses_the_office_period_when_longer(atlas, offices, pct, tmp_path):
+def test_pct_uses_the_office_period_when_longer(atlas, offices_projected, pct, tmp_path):
     """A designated Office allowing 31 months must override the Treaty's 30."""
     import yaml
 
@@ -150,7 +164,7 @@ def test_pct_uses_the_office_period_when_longer(atlas, offices, pct, tmp_path):
     p.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
     from ipatlas.core.pack import Atlas
     alt = Atlas({"SG": load_pack(p)})
-    d = pct_national_phase(alt, offices, "SG", dt.date(2024, 9, 1), treaty=pct)
+    d = pct_national_phase(alt, offices_projected, "SG", dt.date(2024, 9, 1), treaty=pct)
     assert d.date == dt.date(2027, 4, 1)
     assert any("longer than the Treaty default of 30" in line for line in d.trace)
 
@@ -199,17 +213,19 @@ def test_opposition_not_recorded_refuses(atlas, offices):
 
 # -- Madrid ----------------------------------------------------------------------------
 
-def test_madrid_refusal_window_eighteen_months(atlas, offices, madrid):
+def test_madrid_refusal_window_eighteen_months(atlas, offices_projected, madrid):
     # All three packs declare the 18-month window. 1 Mar 2026 + 18 = 1 Sep 2027 (Wednesday)
-    d = madrid_refusal_deadline(atlas, offices, "SG", dt.date(2026, 3, 1), treaty=madrid)
+    d = madrid_refusal_deadline(atlas, offices_projected, "SG", dt.date(2026, 3, 1),
+                                treaty=madrid)
     assert d.source.months == 18
     assert d.date == dt.date(2027, 9, 1)
     assert any("Art 5(2)(c)" in line for line in d.trace)
 
 
-def test_madrid_refusal_uses_the_designated_office_calendar(atlas, offices, madrid):
+def test_madrid_refusal_uses_the_designated_office_calendar(atlas, offices_projected, madrid):
     """The refusal is notified BY the designated Office, so its calendar governs, not WIPO's."""
-    d = madrid_refusal_deadline(atlas, offices, "SG", dt.date(2026, 3, 1), treaty=madrid)
+    d = madrid_refusal_deadline(atlas, offices_projected, "SG", dt.date(2026, 3, 1),
+                                treaty=madrid)
     assert d.office == "IPOS"
     assert any("IPOS closure data" in line for line in d.trace)
     assert not any("office: WIPO" in line for line in d.trace)
@@ -227,6 +243,52 @@ def test_madrid_refusal_for_cn_refuses_for_want_of_2027_closure_data(atlas, offi
         madrid_refusal_deadline(atlas, offices, "CN", dt.date(2026, 4, 1), treaty=madrid)
 
 
+# -- projected calendars ---------------------------------------------------------------
+
+def test_a_projected_calendar_refuses_by_default(atlas, offices, pct):
+    """A reconstructed closure list must not produce a legal deadline.
+
+    IPOS 2027 was projected from the gazetted pattern because MOM had not published it. A
+    computed date over invented closure days looks authoritative and may be wrong, which is
+    more dangerous than no answer.
+    """
+    with pytest.raises(ProjectedCalendarError, match="PROJECTED"):
+        pct_national_phase(atlas, offices, "SG", dt.date(2024, 9, 1), treaty=pct)
+
+
+def test_the_refusal_names_the_remedy(atlas, offices, pct):
+    try:
+        pct_national_phase(atlas, offices, "SG", dt.date(2024, 9, 1), treaty=pct)
+    except ProjectedCalendarError as e:
+        assert "Replace it with the published list" in str(e)
+        assert "allow_projected=True" in str(e)
+    else:
+        pytest.fail("expected a refusal")
+
+
+def test_official_and_derived_calendars_compute_without_opting_in(atlas, offices):
+    """IPOS 2026 is gazetted and USPTO 2026-2027 are derived from statute, so these work."""
+    sg = opposition_deadline(atlas, offices, "trade_mark", "SG", dt.date(2026, 6, 1))
+    assert sg.date == dt.date(2026, 8, 3)
+    us = opposition_deadline(atlas, offices, "trade_mark", "US", dt.date(2026, 6, 1))
+    assert us.date == dt.date(2026, 7, 1)
+
+
+def test_provenance_appears_in_the_trace(atlas, offices):
+    d = opposition_deadline(atlas, offices, "trade_mark", "US", dt.date(2026, 6, 1))
+    assert any("provenance=derived" in line for line in d.trace)
+    d = opposition_deadline(atlas, offices, "trade_mark", "SG", dt.date(2026, 6, 1))
+    assert any("provenance=official" in line for line in d.trace)
+
+
+def test_every_closure_year_declares_its_provenance(offices):
+    """An unmarked year would silently behave as if sourced."""
+    from ipatlas import Provenance
+    for code in offices.codes:
+        for year, cy in offices[code].years.items():
+            assert cy.provenance is not Provenance.UNKNOWN, f"{code} {year}"
+
+
 # -- traces and provenance -------------------------------------------------------------
 
 def test_every_deadline_warns_when_the_period_is_unverified(atlas, offices, paris):
@@ -242,10 +304,10 @@ def test_trace_carries_the_closure_data_provenance(atlas, offices, paris):
     assert any(line.startswith("DEADLINE:") for line in d.trace)
 
 
-def test_provenance_does_not_demand_data_for_the_trigger_year(atlas, offices, pct):
+def test_provenance_does_not_demand_data_for_the_trigger_year(atlas, offices_projected, pct):
     """A 2024 priority date must not require 2024 closure data: the computation never
     asks whether the office was open in 2024, only on the computed expiry."""
-    d = pct_national_phase(atlas, offices, "SG", dt.date(2024, 9, 1), treaty=pct)
+    d = pct_national_phase(atlas, offices_projected, "SG", dt.date(2024, 9, 1), treaty=pct)
     assert d.date == dt.date(2027, 3, 1)
     assert not any("2024" in line for line in d.trace if "closure data" in line)
 

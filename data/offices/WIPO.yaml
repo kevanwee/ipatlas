@@ -26,6 +26,7 @@ computation:
 
 holidays:
   2026:
+    provenance: projected
     source: "WIPO published closure days (Geneva). Pattern: New Year, Good Friday, Easter Monday, Ascension, Whit Monday, Swiss National Day, Jeune genevois, Christmas period."
     checked: 2026-09-12
     verified: false

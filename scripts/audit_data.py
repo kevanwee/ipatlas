@@ -166,6 +166,66 @@ for code, pack in offices.items():
 
 print()
 print("=" * 78)
+print("D. Computable movable feasts")
+print("=" * 78)
+# Many European office closures are Easter-derived and therefore deterministic, as is
+# Geneva's Jeune genevois. Verifying them removes a whole class of error from closure lists
+# that are otherwise reconstructions. It does NOT prove the office actually closes that day,
+# only that the date given for the named feast is arithmetically right.
+
+
+def easter(year: int) -> dt.date:
+    """Anonymous Gregorian computus."""
+    a = year % 19
+    b, c = divmod(year, 100)
+    d, e = divmod(b, 4)
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i, k = divmod(c, 4)
+    ll = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * ll) // 451
+    month, day = divmod(h + ll - 7 * m + 114, 31)
+    return dt.date(year, month, day + 1)
+
+
+def jeune_genevois(year: int) -> dt.date:
+    """Thursday following the first Sunday in September (Geneva)."""
+    d = dt.date(year, 9, 1)
+    while d.weekday() != 6:  # first Sunday
+        d += dt.timedelta(days=1)
+    return d + dt.timedelta(days=4)
+
+
+EASTER_OFFSETS = {
+    "good friday": -2, "easter monday": 1, "ascension": 39,
+    "whit monday": 50, "pentecost monday": 50, "corpus christi": 60,
+}
+movable = 0
+for code, pack in offices.items():
+    for year, block in (pack.get("holidays") or {}).items():
+        year = int(year)
+        e = easter(year)
+        for entry in block.get("days") or []:
+            name = str(entry.get("name", "")).lower()
+            d = as_date(entry["date"])
+            for key, offset in EASTER_OFFSETS.items():
+                if key in name:
+                    expected = e + dt.timedelta(days=offset)
+                    movable += 1
+                    if d != expected:
+                        fail(f"{code} {year}: {name!r} recorded {d}, but Easter {year} is "
+                             f"{e} so it falls on {expected}")
+                    break
+            if "jeune genevois" in name or "jeûne genevois" in name:
+                expected = jeune_genevois(year)
+                movable += 1
+                if d != expected:
+                    fail(f"{code} {year}: Jeune genevois recorded {d}, computed {expected}")
+print(f"checked {movable} movable-feast dates against the computus")
+
+print()
+print("=" * 78)
 print("C. Structural invariants")
 print("=" * 78)
 

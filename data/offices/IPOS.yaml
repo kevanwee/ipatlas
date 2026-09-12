@@ -29,6 +29,7 @@ computation:
 
 holidays:
   2026:
+    provenance: official
     source: "Ministry of Manpower gazetted public holidays 2026 (via data.gov.sg). IPOS observes Singapore public holidays."
     checked: 2026-09-12
     verified: false
@@ -49,6 +50,7 @@ holidays:
       - { date: 2026-11-09, name: Deepavali (observed) }
       - { date: 2026-12-25, name: Christmas Day }
   2027:
+    provenance: projected
     source: "Projected from the gazetted pattern; NOT yet published by MOM at the time of writing."
     checked: 2026-09-12
     verified: false

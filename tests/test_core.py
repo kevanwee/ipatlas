@@ -213,3 +213,80 @@ def test_as_of_resolves_superseded_statute(atlas):
 def test_date_before_any_version_is_not_recorded(atlas):
     with pytest.raises(NotRecordedError, match="no version in force"):
         atlas["SG"].get("copyright.statute", as_of=dt.date(1900, 1, 1))
+
+
+# -- pending: adopted but not yet in force ---------------------------------------------
+
+def test_pending_resolves_for_dates_on_or_after_commencement(atlas):
+    """China's fifth Trademark Law amendment cuts the opposition window from 3 months to 2
+    with effect from 1 January 2027. It was adopted on 26 June 2026, so the change is law
+    but not yet in force, and both answers must be available by date."""
+    cn = atlas["CN"]
+    before = cn.get("trade_mark.opposition", as_of=dt.date(2026, 12, 31))
+    after = cn.get("trade_mark.opposition", as_of=dt.date(2027, 1, 1))
+    assert before.value["window_months"] == 3
+    assert after.value["window_months"] == 2
+    assert "第33条" in before.cite.text
+    assert "第36条" in after.cite.text
+
+
+def test_pending_records_adoption_separately_from_commencement(atlas):
+    """The gap between adoption and commencement is load-bearing for advice: an applicant
+    filing in December 2026 is already deciding against the 2027 rules."""
+    f = atlas["CN"].get("trade_mark.opposition", as_of=dt.date(2027, 6, 1))
+    assert f.adopted == dt.date(2026, 6, 26)
+    assert f.in_force_from == dt.date(2027, 1, 1)
+    assert f.adopted < f.in_force_from
+
+
+def test_renumbering_alone_is_still_recorded(atlas):
+    """Where the amendment only renumbers, the value is unchanged but the citation moves.
+    A pleading citing the old article after commencement cites a repealed numbering."""
+    cn = atlas["CN"]
+    old = cn.get("trade_mark.term", as_of=dt.date(2026, 6, 1))
+    new = cn.get("trade_mark.term", as_of=dt.date(2027, 6, 1))
+    assert old.value["years"] == new.value["years"] == 10
+    assert "第39-40条" in old.cite.text
+    assert "第43-44条" in new.cite.text
+
+
+def test_pending_entry_without_adopted_is_rejected(tmp_path):
+    p = tmp_path / "ZZ.yaml"
+    p.write_text(
+        "jurisdiction: ZZ\nname: Test\noffice: ZZO\n"
+        "defaults: { checked: 2026-09-01 }\n"
+        "trade_mark:\n  term: { years: 10, from: filing_date, cite: c }\n"
+        "pending:\n  trade_mark.term:\n"
+        "    - value: { years: 15 }\n      cite: new\n      in_force_from: 2027-01-01\n",
+        encoding="utf-8")
+    with pytest.raises(PackError, match="need `adopted`"):
+        load_pack(p)
+
+
+def test_pending_entry_without_commencement_is_rejected(tmp_path):
+    p = tmp_path / "ZZ.yaml"
+    p.write_text(
+        "jurisdiction: ZZ\nname: Test\noffice: ZZO\n"
+        "defaults: { checked: 2026-09-01 }\n"
+        "trade_mark:\n  term: { years: 10, from: filing_date, cite: c }\n"
+        "pending:\n  trade_mark.term:\n"
+        "    - value: { years: 15 }\n      cite: new\n      adopted: 2026-06-26\n",
+        encoding="utf-8")
+    with pytest.raises(PackError, match="need `in_force_from`"):
+        load_pack(p)
+
+
+def test_commencement_before_adoption_is_a_lint_error(tmp_path):
+    from ipatlas.core.lint import errors, lint_pack
+    p = tmp_path / "ZZ.yaml"
+    p.write_text(
+        "jurisdiction: ZZ\nname: Test\noffice: ZZO\n"
+        "defaults: { checked: 2026-09-01 }\n"
+        "trade_mark:\n"
+        "  term: { years: 10, from: filing_date, cite: c, in_force_until: 2026-12-31 }\n"
+        "pending:\n  trade_mark.term:\n"
+        "    - value: { years: 15 }\n      cite: new\n      adopted: 2027-06-01\n"
+        "      in_force_from: 2027-01-01\n",
+        encoding="utf-8")
+    out = lint_pack(load_pack(p), as_of=dt.date(2026, 9, 12))
+    assert any("cannot commence before it is adopted" in f.message for f in errors(out))

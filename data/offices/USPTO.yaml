@@ -22,6 +22,7 @@ computation:
 
 holidays:
   2026:
+    provenance: derived
     source: "5 U.S.C. § 6103 federal holidays, with in-lieu observance under Executive Order 11582"
     checked: 2026-09-12
     verified: false
@@ -38,6 +39,7 @@ holidays:
       - { date: 2026-11-26, name: "Thanksgiving Day" }
       - { date: 2026-12-25, name: "Christmas Day" }
   2027:
+    provenance: derived
     source: "5 U.S.C. § 6103 federal holidays, with in-lieu observance under Executive Order 11582"
     checked: 2026-09-12
     verified: false

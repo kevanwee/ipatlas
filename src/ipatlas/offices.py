@@ -33,8 +33,28 @@ class MonthArithmetic(StrEnum):
     CORRESPONDING_DATE = "corresponding_date"
 
 
+class Provenance(StrEnum):
+    """Where a closure year's dates came from. Drives whether the engine will compute on it."""
+
+    OFFICIAL = "official"    # transcribed from the office's or government's published list
+    DERIVED = "derived"      # computed from a statutory rule and checkable (US federal holidays)
+    PROJECTED = "projected"  # reconstructed from a general pattern. An invention.
+    UNKNOWN = "unknown"
+
+
 class CalendarDataMissingError(LookupError):
     """A computation touched a year with no vendored closure data for the office."""
+
+
+class ProjectedCalendarError(LookupError):
+    """A computation touched a year whose closure list was reconstructed, not sourced.
+
+    Separate from CalendarDataMissingError because the remedy differs: one needs data, the
+    other needs the data it already has to be replaced with the official list. Both refuse,
+    because a guessed closure date produces a wrong legal deadline just as surely as an
+    absent one, and the wrong deadline is the more dangerous of the two failures since it
+    looks like an answer.
+    """
 
 
 @dataclass(frozen=True)
@@ -53,6 +73,7 @@ class ClosureYear:
     source: str
     checked: dt.date | None
     verified: bool
+    provenance: Provenance = Provenance.UNKNOWN
     notes: tuple[str, ...] = ()
     working_weekends: frozenset[dt.date] = frozenset()
 
@@ -68,24 +89,37 @@ class Office:
     month_arithmetic: Rule
     weekend: tuple[int, ...]
     years: dict[int, ClosureYear] = field(default_factory=dict)
+    # Opt in to computing over a reconstructed closure list. Off by default: see
+    # ProjectedCalendarError. Set it knowingly, per Office instance, never globally.
+    allow_projected: bool = False
 
     # -- coverage ---------------------------------------------------------------------
 
     def ensure_year(self, year: int) -> ClosureYear:
         try:
-            return self.years[year]
+            cy = self.years[year]
         except KeyError:
             raise CalendarDataMissingError(
                 f"{self.code} has no closure data for {year}. Add it to "
                 f"data/offices/{self.code}.yaml rather than assuming the office was open."
             ) from None
+        if cy.provenance is Provenance.PROJECTED and not self.allow_projected:
+            raise ProjectedCalendarError(
+                f"{self.code} closure data for {year} is PROJECTED, not taken from the "
+                f"office's published list ({cy.source}). Computing a legal deadline over "
+                "invented closure dates would produce a date that looks authoritative and "
+                "may be wrong. Replace it with the published list, or pass "
+                "allow_projected=True if an approximate answer is genuinely what you want."
+            )
+        return cy
 
     def provenance(self, *dates: dt.date) -> list[str]:
         out = []
         for year in sorted({d.year for d in dates}):
             cy = self.ensure_year(year)
             status = "verified" if cy.verified else "UNVERIFIED"
-            out.append(f"{self.code} closure data {year}: {status}, source={cy.source}")
+            out.append(f"{self.code} closure data {year}: {status}, "
+                       f"provenance={cy.provenance.value}, source={cy.source}")
             out.extend(f"  caution: {n}" for n in cy.notes)
         return out
 
@@ -194,12 +228,21 @@ def load_office(path: str | Path) -> Office:
                 # an office whose observance REPLACES the holiday it signals a mistake.
                 pass
             days[d] = str(entry.get("name", "closed"))
+        prov_raw = str(block.get("provenance", "unknown"))
+        try:
+            prov = Provenance(prov_raw)
+        except ValueError:
+            raise ValueError(
+                f"{path}: holidays.{year} provenance {prov_raw!r} is not one of "
+                f"{[p.value for p in Provenance]}"
+            ) from None
         years[int(year)] = ClosureYear(
             year=int(year),
             days=days,
             source=str(block.get("source", "unknown")),
             checked=_date(block.get("checked")),
             verified=bool(block.get("verified", False)),
+            provenance=prov,
             notes=tuple(block.get("notes") or []),
             working_weekends=frozenset(_date(x) for x in (ww_raw.get(int(year)) or [])),
         )
@@ -243,11 +286,14 @@ class Offices:
         raise LookupError(f"no office pack records jurisdiction {code!r}")
 
 
-def load_offices(directory: str | Path | None = None) -> Offices:
+def load_offices(directory: str | Path | None = None, *,
+                 allow_projected: bool = False) -> Offices:
+    """Load every office pack. `allow_projected` opts in to reconstructed closure lists."""
     directory = Path(directory or OFFICES_DIR)
     out = {}
     for p in sorted(directory.glob("*.yaml")):
         office = load_office(p)
+        office.allow_projected = allow_projected
         out[office.code] = office
     return Offices(out)
 

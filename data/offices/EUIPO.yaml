@@ -20,6 +20,7 @@ computation:
 
 holidays:
   2026:
+    provenance: projected
     source: "EUIPO published days on which the Office is not open"
     checked: 2026-09-12
     verified: false

@@ -20,7 +20,12 @@ from .deadlines import (
 )
 from .lifecycle import copyright_term, renewal_schedule
 from .lifecycle.term import MissingDateError
-from .offices import CalendarDataMissingError, load_offices, load_treaty_pack
+from .offices import (
+    CalendarDataMissingError,
+    ProjectedCalendarError,
+    load_offices,
+    load_treaty_pack,
+)
 from .routes import routes as route_matrix
 
 
@@ -100,7 +105,7 @@ def cmd_fact(a) -> int:
 
 
 def _offices(a):
-    return load_offices(a.offices)
+    return load_offices(a.offices, allow_projected=a.allow_projected)
 
 
 def _emit(result, as_json: bool) -> int:
@@ -130,7 +135,7 @@ def cmd_deadline(a) -> int:
     except NotRecordedError as e:
         print(f"not recorded: {e}", file=sys.stderr)
         return 2
-    except CalendarDataMissingError as e:
+    except (CalendarDataMissingError, ProjectedCalendarError) as e:
         print(f"cannot compute: {e}", file=sys.stderr)
         return 3
     return _emit(r, a.json)
@@ -187,11 +192,9 @@ def cmd_offices(a) -> int:
     offices = _offices(a)
     for code in offices.codes:
         o = offices[code]
-        years = ", ".join(str(y) for y in sorted(o.years))
-        unverified = sum(1 for y in o.years.values() if not y.verified)
-        print(f"{code:7} {o.name[:48]:50} jur={o.jurisdiction or '-':4} "
-              f"closure years: {years or 'NONE'}"
-              + (f" ({unverified} unverified)" if unverified else ""))
+        provs = ", ".join(f"{y}:{c.provenance.value}"
+                          for y, c in sorted(o.years.items())) or "NONE"
+        print(f"{code:7} {o.name[:46]:48} jur={o.jurisdiction or '-':4} closure {provs}")
     return 0
 
 
@@ -227,6 +230,9 @@ def main(argv=None) -> int:
     # Global, for the commands that emit a single structured result. `compare` and `fact`
     # predate it and take --format, which also accepts json.
     p.add_argument("--json", action="store_true", help="emit JSON instead of a trace")
+    p.add_argument("--allow-projected", action="store_true",
+                   help="compute over reconstructed closure calendars (refused by default; "
+                        "the result may be wrong by a day or more)")
     p.add_argument("--as-of", type=dt.date.fromisoformat, default=None,
                    help="resolve facts as in force on this date (default: today)")
     sub = p.add_subparsers(dest="cmd", required=True)

@@ -24,6 +24,7 @@ from typing import Any
 # Keys that describe a fact rather than form part of its value.
 PROVENANCE_KEYS = frozenset({
     "value", "cite", "url", "checked", "verified", "notes", "in_force_from", "in_force_until",
+    "adopted",
 })
 
 UNKNOWN = "not recorded"
@@ -54,6 +55,10 @@ class Fact:
     notes: list[str] = field(default_factory=list)
     in_force_from: dt.date | None = None
     in_force_until: dt.date | None = None
+    # When the instrument was ADOPTED, which is not when it comes into force. The gap is
+    # load-bearing for advice: an applicant filing in December 2026 is already deciding
+    # against rules that take effect on 1 January 2027.
+    adopted: dt.date | None = None
     # True when this entry only carries commentary attached to a group of facts (e.g. a note
     # on `copyright.term` covering all its branches). Such an entry has no value by design.
     is_group_note: bool = False
@@ -105,6 +110,8 @@ class Fact:
             "verified": self.verified,
             "notes": self.notes or None,
             "in_force_from": self.in_force_from.isoformat() if self.in_force_from else None,
+            "in_force_until": self.in_force_until.isoformat() if self.in_force_until else None,
+            "adopted": self.adopted.isoformat() if self.adopted else None,
         }
 
 
@@ -301,4 +308,5 @@ def parse_fact(node: Any, *, path: str, jurisdiction: str, defaults: dict[str, A
         notes=list(notes),
         in_force_from=_date(node.get("in_force_from"), path),
         in_force_until=_date(node.get("in_force_until"), path),
+        adopted=_date(node.get("adopted"), path),
     )

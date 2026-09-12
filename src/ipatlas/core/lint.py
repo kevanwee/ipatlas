@@ -126,6 +126,29 @@ def lint_pack(pack: Pack, *, as_of: dt.date | None = None) -> list[Finding]:
             out.append(Finding("error", pack.jurisdiction, path,
                                "has history but no `in_force_from` of its own, so a dated "
                                "query cannot tell which version applies"))
+    for path, versions in pack.pending.items():
+        for f in versions:
+            out.extend(lint_fact(f, as_of=when))
+            if f.adopted and f.in_force_from and f.adopted > f.in_force_from:
+                out.append(Finding("error", pack.jurisdiction, f"pending.{path}",
+                                   "adopted after in_force_from: an instrument cannot "
+                                   "commence before it is adopted"))
+        for a, b in zip(versions, versions[1:], strict=False):
+            if a.in_force_until and b.in_force_from and a.in_force_until >= b.in_force_from:
+                out.append(Finding("error", pack.jurisdiction, f"pending.{path}",
+                                   "overlapping validity periods"))
+        current = pack.facts.get(path)
+        if current is None:
+            out.append(Finding("error", pack.jurisdiction, f"pending.{path}",
+                               "pending version for a path with no current fact"))
+        elif current.in_force_until is None and versions:
+            # Resolution is still correct, because `pending` is searched first. But an
+            # unbounded current fact reads as though it applies indefinitely.
+            out.append(Finding("warn", pack.jurisdiction, path,
+                               f"has a pending version from "
+                               f"{versions[0].in_force_from.isoformat()} but no "
+                               "`in_force_until` of its own; resolution is unaffected but the "
+                               "current entry reads as if it applied indefinitely"))
     if not pack.office:
         out.append(Finding("warn", pack.jurisdiction, "office",
                            "no office recorded; deadline computation needs one"))

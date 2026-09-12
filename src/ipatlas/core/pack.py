@@ -24,7 +24,7 @@ TREATIES_DIR = DATA_DIR / "treaties"
 # Top-level keys that are metadata about the pack, not legal facts.
 META_KEYS = frozenset({
     "jurisdiction", "name", "office", "office_name", "languages", "legal_system",
-    "currency", "defaults", "history",
+    "currency", "defaults", "history", "pending",
 })
 
 RIGHTS = (
@@ -51,19 +51,27 @@ class Pack:
     meta: dict[str, Any] = field(default_factory=dict)
     facts: dict[str, Fact] = field(default_factory=dict)
     history: dict[str, list[Fact]] = field(default_factory=dict)
+    # Law that is ADOPTED but not yet in force. Mirrors `history` in shape, opposite in time,
+    # so resolution stays one comparison rather than two code paths. Nothing has to be
+    # migrated on the commencement date: correctness does not depend on anyone remembering.
+    pending: dict[str, list[Fact]] = field(default_factory=dict)
 
     # -- addressing -------------------------------------------------------------------
 
     def get(self, attr: str, *, as_of: dt.date | None = None) -> Fact:
         """Fact at a dotted path, as in force on `as_of`. Raises NotRecordedError if absent."""
         when = as_of or dt.date.today()
+        # Future, present, past. A pending entry wins for a date on or after its commencement.
+        for future in self.pending.get(attr, []):
+            if future.in_force_on(when):
+                return future
         current = self.facts.get(attr)
         if current is not None and current.in_force_on(when):
             return current
         for old in self.history.get(attr, []):
             if old.in_force_on(when):
                 return old
-        if current is None and attr not in self.history:
+        if current is None and attr not in self.history and attr not in self.pending:
             raise NotRecordedError(f"{self.jurisdiction}: {attr!r} is not recorded")
         raise NotRecordedError(
             f"{self.jurisdiction}: {attr!r} has no version in force on {when.isoformat()}"
@@ -142,6 +150,34 @@ def _walk(node: Any, *, prefix: str, jurisdiction: str, defaults: dict,
               jurisdiction=jurisdiction, defaults=defaults, out=out)
 
 
+def _load_pending(raw: Any, *, jurisdiction: str, defaults: dict) -> dict[str, list[Fact]]:
+    """Adopted-but-not-yet-in-force versions. `in_force_until` is optional (usually open)."""
+    out: dict[str, list[Fact]] = {}
+    if not raw:
+        return out
+    if not isinstance(raw, dict):
+        raise PackError(f"{jurisdiction}: `pending` must be a mapping of path -> versions")
+    for path, versions in raw.items():
+        if not isinstance(versions, list):
+            raise PackError(f"{jurisdiction}: pending.{path} must be a list of versions")
+        facts = []
+        for v in versions:
+            f = parse_fact(v, path=path, jurisdiction=jurisdiction, defaults=defaults)
+            if f.in_force_from is None:
+                raise PackError(
+                    f"{jurisdiction}: pending.{path} entries need `in_force_from` - the "
+                    "commencement date is the whole point of a pending entry"
+                )
+            if f.adopted is None:
+                raise PackError(
+                    f"{jurisdiction}: pending.{path} entries need `adopted` so a reader can "
+                    "tell adopted-not-yet-in-force from merely proposed"
+                )
+            facts.append(f)
+        out[path] = sorted(facts, key=lambda f: f.in_force_from)
+    return out
+
+
 def _load_history(raw: Any, *, jurisdiction: str, defaults: dict) -> dict[str, list[Fact]]:
     out: dict[str, list[Fact]] = {}
     if not raw:
@@ -191,6 +227,7 @@ def load_pack(path: str | Path) -> Pack:
         meta={k: raw.get(k) for k in META_KEYS if k in raw and k != "history"},
         facts=facts,
         history=_load_history(raw.get("history"), jurisdiction=code, defaults=defaults),
+        pending=_load_pending(raw.get("pending"), jurisdiction=code, defaults=defaults),
     )
 
 

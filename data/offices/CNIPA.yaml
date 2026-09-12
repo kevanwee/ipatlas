@@ -25,6 +25,7 @@ computation:
 
 holidays:
   2026:
+    provenance: official
     source: "State Council annual holiday notice (国务院办公厅关于2026年部分节假日安排的通知)"
     checked: 2026-09-12
     verified: false
