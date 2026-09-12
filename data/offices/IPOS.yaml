@@ -16,8 +16,11 @@ computation:
     notes: ["A period beginning on a day excludes that day."]
   roll_non_working_forward:
     value: true
-    cite: "Patents Rules, r 100; Trade Marks Rules, r 78"
-    notes: ["Where a time limit expires on a day the Registry is not open, the act is in time if done on the next day the Registry is open."]
+    cite: "Patents Rules; Trade Marks Rules (rule numbers unresolved, see notes)"
+    rule_numbers_disputed: true
+    notes:
+      - "Where a time limit expires on a day the Registry is not open, the act is in time if done on the next day the Registry is open. The RULE itself is standard practice and is not in doubt."
+      - "RULE NUMBERS UNRESOLVED. This entry cited Patents Rules r 100 and Trade Marks Rules r 78. A verification pass on 2026-09-12 flagged both as looking wrong before it was interrupted, without supplying replacements. Check against sso.agc.gov.sg before citing either number."
   month_arithmetic:
     value: corresponding_date
     cite: "Interpretation Act 1965, s 50(b)"

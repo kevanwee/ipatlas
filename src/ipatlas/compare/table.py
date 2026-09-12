@@ -200,7 +200,10 @@ def compare(atlas: Atlas, right: str, jurisdictions: list[str],
             f"unknown right {right!r}; known: {', '.join(sorted(DEFAULT_ATTRIBUTES))}"
         )
     attrs = attributes or DEFAULT_ATTRIBUTES[right]
-    codes = [j.upper() for j in jurisdictions]
+    # Deduplicate while preserving the caller's order. Cells are keyed by (attribute,
+    # jurisdiction), so a repeated jurisdiction collapses to one cell while `coverage` would
+    # still multiply by the column count, reporting 13 recorded out of 26.
+    codes = list(dict.fromkeys(j.upper() for j in jurisdictions))
     table = Table(right=right, jurisdictions=codes, attributes=attrs, as_of=when)
     for code in codes:
         pack = atlas[code]  # raises NotRecordedError with the loaded list if absent

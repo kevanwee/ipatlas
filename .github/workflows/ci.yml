@@ -13,3 +13,6 @@ jobs:
       - run: python -m pytest
       # The data gate. A pack that breaks CLAUDE.md's rules cannot merge.
       - run: python scripts/lint_data.py
+      # Internal-consistency audit: derives US federal holidays from the statutory rules,
+      # checks prose weekday claims against the calendar, and enforces structural invariants.
+      - run: python scripts/audit_data.py

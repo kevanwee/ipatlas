@@ -173,9 +173,26 @@ def load_office(path: str | Path) -> Office:
     for year, block in (raw.get("holidays") or {}).items():
         days = {}
         for entry in block.get("days") or []:
+            # Reject unknown keys. An unquoted YAML flow scalar containing a comma is split
+            # by the parser, silently truncating the value and inventing a key from the rest
+            # ("Martin Luther King, Jr." -> name "Martin Luther King" plus key "Jr."). That
+            # corrupted four USPTO closure names before this check existed.
+            unknown = set(entry) - {"date", "name", "observance"}
+            if unknown:
+                raise ValueError(
+                    f"{path}: holidays.{year} entry for {entry.get('date')} has unknown "
+                    f"key(s) {sorted(unknown)}. This is usually an unquoted name containing "
+                    "a comma: quote the value."
+                )
             d = _date(entry["date"])
             if d.year != int(year):
                 raise ValueError(f"{path}: {d} listed under holidays.{year}")
+            if d in days:
+                raise ValueError(f"{path}: duplicate closure date {d} in holidays.{year}")
+            if d.weekday() >= 5:
+                # Harmless for SG/CN, which list a holiday and its observed weekday, but for
+                # an office whose observance REPLACES the holiday it signals a mistake.
+                pass
             days[d] = str(entry.get("name", "closed"))
         years[int(year)] = ClosureYear(
             year=int(year),

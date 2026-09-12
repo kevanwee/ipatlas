@@ -57,6 +57,37 @@ scripts/                       human-run maintenance (lint, refresh)
 Front-ends contain no logic. Modules do not import each other except through `core`
 (`deadlines` may use `core.calendar`; `portfolio` may call `lifecycle` and `deadlines`).
 
+## Hard-won rules
+
+These came from actual defects. Do not relitigate them.
+
+- **Quote every YAML scalar that could contain a comma.** An unquoted flow-mapping value is
+  split at the comma: `name: Martin Luther King, Jr.` becomes the value `Martin Luther King`
+  plus a phantom key `Jr.` with a None value. This silently corrupted four USPTO closure
+  names. Loaders reject unknown keys now; keep that check.
+- **Never drive a legal answer off prose.** The copyright term engine once decided whether a
+  term ran to 31 December by searching the notes for the string "31 december", so rewording a
+  note changed a legal answer. Facts that change behaviour are declared fields
+  (`to_end_of_calendar_year`), never inferred from text.
+- **A fact that changes behaviour by its ABSENCE must warn.** The US pack did not record
+  `to_end_of_calendar_year`, so US copyright expiry was computed to the anniversary, up to a
+  year early, because 17 U.S.C. s 305 was missing. The engine now warns when the field is
+  absent; that warning is what found the error.
+- **Deduplicate caller-supplied jurisdiction lists.** Cells are keyed by (attribute,
+  jurisdiction) but coverage multiplied by the column count, so a repeated jurisdiction
+  reported 13 recorded out of 26.
+- **Record a disputed citation as disputed; do not quietly keep it or quietly change it.**
+  Where a verification pass casts doubt on a provision number without supplying a confirmed
+  replacement, keep the value, add `*_disputed: true` and a note saying what was doubted and
+  what to check. An unverified number presented cleanly is worse than a flagged one.
+- **Check a citation points at the right SUBJECT, not just the right number.** Several
+  citations pointed at provisions about a different topic entirely (SG CA s 117 is published
+  editions, not sound recordings; PA s 20(1) is entitlement disputes, not first-to-file). A
+  reviewer spot-checking one of those concludes the whole pack is unreliable.
+- **Where a value is true only because of a deeming provision, cite both.** TMA s 18(1) says
+  a term runs "from the date of registration"; it means filing only because s 15(2) deems
+  them the same. Citing s 18 alone makes correct data look wrong.
+
 ## Data conventions
 
 - **Jurisdiction codes**: ISO 3166-1 alpha-2, upper-case. Supranational: `EU` (EUIPO/EPO

@@ -127,7 +127,8 @@ def test_cn_copyright_is_fifty_years_to_the_year_end(atlas):
 def test_us_works_made_for_hire_takes_the_earlier_limb(atlas):
     c = copyright_term(atlas, "US", "works_made_for_hire",
                        {"publication": dt.date(2000, 1, 1), "creation": dt.date(1990, 1, 1)})
-    assert c.expiry == dt.date(2095, 1, 1)  # pub+95 = 2095 beats creation+120 = 2110
+    # pub+95 = 2095 beats creation+120 = 2110, then s 305 runs it to the year end.
+    assert c.expiry == dt.date(2095, 12, 31)
     assert any("whichever is earlier" in line for line in c.trace)
 
 
@@ -135,7 +136,38 @@ def test_us_works_made_for_hire_when_unpublished_for_long(atlas):
     # Created 1990, published 2060: creation+120 = 2110 beats publication+95 = 2155
     c = copyright_term(atlas, "US", "works_made_for_hire",
                        {"publication": dt.date(2060, 1, 1), "creation": dt.date(1990, 1, 1)})
-    assert c.expiry == dt.date(2110, 1, 1)
+    assert c.expiry == dt.date(2110, 12, 31)
+
+
+def test_us_copyright_runs_to_the_calendar_year_end(atlas):
+    """17 U.S.C. s 305: 'All terms of copyright provided by sections 302 through 304 run to
+    the end of the calendar year in which they would otherwise expire.'
+
+    The pack did not record this at first, so the engine computed US expiry to the
+    anniversary - up to a year early. It was caught by the engine warning that fires when a
+    jurisdiction does not declare `to_end_of_calendar_year`, which is why that warning exists.
+    """
+    c = copyright_term(atlas, "US", "literary_dramatic_musical_artistic",
+                       {"author_death": dt.date(2000, 6, 15)})
+    assert c.expiry == dt.date(2070, 12, 31)
+    assert any("calendar year" in line for line in c.trace)
+
+
+def test_a_jurisdiction_not_declaring_the_year_end_rule_is_warned_about(atlas, tmp_path):
+    """Silence must produce a warning, not a silently-early date."""
+    from ipatlas import load_pack
+    from ipatlas.core.pack import Atlas
+    p = tmp_path / "ZZ.yaml"
+    p.write_text(
+        "jurisdiction: ZZ\nname: Testland\noffice: ZZO\n"
+        "defaults: { checked: 2026-09-01 }\n"
+        "copyright:\n  term:\n"
+        "    literary: { base: author_death, plus_years: 70, cite: 'Testland CA s 1' }\n",
+        encoding="utf-8")
+    c = copyright_term(Atlas({"ZZ": load_pack(p)}), "ZZ", "literary",
+                       {"author_death": dt.date(2000, 6, 15)})
+    assert c.expiry == dt.date(2070, 6, 15)  # anniversary, because nothing is declared
+    assert any("to_end_of_calendar_year" in w for w in c.warnings)
 
 
 def test_copyright_missing_base_date_refuses(atlas):
@@ -150,14 +182,18 @@ def test_unknown_category_lists_what_is_recorded(atlas):
 
 
 def test_jurisdictions_diverge_on_copyright_term(atlas):
-    """Same author, three answers. The reason the dataset exists."""
+    """Same author, and China is twenty years shorter.
+
+    All three jurisdictions run terms to 31 December (SG s 114, US s 305, CN Art 23), so the
+    divergence here is the PERIOD - 70 years against 50 - not the year-end treatment. An
+    earlier version of this test asserted the US expired on the anniversary, which was wrong.
+    """
     death = {"author_death": dt.date(2000, 6, 15)}
     sg = copyright_term(atlas, "SG", "literary_dramatic_musical_artistic", death).expiry
     us = copyright_term(atlas, "US", "literary_dramatic_musical_artistic", death).expiry
     cn = copyright_term(atlas, "CN", "literary_dramatic_musical_artistic", death).expiry
-    # All three are a flat "+70" or "+50" on paper, yet all three give a different date:
-    # SG and CN run to the end of the calendar year, the US runs to the anniversary.
-    assert sg == dt.date(2070, 12, 31)
-    assert us == dt.date(2070, 6, 15)
+    assert sg == us == dt.date(2070, 12, 31)
     assert cn == dt.date(2050, 12, 31)
-    assert cn < us < sg
+    assert cn < sg
+    # A work can be in the public domain in China while still protected in SG and the US.
+    assert (sg - cn).days > 7000

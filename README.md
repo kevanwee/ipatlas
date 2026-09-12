@@ -121,8 +121,14 @@ $ ipatlas copyright-term US works_made_for_hire --date publication=2000-01-01 --
   rule: whichever is earlier -> 2095-01-01
 ```
 
-Same author's death, three jurisdictions: SG and US give 2070-06-15; China gives
-2050-12-31, because the term is 50 years and runs to the end of the calendar year.
+Same author's death: Singapore and the US both give 2070-12-31; China gives 2050-12-31.
+All three run terms to 31 December (SG s 114, US 17 U.S.C. s 305, CN Art 23), so the
+divergence is the period - 70 years against 50 - and a work can be in the public domain in
+China while still protected in the other two.
+
+The engine warns when a jurisdiction does not declare `to_end_of_calendar_year`, because
+silence would otherwise produce a date up to a year early. That warning is how the missing
+US s 305 rule was found.
 
 Rights covered by the three packs: trade marks, patents, utility models, registered
 designs, copyright, trade secrets, geographical indications, plant varieties (SG), plus

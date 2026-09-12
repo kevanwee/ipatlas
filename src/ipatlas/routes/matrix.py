@@ -103,7 +103,8 @@ def routes(atlas: Atlas, right: str, targets: list[str], *,
             f"no route treaty mapping for {right!r}; known: {', '.join(ROUTE_TREATIES)}"
         )
     out: list[TargetRoutes] = []
-    for code in [t.upper() for t in targets]:
+    # Deduplicate while preserving order, as `compare` does.
+    for code in dict.fromkeys(t.upper() for t in targets):
         pack = atlas[code]
         tr = TargetRoutes(jurisdiction=code, name=pack.name,
                           right_available=pack.has_right(right))

@@ -159,3 +159,23 @@ def test_brief_is_dated(atlas):
     new = brief(atlas["CN"], "registered_design", as_of=dt.date(2026, 1, 1))
     assert "10 years from filing date" in old
     assert "15 years from filing date" in new
+
+
+def test_repeated_jurisdiction_is_deduplicated(atlas):
+    """A repeated jurisdiction collapses to one column.
+
+    Cells are keyed by (attribute, jurisdiction), so a duplicate produced one cell while
+    `coverage` multiplied by the column count: it reported 13 recorded out of 26.
+    """
+    one = compare(atlas, "trade_mark", ["SG"])
+    two = compare(atlas, "trade_mark", ["SG", "SG"])
+    assert two.jurisdictions == ["SG"]
+    assert two.coverage == one.coverage
+    recorded, total = two.coverage
+    assert recorded <= total
+
+
+def test_repeated_jurisdiction_is_deduplicated_in_routes(atlas):
+    from ipatlas import routes
+    m = routes(atlas, "trade_mark", ["SG", "sg", "SG"])
+    assert [t.jurisdiction for t in m.targets] == ["SG"]

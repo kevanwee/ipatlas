@@ -298,6 +298,13 @@ copyright:
       verified: true
       cite: "Copyright Act 2021, s 132"
       notes: ["Verified 2026-09-12: 50 years from the end of the year the programme was included in a cable programme service."]
+    to_end_of_calendar_year:
+      value: true
+      verified: true
+      cite: "Copyright Act 2021, ss 114, 119, 122, 125, 128, 132"
+      notes:
+        - "Every duration provision in the Act is expressed as a number of years 'after the end of the year' in which the triggering event occurs, so a term expires on 31 December."
+        - "Declared explicitly because the term engine must not infer this from prose."
     notes:
       - "EVERY Singapore copyright term runs from THE END OF THE YEAR of the triggering event, not from its anniversary. A term therefore expires on 31 December of the final year."
       - "Singapore moved from life+50 to life+70 in 2004 under the US-Singapore FTA."

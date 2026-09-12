@@ -227,6 +227,13 @@ copyright:
       notes:
         - "Runs to 31 December of the 95th year after first publication, PLUS a transition period: +5 years for recordings first published 1923-1946, +15 years for 1947-1956. Nothing in this class runs past 15 February 2067."
         - "Verified 2026-09-12 against 17 U.S.C. s 1401. The transition periods and the 2067 outer limit are NOT modelled by the term engine; do not compute from this entry without applying them."
+    to_end_of_calendar_year:
+      value: true
+      verified: true
+      cite: "17 U.S.C. § 305"
+      notes:
+        - "s 305: 'All terms of copyright provided by sections 302 through 304 run to the end of the calendar year in which they would otherwise expire.' So a life+70 term expires on 31 December, not on the anniversary of death."
+        - "Added 2026-09-12. The pack previously did not record this, so the term engine computed US copyright expiry to the anniversary - up to a year early. Found by the engine warning that the field was absent."
     notes:
       - "There is NO sound-recording-specific term rule for recordings fixed on or after 15 February 1972. Such a recording takes the term for its authorship: life+70 under s 302(a) where the authors are individuals, or publication+95 / creation+120 under s 302(c) only where it is a work made for hire or anonymous/pseudonymous. Use the applicable category above."
       - "A flat `sound_recording: publication + 95` entry was recorded here and removed on 2026-09-12: it was wrong in both directions, and s 1401 is a separate pre-1972 regime rather than authority for a post-1978 term."

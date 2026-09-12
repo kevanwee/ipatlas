@@ -1,8 +1,16 @@
 # ipatlas jurisdiction pack: China (mainland)
 #
-# Nothing here is verified. Citations give the Chinese article reference with an English
-# gloss, per CLAUDE.md. Hong Kong, Macau and Taiwan are separate jurisdictions and separate
-# packs; nothing in this file applies to them.
+# Citations give the Chinese article reference with an English gloss, per CLAUDE.md.
+# Hong Kong, Macau and Taiwan are separate jurisdictions and separate packs; nothing in this
+# file applies to them.
+#
+# VERIFICATION STATE: facts marked `verified: true` were checked on the date in their notes.
+# Facts without the flag are unchecked. Where a correction was made the note records what the
+# previous entry said, so the error is auditable.
+#
+# KNOWN PENDING CHANGE: the fifth Trademark Law amendment was adopted on 26 June 2026 and
+# takes effect 1 January 2027. The trade_mark block below states the law in force TODAY and
+# does not yet model the amendment; see the `pending_amendment` note on trade_mark.statute.
 
 jurisdiction: CN
 name: China (mainland)
@@ -118,16 +126,33 @@ patent:
     grace_months: 6
     surcharge: true
     cite: "专利法 第43条; 专利法实施细则 (Implementing Regulations)"
-    notes: ["Annuities run from the first year after grant, counted by filing anniversary. Contrast the US three-fee schedule."]
+    notes:
+      - "专利法 第43条: the patentee pays an annual fee BEGINNING WITH THE YEAR IN WHICH THE PATENT RIGHT IS GRANTED. Corrected 2026-09-12: the pack previously said 'the first year after grant', which is off by one."
+      - "Art 43 carries only the duty to pay. The due date by filing anniversary and the 6-month late-payment window with surcharge are in the Implementing Regulations (2023 revision, in force 20 January 2024)."
+      - "Contrast the US three-fee schedule at 3.5 / 7.5 / 11.5 years from grant."
   grace_period:
     months: 6
     scope: limited_grounds
-    grounds: ["first disclosure at a state-recognised exhibition", "first disclosure at a prescribed academic conference", "disclosure by another without consent", "public-interest disclosure during a national emergency"]
+    grounds:
+      - "first public disclosure for the public interest when a state of emergency or extraordinary situation occurred in the country"
+      - "first exhibition at an INTERNATIONAL exhibition sponsored or recognised by the Chinese Government"
+      - "first publication at a prescribed academic or technological conference"
+      - "contents divulged by another person without the applicant's consent"
     cite: "专利法 第24条 (Art 24)"
     notes:
       - "Six months and only on enumerated grounds. An inventor's own ordinary publication is NOT excused, unlike the 12-month self-disclosure grace in the US and Singapore."
       - "This asymmetry is a classic cross-border trap: a US-led programme that relies on § 102(b)(1) destroys novelty in China."
-  pct: { national_phase_months: 30, from: priority_date, extension_available: true, extended_months: 32, cite: "专利法实施细则 (Implementing Regulations, PCT chapter)" }
+  pct:
+    national_phase_months: 30
+    from: priority_date
+    extension_available: true
+    extended_months: 32
+    surcharge_for_extension: true
+    cite: "专利法实施细则 (Patent Law Implementing Regulations, 2023 revision, PCT chapter); PCT Art 48"
+    rule_number_disputed: true
+    notes:
+      - "Entry within 30 months of the earliest priority date; the procedures may still be completed within 32 months on payment of a surcharge. The PERIODS are not in doubt."
+      - "RULE NUMBER UNRESOLVED. A verification pass on 2026-09-12 proposed Rule 103, then flagged Rule 120 as the likely correct number before it was interrupted; neither was confirmed. The 2023 revision renumbered the Regulations, so a pre-2024 rule number may be stale. Do not cite a specific rule number from this entry until it is checked against the current text on cnipa.gov.cn."
   exhaustion: { value: international, cite: "专利法 第75条第1项 (Art 75(1))" }
   border_measures: { available: true, mechanism: "customs recordal as for trade marks", cite: "知识产权海关保护条例" }
   criminal_sanctions: { available: true, scope: counterfeit_patent_marking_only, cite: "刑法 第216条 (Criminal Law, Art 216)" }
@@ -181,6 +206,13 @@ copyright:
     literary_dramatic_musical_artistic: { base: author_death, plus_years: 50, cite: "著作权法 第23条 (Art 23)" }
     legal_person_works: { base: publication, plus_years: 50, cite: "著作权法 第23条 (Art 23)" }
     audiovisual_works: { base: publication, plus_years: 50, cite: "著作权法 第23条 (Art 23)" }
+    to_end_of_calendar_year:
+      value: true
+      verified: true
+      cite: "著作权法 第23条 (Copyright Law, Art 23)"
+      notes:
+        - "Art 23 expresses each term as ending on 31 December of the final year (截止于...第五十年的12月31日), not on the anniversary."
+        - "Declared explicitly because the term engine must not infer this from prose."
     notes:
       - "Fifty years, not seventy. A work in the public domain in China may still be protected in Singapore or the US, and vice versa where the rule of the shorter term applies."
       - "Terms are calculated to 31 December of the fiftieth year, not to the anniversary date."
@@ -191,12 +223,20 @@ copyright:
     rights: [publication, attribution, integrity, modification]
     perpetual: [attribution, integrity, modification]
     waivable: false
-    cite: "著作权法 第10条, 第23条 (Arts 10, 23)"
-    notes: ["Attribution, integrity and the right of modification are unlimited in time and are not waivable. A global assignment clause purporting to waive moral rights is ineffective here."]
+    waivability_is_inference: true
+    cite: "著作权法 第10条 (rights); 第22条 (unlimited term of attribution, modification and integrity)"
+    notes:
+      - "Art 22: 作者的署名权、修改权、保护作品完整权的保护期不受限制 - the terms of the rights of attribution, modification and integrity are UNLIMITED. Previously cited to Art 23, which is the economic-term article. Corrected 2026-09-12."
+      - "The publication right (发表权) is NOT perpetual; its term is limited under Art 23."
+      - "NON-WAIVABILITY IS AN INFERENCE, not statutory text. The Law says the term is unlimited and that only the economic rights in Art 10(1)(5)-(17) are transferable (Art 27); it does not expressly say moral rights cannot be waived. Orthodox Chinese practice treats them as non-waivable. Flagged rather than asserted."
   fair_dealing:
     value: closed_list
+    semi_closed_after_2020_amendment: true
     cite: "著作权法 第24条 (Art 24)"
-    notes: ["A closed list of enumerated exceptions with a three-step limitation. US fair-use reasoning does not transfer; a use must fit an enumerated head."]
+    notes:
+      - "Twelve enumerated heads plus, since the 2020 amendment, a thirteenth: 法律、行政法规规定的其他情形 - other circumstances provided by laws and administrative regulations. The list is therefore no longer closed on its face, though the catch-all still requires another legal instrument."
+      - "Art 24 also opens with a three-step limitation: the user must name the author and the work, and must not affect the normal exploitation of the work or unreasonably prejudice the rights holder's legitimate interests."
+      - "Value kept as closed_list because this is not a US-style open standard: a use must still fit an enumerated head or another instrument. Qualification added 2026-09-12."
   safe_harbour:
     available: true
     regime: network_service_provider
@@ -211,16 +251,39 @@ copyright:
 
 # ---------------------------------------------------------------------------------------
 trade_secret:
-  statute: { name: "反不正当竞争法 (Anti-Unfair Competition Law, as amended 2019)", url: https://www.gov.cn }
-  basis: { value: statutory, cite: "反不正当竞争法 第9条 (Art 9)" }
+  statute:
+    value: { name: "反不正当竞争法 (Anti-Unfair Competition Law, as amended 2025)" }
+    url: https://www.gov.cn
+    in_force_from: 2025-10-15
+    cite: "反不正当竞争法 (AUCL), amended by the NPCSC on 27 June 2025, in force 15 October 2025"
+    notes:
+      - "The 2025 amendment took the AUCL from 33 to 41 articles and RENUMBERED the trade-secret provisions. A pleading citing the 2019 numbering today cites a repealed numbering."
+      - "Corrected 2026-09-12: the pack previously described the 2019 version as current."
+  basis:
+    value: statutory
+    in_force_from: 2025-10-15
+    cite: "反不正当竞争法 第10条 (AUCL 2025, Art 10)"
+    notes:
+      - "Art 10 in the 2025 text. It was Art 9 in the 2019 text; see history."
   elements:
     value: ["not known to the public", "commercial value", "subject to confidentiality measures taken by the right holder"]
-    cite: "反不正当竞争法 第9条第4款 (Art 9, para 4)"
+    in_force_from: 2025-10-15
+    cite: "反不正当竞争法 第10条末款 (AUCL 2025, Art 10, final paragraph)"
+    notes:
+      - "Art 10 final paragraph defines a trade secret as technical, operational or other commercial information that is not known to the public and has commercial value, and for which the holder has taken corresponding confidentiality measures."
+      - "The three elements are unchanged from the 2019 text; only the article number moved (Art 9 -> Art 10)."
   burden_shifting:
     value: true
-    cite: "反不正当竞争法 第32条 (Art 32)"
-    notes: ["The 2019 amendment shifts the burden to the defendant once the holder shows preliminary evidence of confidentiality measures and of access. Materially claimant-friendlier than before."]
-  criminal_sanctions: { available: true, cite: "刑法 第219条 (Criminal Law, Art 219)" }
+    in_force_from: 2025-10-15
+    cite: "反不正当竞争法 第39条 (AUCL 2025, Art 39)"
+    notes:
+      - "Two-stage framework retained: the holder provides preliminary evidence of reasonable confidentiality measures and of infringement, whereupon the alleged infringer bears the burden of proving non-infringement."
+      - "Art 39 in the 2025 text; it was Art 32 in the 2019 text. Corrected 2026-09-12."
+  criminal_sanctions:
+    available: true
+    cite: "刑法 第219条 (Criminal Law, Art 219)"
+    notes:
+      - "Criminal Law Amendment (XI), in force 1 March 2021, revised the Art 219 offence; confirm the current thresholds before advising on criminal exposure."
 
 geographical_indication:
   registration:
@@ -249,9 +312,11 @@ transfer_formalities:
     government_approval:
       value: conditional
       condition: assignment_to_foreign_party
-      cite: "技术进出口管理条例 (Regulations on Administration of Technology Import and Export); 专利法 第10条"
+      cite: "专利法 第10条 (statutory hook); 技术进出口管理条例 (Regulations on Administration of Technology Import and Export); 中国禁止出口限制出口技术目录 (Catalogue)"
       notes:
-        - "Assigning a Chinese patent or patent application to a foreign party is a technology export requiring clearance, and restricted/prohibited technologies under the Catalogue may not be assigned at all."
+        - "专利法 第10条: where a Chinese entity or individual transfers a patent or patent application to a foreigner or foreign organisation, the transfer must go through the formalities in accordance with the relevant laws and administrative regulations."
+        - "THREE tiers, not two. FREELY EXPORTABLE technology still needs a MOFCOM registration certificate before CNIPA will record the assignment. RESTRICTED technology needs a MOFCOM export LICENCE and CAN be assigned. Only PROHIBITED technology cannot be assigned at all."
+        - "Corrected 2026-09-12: the pack previously said restricted AND prohibited technologies may not be assigned at all, which over-states the bar on restricted technology and under-states the baseline requirement for unrestricted technology."
         - "This is a closing condition, not a formality. Build it into the timetable of any transaction moving Chinese patents offshore."
   copyright_assignment:
     writing_required: { value: true, cite: "著作权法 第27条 (Art 27)" }
@@ -270,7 +335,10 @@ takedown:
         - "identification of the infringing goods or content and its location on the platform"
         - "statement of the grounds of infringement"
         - "undertaking as to the truthfulness of the notice"
-      cite: "电子商务法 第42条; 信息网络传播权保护条例 第14条 (Regulations, Art 14)"
+      cite: "信息网络传播权保护条例 第14条 (Regulations on Protection of the Right of Communication through Information Networks, Art 14); 电子商务法 第42条 (preliminary evidence requirement only)"
+      notes:
+        - "E-Commerce Law Art 42 itself requires only that the notice include PRELIMINARY EVIDENCE of the infringement. The itemised elements come from the Regulations Art 14 and from platform rules."
+        - "Attribution corrected 2026-09-12: the list was previously presented as the requirements of ECL Art 42."
     counter_notice:
       available: true
       platform_wait_days: 15
@@ -288,6 +356,29 @@ takedown:
 
 # ---------------------------------------------------------------------------------------
 history:
+  trade_secret.statute:
+    - value: { name: "反不正当竞争法 (Anti-Unfair Competition Law, as amended 2019)" }
+      in_force_from: 2019-04-23
+      in_force_until: 2025-10-14
+      cite: "反不正当竞争法 (AUCL), amended 23 April 2019"
+      notes: ["33 articles. Superseded by the 2025 amendment in force 15 October 2025."]
+  trade_secret.basis:
+    - value: statutory
+      in_force_from: 2019-04-23
+      in_force_until: 2025-10-14
+      cite: "反不正当竞争法 第9条 (AUCL 2019, Art 9)"
+      notes: ["Trade secrets sat at Art 9 until the 2025 renumbering moved them to Art 10."]
+  trade_secret.elements:
+    - value: ["not known to the public", "commercial value", "subject to confidentiality measures taken by the right holder"]
+      in_force_from: 2019-04-23
+      in_force_until: 2025-10-14
+      cite: "反不正当竞争法 第9条第4款 (AUCL 2019, Art 9, para 4)"
+  trade_secret.burden_shifting:
+    - value: true
+      in_force_from: 2019-04-23
+      in_force_until: 2025-10-14
+      cite: "反不正当竞争法 第32条 (AUCL 2019, Art 32)"
+      notes: ["Burden-shifting was introduced by the 2019 amendment at Art 32; it is Art 39 in the 2025 text."]
   registered_design.term:
     - value: { years: 10, from: filing_date, renewable: false }
       in_force_from: 1985-04-01

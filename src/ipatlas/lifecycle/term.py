@@ -279,12 +279,26 @@ def copyright_term(atlas: Atlas, jurisdiction: str, category: str,
         expiry = min(expiry, alt_date) if rule == "earlier" else max(expiry, alt_date)
         trace.append(f"  rule: whichever is {rule} -> {expiry.isoformat()}")
 
-    # Several jurisdictions run copyright terms to the end of the calendar year.
+    # Several jurisdictions run copyright terms to the end of the calendar year (SG s 114,
+    # CN Art 23). This MUST be an explicit declared fact: an earlier version inferred it by
+    # searching the notes for the string "31 december", which meant rewording a note silently
+    # changed a legal answer. That is exactly the inference CLAUDE.md forbids in an engine.
     group = pack.try_get("copyright.term", as_of=as_of)
     notes = list(fact.notes) + (list(group.notes) if group else [])
     to_year_end = calendar_year_end
     if to_year_end is None:
-        to_year_end = any("31 december" in n.lower() for n in notes)
+        declared, src = pack.subvalue("copyright.term", "to_end_of_calendar_year", as_of=as_of)
+        if declared is None:
+            declared, src = pack.subvalue(path, "to_end_of_calendar_year", as_of=as_of)
+        to_year_end = declared is True
+        if declared is None:
+            warnings.append(
+                f"{jurisdiction} does not record `copyright.term.to_end_of_calendar_year`, so "
+                "the term is computed to the anniversary. If the jurisdiction runs terms to "
+                "31 December the answer is up to a year early; record the field."
+            )
+        elif src is not None and src.cite:
+            trace.append(f"  calendar-year-end rule declared: {src.cite}")
     if to_year_end:
         expiry = dt.date(expiry.year, 12, 31)
         trace.append(f"  term runs to the end of the calendar year -> {expiry.isoformat()}")
