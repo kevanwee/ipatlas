@@ -1,0 +1,295 @@
+# ipatlas jurisdiction pack: United States
+#
+# Nothing here is verified. See CLAUDE.md "Data conventions" before editing.
+# Note the two `history` entries at the foot of the file: the AIA shift to first-to-file
+# and Lexmark's move to international patent exhaustion are both dated changes of law, so a
+# query with an earlier `as_of` must get the earlier rule.
+
+jurisdiction: US
+name: United States
+office: USPTO
+office_name: United States Patent and Trademark Office
+languages: [en]
+legal_system: common_law
+currency: USD
+
+defaults:
+  checked: 2026-09-12
+  verified: false
+
+memberships:
+  value: [paris, trips, berne, pct, madrid, singapore_treaty, hague, budapest, wct, wppt, upov]
+  cite: "WIPO-administered treaties: contracting parties list (United States)"
+  url: https://www.wipo.int/wipolex/en/treaties/ShowResults?country_id=176C
+  notes: ["Not a party to the Hague Agreement's 1960 Act; joined the 1999 Geneva Act in 2015."]
+
+# ---------------------------------------------------------------------------------------
+trade_mark:
+  statute: { name: "Lanham Act, 15 U.S.C. ch. 22", url: https://www.law.cornell.edu/uscode/text/15/chapter-22 }
+  filing_system:
+    value: first_to_use
+    cite: "15 U.S.C. §§ 1051, 1057(c)"
+    notes:
+      - "Rights arise from use in commerce; registration is available on an intent-to-use basis under § 1051(b) but a Statement of Use is required before registration issues."
+      - "This is the single largest divergence from first-to-file jurisdictions: an unregistered senior user can defeat a registrant."
+  examination:
+    value: substantive
+    scope: [absolute, relative]
+    cite: "15 U.S.C. § 1052"
+    notes: ["The USPTO examines for likelihood of confusion with prior marks ex officio, unlike offices that raise relative grounds only on opposition."]
+  multi_class: { value: true, cite: "37 C.F.R. § 2.86" }
+  classification:
+    value: nice
+    practice: "Identifications must be specific; class headings are not accepted. The USPTO ID Manual is effectively mandatory in practice."
+    cite: "37 C.F.R. § 2.32(a)(6); TMEP § 1402"
+  priority: { months: 6, treaty: paris, cite: "15 U.S.C. § 1126(d)" }
+  term:
+    years: 10
+    from: registration_date
+    renewable: true
+    renewal_years: 10
+    cite: "15 U.S.C. §§ 1058-1059"
+    notes: ["Runs from registration, not filing. Compare jurisdictions that run the term from the filing date: the same mark can expire on different dates in each."]
+  renewal_grace: { months: 6, surcharge: true, cite: "15 U.S.C. § 1059(a)" }
+  maintenance:
+    declarations_of_use: ["between the 5th and 6th year after registration", "with each 10-year renewal"]
+    grace_months: 6
+    consequence: cancellation
+    cite: "15 U.S.C. § 1058"
+    notes: ["A § 8 declaration is a separate obligation from renewal and is the most commonly missed US trade mark deadline."]
+  opposition:
+    window_days: 30
+    from: publication
+    extendable: true
+    max_extension_months: 3
+    forum: TTAB
+    cite: "15 U.S.C. § 1063; 37 C.F.R. § 2.102"
+    notes: ["30 days, not months. Extensions to 90 days on request, and to 180 days with consent or for cause."]
+  use_requirement:
+    non_use_years: 3
+    effect: prima_facie_abandonment
+    consequence: cancellation_on_petition
+    cite: "15 U.S.C. §§ 1064(3), 1127 (definition of abandonment)"
+    notes: ["Three years of non-use raises a presumption of abandonment, rebuttable by proof of intent to resume use."]
+  well_known_marks:
+    protected: true
+    registration_required: false
+    dilution_protection: true
+    cite: "15 U.S.C. § 1125(c) (famous marks); § 1125(a) (unregistered marks)"
+    notes: ["The federal 'famous mark' dilution standard is demanding and niche fame does not qualify. Whether the Paris Art 6bis well-known marks doctrine protects a mark with no US use is unsettled between the circuits; see Grupo Gigante (9th Cir) against ITC Ltd v Punchgini (2d Cir)."]
+  exhaustion:
+    value: national
+    exceptions: ["genuine goods with no material difference may be resold", "material differences defeat the defence (the Lever rule)"]
+    cite: "19 U.S.C. § 1526; Lever Bros Co v United States, 981 F.2d 1330 (DC Cir 1993)"
+    notes: ["Gray-market analysis turns on material difference and common control, not on a clean statutory exhaustion rule. Treat the value as shorthand for a fact-specific enquiry."]
+  border_measures:
+    available: true
+    mechanism: "recordation with CBP after federal registration; CBP may seize counterfeit and gray-market goods"
+    cite: "19 U.S.C. § 1526; 19 C.F.R. Part 133"
+  criminal_sanctions: { available: true, cite: "18 U.S.C. § 2320 (trafficking in counterfeit goods)" }
+  madrid:
+    designation_accepted: true
+    refusal_window_months: 18
+    individual_fee: true
+    cite: "15 U.S.C. §§ 1141-1141n; Madrid Protocol Art 5(2)(b) declaration"
+    notes: ["A US designation still requires a declaration of intent to use, so the Madrid route does not avoid the US use requirement."]
+
+# ---------------------------------------------------------------------------------------
+patent:
+  statute: { name: "Patent Act, 35 U.S.C.", url: https://www.law.cornell.edu/uscode/text/35 }
+  filing_system:
+    value: first_to_file
+    in_force_from: 2013-03-16
+    cite: "35 U.S.C. § 102 as amended by the Leahy-Smith America Invents Act, Pub. L. 112-29"
+    notes: ["Strictly 'first-inventor-to-file': a derivation proceeding under § 135 still protects a true inventor against a deriving filer."]
+  examination: { value: substantive, cite: "35 U.S.C. §§ 131-132" }
+  priority: { months: 12, treaty: paris, cite: "35 U.S.C. §§ 119, 365" }
+  provisional_applications:
+    available: true
+    pendency_months: 12
+    cite: "35 U.S.C. § 111(b)"
+    notes: ["No equivalent in many jurisdictions; a useful priority-anchoring device for cross-border programmes."]
+  term:
+    years: 20
+    from: filing_date
+    cite: "35 U.S.C. § 154(a)(2)"
+    notes: ["Measured from the earliest US non-provisional filing date, not from a provisional. Continuations and divisionals inherit the parent's date."]
+  term_extension:
+    available: true
+    grounds: [patent_term_adjustment_office_delay, hatch_waxman_regulatory_review]
+    max_years: 5
+    cite: "35 U.S.C. § 154(b) (PTA); 35 U.S.C. § 156 (PTE)"
+    notes: ["PTA and PTE are different mechanisms and can both apply. The 5-year cap is the § 156 cap."]
+  maintenance:
+    due_at_years: [3.5, 7.5, 11.5]
+    from: grant_date
+    grace_months: 6
+    consequence: expiry
+    cite: "35 U.S.C. § 41(b); 37 C.F.R. § 1.362"
+    notes: ["Three fees from grant, not annuities from filing. Programmes run on an annuity assumption routinely mis-docket US cases."]
+  grace_period:
+    months: 12
+    scope: inventor_own_disclosure_or_derived
+    cite: "35 U.S.C. § 102(b)(1)"
+    notes: ["Broad by international standards: an inventor's own publication within a year does not bar. Relying on it destroys novelty in absolute-novelty jurisdictions, so it is a trap in any cross-border filing programme."]
+  pct: { national_phase_months: 30, from: priority_date, cite: "35 U.S.C. § 371; 37 C.F.R. § 1.495" }
+  exhaustion:
+    value: international
+    in_force_from: 2017-05-30
+    cite: "Impression Products, Inc v Lexmark International, Inc, 581 U.S. 360 (2017)"
+    notes: ["An authorised sale anywhere exhausts US patent rights, and post-sale restrictions are a matter of contract rather than patent law."]
+  border_measures:
+    available: true
+    mechanism: "ITC exclusion order under section 337; no CBP recordation for patents"
+    cite: "19 U.S.C. § 1337"
+  criminal_sanctions: { available: false, cite: "No criminal provision for patent infringement under 35 U.S.C." }
+
+utility_model:
+  available: false
+  cite: "35 U.S.C. (no utility model system)"
+  notes: ["The US has no utility model. Design patents under 35 U.S.C. § 171 are examined patents, not a registration right."]
+
+# ---------------------------------------------------------------------------------------
+registered_design:
+  statute: { name: "35 U.S.C. §§ 171-173 (design patents)", url: https://www.law.cornell.edu/uscode/text/35/171 }
+  examination:
+    value: substantive
+    cite: "35 U.S.C. § 171(b)"
+    notes: ["Design protection in the US is an examined patent, not a registration. Expect examination delay where other jurisdictions register within weeks."]
+  priority: { months: 6, treaty: paris, cite: "35 U.S.C. § 172" }
+  term:
+    years: 15
+    from: grant_date
+    renewable: false
+    cite: "35 U.S.C. § 173"
+    notes: ["15 years from grant with no renewals or maintenance fees; contrast renewable registration systems measured from filing."]
+  grace_period: { months: 12, scope: inventor_own_disclosure_or_derived, cite: "35 U.S.C. § 102(b)(1)" }
+  hague: { designation_accepted: true, refusal_window_months: 12, cite: "35 U.S.C. § 385; Hague Geneva Act Art 18(1)(b) declaration" }
+  unregistered_design_right: { available: false, cite: "No unregistered design right under US law",
+                               notes: ["Trade dress under 15 U.S.C. § 1125(a) may overlap in substance."] }
+
+# ---------------------------------------------------------------------------------------
+copyright:
+  statute: { name: "Copyright Act of 1976, 17 U.S.C.", url: https://www.law.cornell.edu/uscode/text/17 }
+  registration:
+    value: available
+    required_for_subsistence: false
+    required_to_sue: true
+    cite: "17 U.S.C. § 411(a); Fourth Estate Public Benefit Corp v Wall-Street.com, 586 U.S. 296 (2019)"
+    notes:
+      - "Registration is not needed for the right to exist but a US action cannot be brought until the Register has acted on the application."
+      - "Timely registration is also a precondition of statutory damages and attorney's fees under § 412, which is why US copyright practice registers early and non-US practice often does not register at all."
+  term:
+    literary_dramatic_musical_artistic: { base: author_death, plus_years: 70, cite: "17 U.S.C. § 302(a)" }
+    joint_works: { base: author_death, plus_years: 70, rule: last_surviving_author, cite: "17 U.S.C. § 302(b)" }
+    works_made_for_hire: { base: publication, plus_years: 95, alt: { base: creation, plus_years: 120 }, rule: earlier, cite: "17 U.S.C. § 302(c)" }
+    anonymous_or_pseudonymous: { base: publication, plus_years: 95, alt: { base: creation, plus_years: 120 }, rule: earlier, cite: "17 U.S.C. § 302(c)" }
+    sound_recording: { base: publication, plus_years: 95, cite: "17 U.S.C. §§ 302(c), 1401 (pre-1972 recordings)" }
+    notes: ["Pre-1978 works follow the 1909 Act's published/renewal scheme and are not modelled here. Any term question about a work first published before 1978 must be researched, not computed."]
+  shorter_term_rule:
+    applies: false
+    cite: "17 U.S.C. § 104; Berne Convention Art 7(8)"
+    notes: ["The US does not apply the rule of the shorter term; a foreign work gets the full US term even if it has expired at home."]
+  moral_rights:
+    available: true
+    scope: visual_art_only
+    rights: [attribution, integrity]
+    cite: "17 U.S.C. § 106A (Visual Artists Rights Act)"
+    notes: ["Far narrower than Berne Art 6bis as implemented elsewhere: VARA covers only works of visual art in limited editions, and the rights are waivable in writing."]
+  fair_dealing:
+    value: open_fair_use
+    cite: "17 U.S.C. § 107"
+    notes: ["Four-factor open standard. Jurisdictions with closed exception lists cannot import US fair-use reasoning."]
+  safe_harbour:
+    available: true
+    regime: dmca_512
+    notice_and_takedown: true
+    counter_notice: true
+    counter_notice_wait_business_days: { min: 10, max: 14 }
+    repeat_infringer_policy_required: true
+    designated_agent_registration_required: true
+    cite: "17 U.S.C. § 512"
+    notes: ["Restoration is required 10 to 14 business days after a compliant counter-notice unless the claimant files suit. Safe harbour also requires a registered designated agent and a repeat-infringer policy."]
+
+# ---------------------------------------------------------------------------------------
+trade_secret:
+  statute: { name: "Defend Trade Secrets Act, 18 U.S.C. § 1836; state UTSA enactments", url: https://www.law.cornell.edu/uscode/text/18/1836 }
+  basis: { value: statutory, cite: "18 U.S.C. § 1839(3) (definition); state Uniform Trade Secrets Act" }
+  elements:
+    value: ["information derives independent economic value from not being generally known", "owner has taken reasonable measures to keep it secret", "misappropriation by improper means or breach of a duty"]
+    cite: "18 U.S.C. § 1839(3), (5)"
+  civil_seizure: { available: true, cite: "18 U.S.C. § 1836(b)(2)", notes: ["Ex parte seizure in extraordinary circumstances; rarely granted."] }
+  criminal_sanctions: { available: true, cite: "18 U.S.C. §§ 1831-1832 (Economic Espionage Act)" }
+  notes: ["Federal civil cause of action since the DTSA 2016 sits alongside, and does not pre-empt, state UTSA claims."]
+
+geographical_indication:
+  registration:
+    value: available
+    mechanism: certification_or_collective_mark
+    cite: "15 U.S.C. § 1054"
+    notes: ["The US has no sui generis GI register outside wine and spirits labelling; GIs are protected as certification marks. This is a long-standing point of friction with the EU system."]
+
+# ---------------------------------------------------------------------------------------
+transfer_formalities:
+  trade_mark_assignment:
+    writing_required: { value: true, cite: "15 U.S.C. § 1060(a)(3)" }
+    recordal:
+      value: optional
+      effect: "void against a subsequent purchaser for value without notice unless recorded within 3 months of the assignment or before the subsequent purchase"
+      cite: "15 U.S.C. § 1060(a)(4)"
+      notes: ["The 3-month window is a hard diary date after any US trade mark assignment."]
+    goodwill:
+      value: must_include_goodwill
+      cite: "15 U.S.C. § 1060(a)(1)"
+      notes: ["An assignment in gross is invalid. Contrast jurisdictions that permit assignment without goodwill; the same global assignment deed can be valid in one and void in the other."]
+    government_approval: { value: false, cite: "No approval requirement under US law" }
+  patent_assignment:
+    writing_required: { value: true, cite: "35 U.S.C. § 261" }
+    recordal: { value: optional, effect: "void against a subsequent purchaser for value without notice unless recorded within 3 months or before the subsequent purchase", cite: "35 U.S.C. § 261" }
+    government_approval: { value: false, cite: "No approval requirement; cf CFIUS for control transactions" }
+  copyright_assignment:
+    writing_required: { value: true, signed_by: assignor, cite: "17 U.S.C. § 204(a)" }
+    recordal: { value: optional, effect: "priority between conflicting transfers; constructive notice", cite: "17 U.S.C. §§ 205(a), (d)" }
+    termination_right:
+      value: true
+      cite: "17 U.S.C. §§ 203, 304(c)"
+      notes: ["An author may terminate a grant 35 years on (or 56 years for pre-1978 grants) notwithstanding any contrary agreement. There is no equivalent in most other jurisdictions and it cannot be contracted away."]
+
+# ---------------------------------------------------------------------------------------
+takedown:
+  copyright:
+    regime: { value: dmca_512, cite: "17 U.S.C. § 512" }
+    statutory_notice: { value: true, prescribed_form: false, cite: "17 U.S.C. § 512(c)(3)(A)" }
+    required_elements:
+      value:
+        - "physical or electronic signature of the owner or authorised agent"
+        - "identification of the copyrighted work claimed to be infringed"
+        - "identification of the material claimed to be infringing and information reasonably sufficient to locate it"
+        - "contact information of the complaining party"
+        - "statement of good-faith belief that the use is not authorised"
+        - "statement that the information is accurate and, under penalty of perjury, that the complainant is authorised to act"
+      cite: "17 U.S.C. § 512(c)(3)(A)(i)-(vi)"
+    misrepresentation_liability: { value: true, cite: "17 U.S.C. § 512(f)", notes: ["A knowing material misrepresentation is actionable; consider fair use before sending (Lenz v Universal, 815 F.3d 1145 (9th Cir 2016))."] }
+    counter_notice: { available: true, restoration_business_days: { min: 10, max: 14 }, cite: "17 U.S.C. § 512(g)" }
+  trade_mark:
+    regime:
+      value: none_statutory
+      cite: "17 U.S.C. § 512 applies to copyright only"
+      notes: ["Platforms act under their own programmes and general contributory-infringement law (Tiffany v eBay, 600 F.3d 93 (2d Cir 2010))."]
+
+# ---------------------------------------------------------------------------------------
+# Dated changes of law. A query with `as_of` before the current fact's in_force_from
+# resolves here instead.
+history:
+  patent.filing_system:
+    - value: first_to_invent
+      in_force_from: 1790-04-10
+      in_force_until: 2013-03-15
+      cite: "35 U.S.C. § 102(g) (pre-AIA)"
+      notes: ["Priority went to the first to invent, provable by interference proceedings. Applications filed before 16 March 2013 are still examined under pre-AIA law."]
+  patent.exhaustion:
+    - value: national
+      in_force_from: 2001-01-01
+      in_force_until: 2017-05-29
+      cite: "Jazz Photo Corp v ITC, 264 F.3d 1094 (Fed Cir 2001)"
+      notes: ["Foreign first sale did not exhaust US patent rights; overruled by Impression Products v Lexmark. The in_force_from date is the Jazz Photo decision, not the start of the doctrine."]

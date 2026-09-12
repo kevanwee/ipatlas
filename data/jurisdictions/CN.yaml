@@ -1,0 +1,308 @@
+# ipatlas jurisdiction pack: China (mainland)
+#
+# Nothing here is verified. Citations give the Chinese article reference with an English
+# gloss, per CLAUDE.md. Hong Kong, Macau and Taiwan are separate jurisdictions and separate
+# packs; nothing in this file applies to them.
+
+jurisdiction: CN
+name: China (mainland)
+office: CNIPA
+office_name: China National Intellectual Property Administration
+languages: [zh]
+legal_system: civil_law
+currency: CNY
+
+defaults:
+  checked: 2026-09-12
+  verified: false
+
+memberships:
+  value: [paris, trips, berne, pct, madrid, hague, budapest, wct, wppt, marrakesh, upov]
+  cite: "WIPO-administered treaties: contracting parties list (China)"
+  url: https://www.wipo.int/wipolex/en/treaties/ShowResults?country_id=38C
+  notes: ["Acceded to the Hague Agreement (1999 Geneva Act) with effect from 5 May 2022."]
+
+# ---------------------------------------------------------------------------------------
+trade_mark:
+  statute: { name: "商标法 (Trademark Law of the PRC, as amended 2019)", url: https://www.cnipa.gov.cn }
+  filing_system:
+    value: first_to_file
+    cite: "商标法 第31条 (Trademark Law, Art 31)"
+    notes:
+      - "Strict first-to-file with very limited unregistered protection. Defensive filing before market entry is essential; squatting remains the single largest practical risk for foreign brands."
+      - "Art 4 (2019 amendment) allows refusal of applications filed in bad faith with no intention to use, which has become the main tool against squatters."
+  examination: { value: substantive, scope: [absolute, relative], cite: "商标法 第28-35条 (Arts 28-35)" }
+  multi_class:
+    value: true
+    cite: "商标法 第22条 (Art 22)"
+    notes: ["Multi-class applications are permitted but are administered as separable registrations; a single application does not create a single indivisible right."]
+  classification:
+    value: nice
+    practice: "CNIPA requires terms from its own subclass system. Goods in different subclasses are generally treated as dissimilar, so a specification drafted for another jurisdiction will leave gaps."
+    cite: "商标法 第22条; 类似商品和服务区分表 (CNIPA Classification of Similar Goods and Services)"
+    notes: ["The subclass practice has no analogue in SG/US/EU and is the most common cause of an apparently broad Chinese registration being unenforceable against a competitor."]
+  priority: { months: 6, treaty: paris, cite: "商标法 第25条 (Art 25)" }
+  term:
+    years: 10
+    from: registration_date
+    renewable: true
+    renewal_years: 10
+    cite: "商标法 第39-40条 (Arts 39-40)"
+  renewal_grace:
+    months: 6
+    window_before_expiry_months: 12
+    cite: "商标法 第40条 (Art 40)"
+    notes: ["Renewal may be filed in the 12 months before expiry, with a 6-month grace period after."]
+  maintenance:
+    separate_obligation: false
+    cite: "商标法 (no declaration of use requirement)"
+    notes: ["No periodic proof of use. Non-use is tested only on a third-party cancellation application under Art 49."]
+  opposition:
+    window_months: 3
+    from: publication
+    extendable: false
+    cite: "商标法 第33条 (Art 33)"
+    notes: ["Three months from publication of the preliminary approval, and it is not extendable. Watching services matter more here than in jurisdictions that grant extensions."]
+  use_requirement:
+    non_use_years: 3
+    consequence: cancellation_on_application
+    cite: "商标法 第49条 (Art 49)"
+    notes: ["Three years, against five in Singapore and a three-year abandonment presumption in the US. Evidence of use must be of use in mainland China."]
+  well_known_marks:
+    protected: true
+    registration_required: false
+    recognition: case_by_case
+    cite: "商标法 第13-14条 (Arts 13-14)"
+    notes: ["Well-known status is determined case by case in the proceeding where it is raised; there is no standing register of well-known marks that confers protection prospectively."]
+  exhaustion:
+    value: unsettled
+    cite: "商标法 (no express exhaustion provision)"
+    notes:
+      - "The Trademark Law contains no exhaustion article and outcomes in parallel-import cases have diverged between courts, often turning on quality differences, repackaging and consumer confusion rather than on a clean exhaustion rule."
+      - "Recorded as unsettled deliberately. Do not convert this to `international` without a decision of the SPC or a statutory amendment to cite."
+  border_measures:
+    available: true
+    mechanism: "recordal with the General Administration of Customs; customs may detain ex officio once recorded"
+    cite: "知识产权海关保护条例 (Regulations on Customs Protection of IP Rights)"
+    notes: ["Ex officio detention on a recorded right is a materially stronger tool than the application-based seizure regimes in several common-law jurisdictions."]
+  criminal_sanctions: { available: true, cite: "刑法 第213-215条 (Criminal Law, Arts 213-215)" }
+  madrid:
+    designation_accepted: true
+    refusal_window_months: 18
+    individual_fee: false
+    cite: "商标法 第21条; Madrid Protocol Art 5(2)(b) declaration"
+    notes: ["A Madrid designation of China is examined under CNIPA subclass practice, so the specification translated from the basic mark often under-covers. Many practitioners file nationally for this reason."]
+
+# ---------------------------------------------------------------------------------------
+patent:
+  statute: { name: "专利法 (Patent Law of the PRC, as amended 2020, effective 1 June 2021)", url: https://www.cnipa.gov.cn }
+  types:
+    value: [invention, utility_model, design]
+    cite: "专利法 第2条 (Art 2)"
+    notes: ["One statute covers three rights with different terms and examination. `patent` in this pack means an invention patent; see `utility_model` and `registered_design`."]
+  filing_system: { value: first_to_file, cite: "专利法 第9条 (Art 9)" }
+  examination: { value: substantive, cite: "专利法 第35条 (Art 35)" }
+  priority: { months: 12, treaty: paris, cite: "专利法 第29条 (Art 29)" }
+  term: { years: 20, from: filing_date, cite: "专利法 第42条 (Art 42)" }
+  term_extension:
+    available: true
+    grounds: [office_delay_compensation, pharmaceutical_marketing_approval]
+    max_years: 5
+    in_force_from: 2021-06-01
+    cite: "专利法 第42条第2-3款 (Art 42, paras 2-3)"
+    notes: ["Introduced by the 2020 amendment. Pharmaceutical compensation is capped at 5 years and total effective term post-approval at 14 years."]
+  maintenance:
+    from_year: 1
+    frequency: annual
+    due: anniversary_of_filing
+    grace_months: 6
+    surcharge: true
+    cite: "专利法 第43条; 专利法实施细则 (Implementing Regulations)"
+    notes: ["Annuities run from the first year after grant, counted by filing anniversary. Contrast the US three-fee schedule."]
+  grace_period:
+    months: 6
+    scope: limited_grounds
+    grounds: ["first disclosure at a state-recognised exhibition", "first disclosure at a prescribed academic conference", "disclosure by another without consent", "public-interest disclosure during a national emergency"]
+    cite: "专利法 第24条 (Art 24)"
+    notes:
+      - "Six months and only on enumerated grounds. An inventor's own ordinary publication is NOT excused, unlike the 12-month self-disclosure grace in the US and Singapore."
+      - "This asymmetry is a classic cross-border trap: a US-led programme that relies on § 102(b)(1) destroys novelty in China."
+  pct: { national_phase_months: 30, from: priority_date, extension_available: true, extended_months: 32, cite: "专利法实施细则 (Implementing Regulations, PCT chapter)" }
+  exhaustion: { value: international, cite: "专利法 第75条第1项 (Art 75(1))" }
+  border_measures: { available: true, mechanism: "customs recordal as for trade marks", cite: "知识产权海关保护条例" }
+  criminal_sanctions: { available: true, scope: counterfeit_patent_marking_only, cite: "刑法 第216条 (Criminal Law, Art 216)" }
+
+utility_model:
+  available: true
+  statute: { name: "专利法 (Patent Law)", url: https://www.cnipa.gov.cn }
+  subject_matter: { value: shape_structure_of_product, excludes: [processes, methods], cite: "专利法 第2条第3款 (Art 2, para 3)" }
+  examination:
+    value: formal
+    cite: "专利法 第40条 (Art 40)"
+    notes: ["No substantive examination before grant, so grant is fast (often under a year) but validity is untested. An evaluation report under Art 66 is usually obtained before enforcement."]
+  priority: { months: 12, treaty: paris, cite: "专利法 第29条 (Art 29)" }
+  term: { years: 10, from: filing_date, renewable: false, cite: "专利法 第42条 (Art 42)" }
+  double_filing:
+    value: permitted_same_day
+    cite: "专利法 第9条 (Art 9)"
+    notes: ["An invention patent and a utility model may be filed on the same day for the same invention, with the utility model surrendered on grant of the invention patent. A fast enforceable right plus a long one."]
+  maintenance: { from_year: 1, frequency: annual, cite: "专利法 第43条 (Art 43)" }
+
+# ---------------------------------------------------------------------------------------
+registered_design:
+  statute: { name: "专利法 (Patent Law) — design patents", url: https://www.cnipa.gov.cn }
+  examination: { value: formal, cite: "专利法 第40条 (Art 40)" }
+  priority: { months: 6, treaty: paris, cite: "专利法 第29条 (Art 29)" }
+  term:
+    years: 15
+    from: filing_date
+    renewable: false
+    in_force_from: 2021-06-01
+    cite: "专利法 第42条 (Art 42)"
+    notes: ["Extended from 10 to 15 years by the 2020 amendment, aligning with Hague accession."]
+  partial_designs:
+    available: true
+    in_force_from: 2021-06-01
+    cite: "专利法 第2条第4款 (Art 2, para 4)"
+    notes: ["Partial designs became available under the 2020 amendment; filings before 1 June 2021 could not claim part of a product."]
+  grace_period: { months: 6, scope: limited_grounds, cite: "专利法 第24条 (Art 24)" }
+  hague: { designation_accepted: true, refusal_window_months: 12, cite: "Hague Geneva Act declaration (effective 5 May 2022)" }
+  unregistered_design_right: { available: false, cite: "专利法 (registration required; no unregistered design right)" }
+
+# ---------------------------------------------------------------------------------------
+copyright:
+  statute: { name: "著作权法 (Copyright Law of the PRC, as amended 2020, effective 1 June 2021)", url: https://www.ncac.gov.cn }
+  registration:
+    value: available
+    required_for_subsistence: false
+    cite: "著作权法 第2条; 作品自愿登记试行办法 (Voluntary Registration Measures)"
+    notes: ["Voluntary registration with the Copyright Protection Centre of China. Not constitutive, but a registration certificate is the practical evidence of ownership in Chinese enforcement and customs recordal."]
+  term:
+    literary_dramatic_musical_artistic: { base: author_death, plus_years: 50, cite: "著作权法 第23条 (Art 23)" }
+    legal_person_works: { base: publication, plus_years: 50, cite: "著作权法 第23条 (Art 23)" }
+    audiovisual_works: { base: publication, plus_years: 50, cite: "著作权法 第23条 (Art 23)" }
+    notes:
+      - "Fifty years, not seventy. A work in the public domain in China may still be protected in Singapore or the US, and vice versa where the rule of the shorter term applies."
+      - "Terms are calculated to 31 December of the fiftieth year, not to the anniversary date."
+  shorter_term_rule:
+    notes: ["Not yet researched. Record whether China applies Berne Art 7(8) comparison of terms to foreign works before any engine relies on this."]
+  moral_rights:
+    available: true
+    rights: [publication, attribution, integrity, modification]
+    perpetual: [attribution, integrity, modification]
+    waivable: false
+    cite: "著作权法 第10条, 第23条 (Arts 10, 23)"
+    notes: ["Attribution, integrity and the right of modification are unlimited in time and are not waivable. A global assignment clause purporting to waive moral rights is ineffective here."]
+  fair_dealing:
+    value: closed_list
+    cite: "著作权法 第24条 (Art 24)"
+    notes: ["A closed list of enumerated exceptions with a three-step limitation. US fair-use reasoning does not transfer; a use must fit an enumerated head."]
+  safe_harbour:
+    available: true
+    regime: network_service_provider
+    notice_and_takedown: true
+    counter_notice: true
+    cite: "电子商务法 第42-45条 (E-Commerce Law, Arts 42-45); 信息网络传播权保护条例 (Regulations on Protection of the Right of Communication through Information Networks)"
+    notes: ["The E-Commerce Law regime applies to platform operators; the Regulations apply to network service providers generally. Both may bite on the same facts."]
+  work_for_hire:
+    value: narrow
+    cite: "著作权法 第18条 (Art 18)"
+    notes: ["Employee-created works generally vest in the author with the employer taking a licence, except in enumerated categories or where agreed. This is the opposite default to the US and must be fixed by contract."]
+
+# ---------------------------------------------------------------------------------------
+trade_secret:
+  statute: { name: "反不正当竞争法 (Anti-Unfair Competition Law, as amended 2019)", url: https://www.gov.cn }
+  basis: { value: statutory, cite: "反不正当竞争法 第9条 (Art 9)" }
+  elements:
+    value: ["not known to the public", "commercial value", "subject to confidentiality measures taken by the right holder"]
+    cite: "反不正当竞争法 第9条第4款 (Art 9, para 4)"
+  burden_shifting:
+    value: true
+    cite: "反不正当竞争法 第32条 (Art 32)"
+    notes: ["The 2019 amendment shifts the burden to the defendant once the holder shows preliminary evidence of confidentiality measures and of access. Materially claimant-friendlier than before."]
+  criminal_sanctions: { available: true, cite: "刑法 第219条 (Criminal Law, Art 219)" }
+
+geographical_indication:
+  registration:
+    value: available
+    mechanism: "sui generis GI products scheme plus collective/certification marks"
+    cite: "商标法 第16条; 地理标志产品保护规定 (Provisions on Protection of GI Products)"
+    notes: ["Two parallel routes (CNIPA GI scheme and collective/certification marks). The EU-China GI Agreement (2021) protects listed EU GIs directly."]
+
+# ---------------------------------------------------------------------------------------
+transfer_formalities:
+  trade_mark_assignment:
+    writing_required: { value: true, cite: "商标法 第42条 (Art 42)" }
+    recordal:
+      value: mandatory
+      effect: "the assignment takes effect on publication by CNIPA; until then the assignee has no registered right"
+      cite: "商标法 第42条 (Art 42)"
+      notes: ["Constitutive, not merely protective. Contrast SG and US where recordal affects priority against third parties but the assignment is effective between the parties on execution."]
+    all_similar_marks_together:
+      value: true
+      cite: "商标法 第42条第2款 (Art 42, para 2)"
+      notes: ["Identical or similar marks for identical or similar goods must be assigned together. A cherry-picked assignment of part of a family will be refused."]
+    government_approval: { value: false, cite: "商标法 第42条 (no approval requirement for trade mark assignment)" }
+  patent_assignment:
+    writing_required: { value: true, cite: "专利法 第10条 (Art 10)" }
+    recordal: { value: mandatory, effect: "effective on registration with CNIPA", cite: "专利法 第10条 (Art 10)" }
+    government_approval:
+      value: conditional
+      condition: assignment_to_foreign_party
+      cite: "技术进出口管理条例 (Regulations on Administration of Technology Import and Export); 专利法 第10条"
+      notes:
+        - "Assigning a Chinese patent or patent application to a foreign party is a technology export requiring clearance, and restricted/prohibited technologies under the Catalogue may not be assigned at all."
+        - "This is a closing condition, not a formality. Build it into the timetable of any transaction moving Chinese patents offshore."
+  copyright_assignment:
+    writing_required: { value: true, cite: "著作权法 第27条 (Art 27)" }
+    recordal: { value: optional, effect: evidential, cite: "著作权法 (voluntary recordal)" }
+    moral_rights_not_assignable: { value: true, cite: "著作权法 第10条 (Art 10)" }
+
+# ---------------------------------------------------------------------------------------
+takedown:
+  copyright:
+    regime: { value: cn_ecommerce_and_network_regulations, cite: "电子商务法 第42-45条; 信息网络传播权保护条例" }
+    statutory_notice: { value: true, prescribed_form: false, cite: "电子商务法 第42条 (E-Commerce Law, Art 42)" }
+    required_elements:
+      value:
+        - "identity and contact details of the right holder"
+        - "preliminary evidence of the right (registration certificate, ownership proof)"
+        - "identification of the infringing goods or content and its location on the platform"
+        - "statement of the grounds of infringement"
+        - "undertaking as to the truthfulness of the notice"
+      cite: "电子商务法 第42条; 信息网络传播权保护条例 第14条 (Regulations, Art 14)"
+    counter_notice:
+      available: true
+      platform_wait_days: 15
+      cite: "电子商务法 第43条 (E-Commerce Law, Art 43)"
+      notes: ["On a counter-notice the platform forwards it to the complainant and must restore the listing if no complaint or action is filed within 15 days. A fixed statutory clock, unlike the DMCA's 10-14 business-day band."]
+    bad_faith_liability:
+      value: true
+      multiplier: double_damages
+      cite: "电子商务法 第42条第3款 (Art 42, para 3)"
+      notes: ["A notice sent in bad faith attracts double liability for the loss caused. Higher exposure than DMCA § 512(f) in practice."]
+  trade_mark:
+    regime: { value: cn_ecommerce, cite: "电子商务法 第42条 (Art 42)" }
+    statutory_notice: { value: true, cite: "电子商务法 第42条 (Art 42)" }
+    notes: ["The E-Commerce Law notice regime is right-agnostic and covers trade marks, unlike the US where § 512 is copyright-only."]
+
+# ---------------------------------------------------------------------------------------
+history:
+  registered_design.term:
+    - value: { years: 10, from: filing_date, renewable: false }
+      in_force_from: 1985-04-01
+      in_force_until: 2021-05-31
+      cite: "专利法 第42条 (Art 42, pre-2020 amendment)"
+      notes: ["Design patents filed before 1 June 2021 have a 10-year term. A portfolio spanning the amendment has two different expiry rules."]
+  registered_design.partial_designs:
+    - value: { available: false }
+      in_force_from: 1985-04-01
+      in_force_until: 2021-05-31
+      cite: "专利法 第2条 (pre-2020 amendment)"
+      notes: ["Partial designs could not be claimed; whole-product designs only."]
+  patent.term_extension:
+    - value: { available: false }
+      in_force_from: 1985-04-01
+      in_force_until: 2021-05-31
+      cite: "专利法 第42条 (pre-2020 amendment)"
+      notes: ["No term compensation of any kind before the 2020 amendment."]

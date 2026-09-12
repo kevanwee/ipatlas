@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ipatlas"
+version = "0.1.0"
+description = "Cross-border intellectual property as structured, cited, versioned data, with deterministic engines for comparison, terms, deadlines, routes, exhaustion and takedown checks."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "pydantic>=2.5",
+  "pyyaml>=6.0",
+  "python-dateutil>=2.8",
+]
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.2"]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+ipatlas = "ipatlas.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

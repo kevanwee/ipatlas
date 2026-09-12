@@ -1,0 +1,206 @@
+# ipatlas jurisdiction pack: Singapore
+#
+# This file is the REFERENCE SHAPE for every pack. Read CLAUDE.md "Data conventions"
+# before editing. Every fact needs a cite; `defaults` supplies checked/verified for the
+# file; per-fact keys override. Nothing here is verified yet.
+
+jurisdiction: SG
+name: Singapore
+office: IPOS
+office_name: Intellectual Property Office of Singapore
+languages: [en]
+legal_system: common_law
+currency: SGD
+
+defaults:
+  checked: 2026-09-12
+  verified: false
+
+memberships:
+  value: [paris, trips, berne, pct, madrid, singapore_treaty, hague, budapest, wct, wppt, marrakesh, upov]
+  cite: "WIPO-administered treaties: contracting parties list (Singapore)"
+  url: https://www.wipo.int/wipolex/en/treaties/ShowResults?country_id=161C
+  notes: ["Refresh via scripts/refresh_wipo_membership.py; do not hand-edit."]
+
+# ---------------------------------------------------------------------------------------
+trade_mark:
+  statute: { name: "Trade Marks Act 1998", url: https://sso.agc.gov.sg/Act/TMA1998 }
+  filing_system: { value: first_to_file, cite: "TMA 1998, s 5 and Part III generally" }
+  examination: { value: substantive, scope: [absolute, relative], cite: "TMA 1998, ss 7-8, 12" }
+  multi_class: { value: true, cite: "TMA 1998, s 5(3)" }
+  classification: { value: nice, edition_followed: current,
+                    practice: "Class headings are not accepted as covering the whole class; specify goods/services. Madrid Goods & Services Manager terms accepted.",
+                    cite: "Trade Marks Rules, r 19; IPOS Trade Marks Work Manual (Classification)" }
+  priority: { months: 6, treaty: paris, cite: "TMA 1998, s 10" }
+  term: { years: 10, from: filing_date, renewable: true, renewal_years: 10, cite: "TMA 1998, ss 18-19" }
+  renewal_grace: { months: 6, surcharge: true, restoration_after_grace_months: 6,
+                   cite: "TMA 1998, s 19; Trade Marks Rules, rr 50-52" }
+  maintenance:
+    separate_obligation: false
+    cite: "Trade Marks Act 1998 (no declaration of use requirement)"
+    notes:
+      - "Renewal is the only periodic obligation. Unlike the US, there is no affidavit or declaration of use to file between renewals, so non-use is tested only on a third-party revocation application."
+  opposition: { window_months: 2, from: publication, extendable: true, max_extension_months: 4,
+                cite: "TMA 1998, s 13; Trade Marks Rules, r 29" }
+  use_requirement:
+    non_use_years: 5
+    from: completion_of_registration
+    consequence: revocation_on_application
+    cite: "TMA 1998, s 22(1)(a)-(b)"
+  well_known_marks: { protected: true, registration_required: false, dilution_protection: true,
+                      cite: "TMA 1998, ss 2 (definition), 55" }
+  exhaustion:
+    value: international
+    exceptions: ["goods changed or impaired after being put on the market", "contrary to proprietor's consent in the circumstances of s 29(2)"]
+    cite: "TMA 1998, s 29"
+  border_measures: { available: true, mechanism: "notice to Director-General of Customs to seize goods",
+                     cite: "TMA 1998, Part X (ss 81-100)" }
+  criminal_sanctions: { available: true, cite: "TMA 1998, ss 46-49" }
+  madrid:
+    designation_accepted: true
+    refusal_window_months: 18
+    individual_fee: true
+    cite: "Trade Marks (International Registration) Rules; Madrid Protocol Art 5(2)(b)-(c) declaration"
+
+# ---------------------------------------------------------------------------------------
+patent:
+  statute: { name: "Patents Act 1994", url: https://sso.agc.gov.sg/Act/PA1994 }
+  filing_system: { value: first_to_file, cite: "PA 1994, s 20(1)" }
+  examination: { value: substantive, routes: [local_search_and_examination, supplementary_examination_on_foreign_result],
+                 cite: "PA 1994, s 29" }
+  priority: { months: 12, treaty: paris, cite: "PA 1994, s 17" }
+  term: { years: 20, from: filing_date, cite: "PA 1994, s 36(1)" }
+  term_extension: { available: true, grounds: [unreasonable_office_delay, marketing_approval_delay_pharma],
+                    max_years: 5, cite: "PA 1994, s 36A" }
+  maintenance:
+    from_year: 5
+    frequency: annual
+    due: before_anniversary_of_filing
+    grace_months: 6
+    cite: "PA 1994, s 36(2)-(3); Patents Rules, r 51"
+  grace_period:
+    months: 12
+    scope: disclosure_by_or_derived_from_applicant
+    cite: "PA 1994, s 14(4)-(6)"
+    notes: ["Confirm current scope: the 2017 amendments broadened the grace period. Record the exact subsection."]
+  pct: { national_phase_months: 30, from: priority_date, extension_available: true, cite: "Patents Rules, r 86" }
+  exhaustion: { value: international, cite: "PA 1994, s 66(2)(g)" }
+  border_measures: { available: false, cite: "Patents Act 1994 (no border enforcement provision)",
+                     notes: ["No customs recordal for patents; enforcement is by civil action."] }
+  criminal_sanctions: { available: false, cite: "Patents Act 1994 (no criminal offence for infringement)" }
+
+utility_model:
+  available: false
+  cite: "No utility model statute in Singapore"
+  notes: ["Singapore has no utility model / petty patent system."]
+
+# ---------------------------------------------------------------------------------------
+registered_design:
+  statute: { name: "Registered Designs Act 2000", url: https://sso.agc.gov.sg/Act/RDA2000 }
+  examination: { value: formal, cite: "RDA 2000, s 17" }
+  priority: { months: 6, treaty: paris, cite: "RDA 2000, s 12" }
+  term: { years: 5, from: filing_date, renewable: true, renewal_years: 5, max_years: 15, cite: "RDA 2000, s 21" }
+  grace_period: { months: 12, scope: disclosure_by_or_derived_from_applicant, cite: "RDA 2000, s 8" }
+  hague: { designation_accepted: true, refusal_window_months: 6, cite: "Registered Designs (International Registration) Rules" }
+  unregistered_design_right: { available: false, cite: "Registered Designs Act 2000 (registration required)",
+                               notes: ["No UK-style unregistered design right; artistic-work copyright may apply within RDA/Copyright Act limits."] }
+
+# ---------------------------------------------------------------------------------------
+copyright:
+  statute:
+    value: { name: "Copyright Act 2021" }
+    url: https://sso.agc.gov.sg/Act/CA2021
+    in_force_from: 2021-11-21
+    cite: "Copyright Act 2021, s 1(2) (commencement)"
+  registration: { value: none, cite: "Copyright Act 2021 (no registration system)" }
+  term:
+    literary_dramatic_musical_artistic: { base: author_death, plus_years: 70, cite: "Copyright Act 2021, s 114" }
+    anonymous_or_pseudonymous: { base: publication, plus_years: 70, cite: "Copyright Act 2021, s 115" }
+    sound_recording: { base: publication, plus_years: 70, cite: "Copyright Act 2021, s 117" }
+    film: { base: publication, plus_years: 70, cite: "Copyright Act 2021, s 118" }
+    notes: ["Singapore moved from life+50 to life+70 in 2004 under the US-Singapore FTA. Section numbers under the 2021 Act must be confirmed."]
+  # Not researched: expressed as a value-less note so `lint` flags it as an open gap
+  # rather than as a fact. Never write `applies: null` -- a null is not an answer.
+  shorter_term_rule:
+    notes: ["Not yet researched. Record whether SG applies Berne Art 7(8) comparison of terms to foreign works."]
+  moral_rights: { available: true, rights: [attribution, against_false_attribution, integrity],
+                  cite: "Copyright Act 2021, Part 7", notes: ["Introduced by the 2021 Act; not waivable in advance? Confirm."] }
+  fair_dealing: { value: open_fair_use_style, cite: "Copyright Act 2021, ss 190-194 (fair use)",
+                  notes: ["2021 Act renamed the general exception 'fair use' with a non-exhaustive factor test."] }
+  safe_harbour:
+    available: true
+    regime: network_service_provider
+    notice_and_takedown: true
+    counter_notice: true
+    cite: "Copyright Act 2021, Part 6 (network service providers); Copyright (Network Service Provider) Regulations"
+    notes: ["Record the prescribed notice contents and the counter-notice/restoration timeline once checked."]
+
+# History lives at the top level, keyed by the full dotted path of the fact it supersedes.
+# A query with `as_of` before the current fact's in_force_from resolves to the entry here
+# whose validity period covers that date. Never overwrite a fact when the law changes.
+history:
+  copyright.statute:
+    - value: { name: "Copyright Act 1987 (Cap 63)" }
+      url: https://sso.agc.gov.sg/Act-Rev/CA1987
+      in_force_from: 1987-04-10
+      in_force_until: 2021-11-20
+      cite: "Copyright Act (Cap 63, 2006 Rev Ed), repealed by Copyright Act 2021, s 245"
+
+# ---------------------------------------------------------------------------------------
+trade_secret:
+  statute:
+    value: none
+    cite: "No trade secrets statute in Singapore"
+    notes: ["Protection is by the equitable action for breach of confidence."]
+  basis: { value: breach_of_confidence, cite: "I-Admin (Singapore) Pte Ltd v Hong Ying Ting [2020] SGCA 32" }
+  elements: { value: ["information has the necessary quality of confidence", "imparted in circumstances importing an obligation of confidence", "burden shifts to defendant to show conscience unaffected (I-Admin modification)"],
+              cite: "I-Admin (Singapore) Pte Ltd v Hong Ying Ting [2020] SGCA 32 at [61]" }
+  criminal_sanctions: { available: false, cite: "No trade-secret offence; cf Computer Misuse Act 1993",
+                        notes: ["The Computer Misuse Act may apply to the means of taking, not to the misuse of the secret."] }
+
+# ---------------------------------------------------------------------------------------
+geographical_indication:
+  statute: { name: "Geographical Indications Act 2014", url: https://sso.agc.gov.sg/Act/GIA2014 }
+  registration: { value: available, registry_operational_from: 2019-04-01, cite: "GIA 2014, Part 4" }
+  protection_without_registration: { value: true, scope: limited, cite: "GIA 2014, s 4" }
+
+plant_variety:
+  statute: { name: "Plant Varieties Protection Act 2004", url: https://sso.agc.gov.sg/Act/PVPA2004 }
+  term: { years: 25, from: grant_date, cite: "PVPA 2004, s 33", notes: ["Confirm whether trees/vines have a different term."] }
+
+# ---------------------------------------------------------------------------------------
+transfer_formalities:
+  trade_mark_assignment:
+    writing_required: { value: true, signed_by: assignor, cite: "TMA 1998, s 38(3)" }
+    recordal: { value: optional, effect: "ineffective against a person acquiring a conflicting interest in ignorance of it until recorded; no costs/damages for pre-recordal infringement in some circumstances",
+                cite: "TMA 1998, s 39" }
+    goodwill: { value: assignable_without_goodwill, cite: "TMA 1998, s 38(1)" }
+    government_approval: { value: false, cite: "No approval requirement under Singapore law" }
+  trade_mark_licence:
+    writing_required: { value: true, cite: "TMA 1998, s 42(2)" }
+    recordal: { value: optional, effect: "as for assignment", cite: "TMA 1998, s 39" }
+  patent_assignment:
+    writing_required: { value: true, signed_by: assignor, cite: "PA 1994, s 41(6)" }
+    recordal: { value: optional, effect: "unregistered transaction ineffective against later inconsistent registered transaction", cite: "PA 1994, s 43" }
+    government_approval: { value: false, cite: "No approval requirement under Singapore law" }
+  copyright_assignment:
+    writing_required: { value: true, signed_by: assignor, cite: "Copyright Act 2021, s 132" }
+    recordal: { value: not_available, cite: "Copyright Act 2021 (no register of assignments)" }
+
+# ---------------------------------------------------------------------------------------
+takedown:
+  copyright:
+    regime: { value: sg_copyright_act_nsp, cite: "Copyright Act 2021, Part 6" }
+    statutory_notice: { value: true, prescribed_form: true, cite: "Copyright (Network Service Provider) Regulations" }
+    required_elements:
+      value: []
+      cite: "Copyright (Network Service Provider) Regulations"
+      notes: ["Populate from the Regulations: identification of material, statement of ownership, contact particulars, declaration, signature. Not yet checked."]
+    counter_notice: { available: true, restoration_window: null,
+                      cite: "Copyright Act 2021, Part 6 Div 3",
+                      notes: ["Record the restoration timeline once checked."] }
+  trade_mark:
+    regime:
+      value: none_statutory
+      cite: "Trade Marks Act 1998 (no notice-and-takedown regime)"
+      notes: ["Platforms act under their own policies and general law; there is no statutory route."]
