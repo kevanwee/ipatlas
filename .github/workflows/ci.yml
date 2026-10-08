@@ -1,18 +1,27 @@
-name: ci
+name: checks
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.11"
+          - os: windows-latest
+            python: "3.13"
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
-      - run: pip install -e ".[dev]"
-      - run: ruff check src tests
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e ".[dev]"
+      - run: ruff check src tests scripts/check_install.py setup.py
       - run: python -m pytest
-      # The data gate. A pack that breaks CLAUDE.md's rules cannot merge.
       - run: python scripts/lint_data.py
-      # Internal-consistency audit: derives US federal holidays from the statutory rules,
-      # checks prose weekday claims against the calendar, and enforces structural invariants.
       - run: python scripts/audit_data.py
+      - run: python scripts/check_install.py
