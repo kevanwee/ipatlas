@@ -16,8 +16,10 @@ import yaml
 
 from .fact import PROVENANCE_KEYS, Fact, is_fact_mapping, parse_fact
 
-_PKG_ROOT = Path(__file__).resolve().parent.parent.parent.parent
-DATA_DIR = _PKG_ROOT / "data"
+_PKG = Path(__file__).resolve().parent.parent
+_BUNDLED = _PKG / "_resources"
+# Editable installs keep the canonical data/ tree; wheels carry their own copy.
+DATA_DIR = (_BUNDLED if _BUNDLED.is_dir() else _PKG.parent.parent) / "data"
 JURISDICTIONS_DIR = DATA_DIR / "jurisdictions"
 TREATIES_DIR = DATA_DIR / "treaties"
 

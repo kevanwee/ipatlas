@@ -14,6 +14,19 @@ $ ipatlas compare trade_mark SG US CN -a filing_system -a term -a use_requiremen
 | **Use requirement**| 5 years of non-use, then    | 3 years of non-use, then         | 3 years of non-use, then         |
 |                    | revocation on application   | cancellation on petition         | cancellation on application      |
 
+## Distribution reliability
+
+`python -m pip install .` installs the CLI with its bundled data, without requiring
+an editable checkout. Run it from any directory. Source contributors continue to
+edit the canonical root data directories; the build copies those files into the
+wheel. No legal facts or verification flags are changed by packaging.
+
+After installing `.[dev]`, run `python scripts/check_install.py`. It builds a source
+distribution, builds a wheel from that archive, installs it in a temporary environment
+outside the checkout, and checks the public commands against the bundled resources.
+CI runs this check on Linux and Windows. The check installs build tools, but the
+calculation commands themselves make no network requests.
+
 ## Where they differ
 - Filing system
 - Term

@@ -1,0 +1,2 @@
+recursive-include data *.json *.yaml
+include scripts/check_install.py
